@@ -859,7 +859,7 @@ $(document).on("click","#m_add",function(e){
         skin: 'z-addDashboard',
         content: $('#Z-addFenZU') ,
         area: ['568px', '520px'],
-        success  : function(layero,index){
+        success: function(layero,index){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
         },
         yes: function(index, layero){
@@ -925,9 +925,9 @@ $(document).on("click","#m_check",function(e){
         btn2: function(index, layero){
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调 
-            var dataObj = idsArr;
-            var fenzuNameVal = $("#fenzuName").val();
-            var fenzuPositionVal = $("#fenzuPosition").val(); 
+            var dataObj = idsArr;   //id
+            var fenzuNameVal = $("#fenzuName").val();   //名称
+            var fenzuPositionVal = $("#fenzuPosition").val();   //位置
             $("#fenzuName").removeClass("valNUllBorder");
             $("#fenzuPosition").removeClass("valNUllBorder");
             if(fenzuNameVal == ""){
@@ -939,7 +939,23 @@ $(document).on("click","#m_check",function(e){
                 $("#fenzuPosition").addClass("valNUllBorder");
                 return false
             }else{
-                
+                let nodes = zTree.getSelectedNodes(); 
+                let postData = {
+                    id: dataObj,
+                    name: fenzuNameVal,
+                    parentId: currentParentId
+                }
+                request.put(`/bi/${appId}/groups`, postData).then(res => {
+                    if (res.data.code === 0) {
+                        layer.msg('编辑成功!')
+                        nodes[0].name = fenzuNameVal
+                        zTree.updateNode(nodes[0]);
+                        $("#fenzuName")[0].value = ''
+                        $("#fenzuPosition")[0].value = ''
+                    } else {
+                        layer.msg(res.data.msg);
+                    }
+                })
             }
         },
         cancel: function(){ 
