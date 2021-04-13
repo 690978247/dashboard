@@ -296,7 +296,7 @@
     color: #fff;
 }
 .z-contentBoxRight-table .layui-table-page{
-    text-align: right;
+    text-align: left;
     padding-right: 40px;
     padding-top: 14px;
 }

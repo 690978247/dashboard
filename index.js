@@ -99,61 +99,48 @@ function onBodyMouseDown(event){
         rMenu.css({"visibility" : "hidden"});
     }
 }
-var addCount = 1;
-		function addTreeNode() {
-			hideRMenu();
-			var newNode = { name:"增加" + (addCount++)};
-			if (zTree.getSelectedNodes()[0]) {
-				newNode.checked = zTree.getSelectedNodes()[0].checked;
-				zTree.addNodes(zTree.getSelectedNodes()[0], newNode);
-			} else {
-				zTree.addNodes(null, newNode);
-			}
-		}
-		function  removeTreeNode() {
-			hideRMenu();
-			var nodes = zTree.getSelectedNodes();
-			if (nodes && nodes.length>0) {
-				if (nodes[0].children && nodes[0].children.length > 0) {
-					var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
-					if (confirm(msg)==true){
-						zTree.removeNode(nodes[0]);
-					}
-				} else {
-					zTree.removeNode(nodes[0]);
-				}
-			}
-		}
-		function checkTreeNode(checked) {
-			var nodes = zTree.getSelectedNodes();
-			if (nodes && nodes.length>0) {
-				zTree.checkNode(nodes[0], checked, true);
-			}
-			hideRMenu();
-		}
-		function resetTree() {
-			hideRMenu();
-			$.fn.zTree.init($("#treeDemo"), setting, zNodes);
-		}
 var zNodes =[
-    { name:"全部分组(右键增删改)",
-        children: [
-            { name:"化工车间",
-                children: [
-                    { name:"化工车间1"},
-                    { name:"化工车间2"},
-                    { name:"化工车间3"},
-                    { name:"化工车间4"}
-                ]},
-            { name:"化工生产情况监控",
-                children: [
-                    { name:"化工生产情况监控1"},
-                    { name:"化工生产情况监控2"},
-                    { name:"化工生产情况监控3"},
-                    { name:"化工生产情况监控4"}
-                ]}
-        ]},
 ];
+request.get('bi/68d61d7f990e11eb847e88d7f63cc98f/groups').then(res => {
+    zNodes = res.data.data
+    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+})
+var addCount = 1;
+function addTreeNode() {
+    hideRMenu();
+    var newNode = { name:"增加" + (addCount++)};
+    if (zTree.getSelectedNodes()[0]) {
+        newNode.checked = zTree.getSelectedNodes()[0].checked;
+        zTree.addNodes(zTree.getSelectedNodes()[0], newNode);
+    } else {
+        zTree.addNodes(null, newNode);
+    }
+}
+function  removeTreeNode() {
+    hideRMenu();
+    var nodes = zTree.getSelectedNodes();
+    if (nodes && nodes.length>0) {
+        if (nodes[0].children && nodes[0].children.length > 0) {
+            var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
+            if (confirm(msg)==true){
+                zTree.removeNode(nodes[0]);
+            }
+        } else {
+            zTree.removeNode(nodes[0]);
+        }
+    }
+}
+function checkTreeNode(checked) {
+    var nodes = zTree.getSelectedNodes();
+    if (nodes && nodes.length>0) {
+        zTree.checkNode(nodes[0], checked, true);
+    }
+    hideRMenu();
+}
+function resetTree() {
+    hideRMenu();
+    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+}
 function addNode(){
     for (var i = 0; i < zNodes.length; i++) {
      //给数组添加一个属性和属性值
