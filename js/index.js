@@ -1,46 +1,4 @@
-function addDiyDom(treeId, treeNode) {
-    var spaceWidth = 5;
-    var switchObj = $("#" + treeNode.tId + "_switch"),
-    icoObj = $("#" + treeNode.tId + "_ico");
-    switchObj.remove();
-    icoObj.before(switchObj);
 
-    if (treeNode.level > 1) {
-        var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
-        switchObj.before(spaceStr);
-    }
-
-    var aObj = $("#" + treeNode.tId + "_a");
-    //treeNode.id 要根据树的数据中的id获取，zNodes 数据配置中的i
-	// if ($("#diyBtn_"+treeNode.id).length>0) return; //控制哪些节点不显示按钮
-	var editStr = "<span class='dot' id='diyBtn_space_"+treeNode.id+ "' >...</span>"
-		+ "<button type='button' class='diyBtn1' id='diyBtn_" + treeNode.id
-		+ "' title='"+treeNode.name+"' onfocus='this.blur();'></button>";
-	aObj.append(editStr);
-	var btn = $("#diyBtn_"+treeNode.id);
-	if (btn) btn.bind("click", function(){alert("diy Button for " + treeNode.name);});
-}
-function addDiyDom1(treeId, treeNode) {
-	var aObj = $("#" + treeNode.tId + "_a");
-    //treeNode.id 要根据树的数据中的id获取，zNodes 数据配置中的i
-	// if ($("#diyBtn_"+treeNode.id).length>0) return; //控制哪些节点不显示按钮
-	var editStr = "<span class='dot' id='diyBtn_space_"+treeNode.id+ "' >...</span>"
-		+ "<button type='button' class='diyBtn1' id='diyBtn_" + treeNode.id
-		+ "' title='"+treeNode.name+"' onfocus='this.blur();'></button>";
-	aObj.append(editStr);
-	var btn = $("#diyBtn_"+treeNode.id);
-	if (btn) btn.bind("click", function(){alert("diy Button for " + treeNode.name);});
-};
-function OnRightClick(event, treeId, treeNode) {
-    var zTree = $.fn.zTree.getZTreeObj("treeDemo");
-    if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
-        zTree.cancelSelectedNode();
-        showRMenu("root", event.clientX, event.clientY);
-    } else if (treeNode && !treeNode.noR) {
-        zTree.selectNode(treeNode);
-        showRMenu("node", event.clientX, event.clientY);
-    }
-}
 
 function showRMenu(type, x, y) {
     $("#rMenu ul").show();
@@ -69,7 +27,7 @@ function onBodyMouseDown(event){
         rMenu.css({"visibility" : "hidden"});
     }
 }
-request.get('bi/68d61d7f990e11eb847e88d7f63cc98f/groups').then(res => {
+request.get(`bi/${appId}/groups`).then(res => {
     zNodes = res.data.data
     $.fn.zTree.init($("#treeDemo"), setting, zNodes);
 })
@@ -84,16 +42,17 @@ function addTreeNode() {
     }
 }
 function  removeTreeNode() {
+    debugger
     hideRMenu();
     var nodes = zTree.getSelectedNodes();
     if (nodes && nodes.length>0) {
         if (nodes[0].children && nodes[0].children.length > 0) {
+            debugger
             var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
             if (confirm(msg)==true){
-                zTree.removeNode(nodes[0]);
+                request.delete(`/bi/${appId}/groups/{groupId}`)
             }
         } else {
-            zTree.removeNode(nodes[0]);
         }
     }
 }
@@ -114,31 +73,9 @@ function addNode(){
      zNodes[i]["iconSkin"]="icon" + i;
     }
 }
-function onClick(event, treeId, treeNode) {
-   
-};
-function beforeClickAdd(treeId, treeNode) {
-    var check = (treeNode && !treeNode.isParent);
-    // if (!check) alert("只能选择城市...");控制哪些层级不能选择
-    return check;
-}
 
-function onClickAdd(e, treeId, treeNode) {
-    var zTree = $.fn.zTree.getZTreeObj("treeDemoAdd"),
-    nodes = zTree.getSelectedNodes(),
-    v = "";
-    h = "";
-    nodes.sort(function compare(a,b){return a.id-b.id;});
-    for (var i=0, l=nodes.length; i<l; i++) {
-        v += nodes[i].name + ",";
-        h += nodes[i].id + ",";
-    }
-    idsArr = h;
-    idsArr = idsArr.slice(0,-1);
-    if (v.length > 0 ) v = v.substring(0, v.length-1);
-    var cityObj = $("#citySel");
-    cityObj.attr("value", v);
-}
+
+
 
 function showMenu() {
     var cityObj = $("#citySel");
@@ -156,28 +93,7 @@ function onBodyDown(event) {
         hideMenu();
     }
 }
-function beforeClickAddFenzu(treeId, treeNode) {
-    var check = (treeNode && !treeNode.isParent);
-    // if (!check) alert("只能选择城市...");控制哪些层级不能选择
-    return check;
-}
 
-function onClickAddFenzu(e, treeId, treeNode) {
-    var zTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu"),
-    nodes = zTree.getSelectedNodes(),
-    v = "";
-    h = "";
-    nodes.sort(function compare(a,b){return a.id-b.id;});
-    for (var i=0, l=nodes.length; i<l; i++) {
-        v += nodes[i].name + ",";
-        h += nodes[i].id + ",";
-    }
-    idsArr = h;
-    idsArr = idsArr.slice(0,-1);
-    if (v.length > 0 ) v = v.substring(0, v.length-1);
-    var cityObj = $("#fenzuPosition");
-    cityObj.attr("value", v);
-}
 
 function showMenuFenzu() {
     var cityObj = $("#fenzuPosition");
@@ -196,34 +112,7 @@ function onBodyDown(event) {
     }
 }
 
-function onCheck(e,treeId,treeNode){
-    var treeObj=$.fn.zTree.getZTreeObj("treeDemoCopeto"),
-    nodes=treeObj.getCheckedNodes(true),
-    v1="";
-    h1="";
-    for(var i=0;i<nodes.length;i++){
-        v1+=nodes[i].name + ",";
-        h1+=nodes[i].id + ",";  
-    }
-    ConfigureToidsArr = h1;
-    ConfigureToidsArr = ConfigureToidsArr.slice(0,-1);
-}
-function zTreeBeforeCheck(treeId, treeNode) {
-    return !treeNode.isParent;//当是父节点 返回false 不让选取
-}
 
-function onCheckRaido(e,treeId,treeNode){
-    var treeObj=$.fn.zTree.getZTreeObj("treeDemoCopeFrom"),
-    nodes=treeObj.getCheckedNodes(true),
-    v2="";
-    h2="";
-    for(var i=0;i<nodes.length;i++){
-        v2+=nodes[i].name + ",";
-        h2+=nodes[i].id + ",";  
-    }
-    ConfigureFromidsArr = h2;
-    ConfigureFromidsArr = ConfigureFromidsArr.slice(0,-1);
-}
 
 $(document).on('click',"#viewTpl i", function(){
     //上面删除了哪个节点，也要修改获取选中节点数组nodes
@@ -231,54 +120,8 @@ $(document).on('click',"#viewTpl i", function(){
     var selectId = $(this).attr("data-id");
     treeObjDept.checkNode(myNodes[selectId], false, true,true);
 });
-function onCheckDept(e,treeId,treeNode){
-    treeObjDept=$.fn.zTree.getZTreeObj("treeDemoDept"),
-    myNodes=treeObjDept.getCheckedNodes(true),
-    v1="";
-    h1="";
-    for(var i=0;i<myNodes.length;i++){
-        v1+=myNodes[i].name + ",";
-        h1+=myNodes[i].id + ",";  
-    }
-    checkDeptArr = v1;
-    checkDeptArrIds =h1;
-    if(checkDeptArr!=""){
-       checkDeptArr = checkDeptArr.slice(0,-1);
-       checkDeptArr = checkDeptArr.split(",");
-    }
-    if(checkDeptArrIds!=""){
-        checkDeptArrIds = checkDeptArrIds.slice(0,-1);
-        checkDeptArrIds = checkDeptArrIds.split(",");
-     }
-    $("#viewTpl li").remove();
-    //模板引擎
-    layui.use('laytpl', function(){
-        var laytpl = layui.laytpl;
-        //第三步：渲染模版
-        var data =checkDeptArr;
-        var getTpl = demoTpl.innerHTML;
-        view = document.getElementById('viewTpl');
-        if(data.length != 0){
-            laytpl(getTpl).render(data, function(html){
-                view.innerHTML = html;
-            });
-        }
-    }); 
-}
 
-function onClickSelectDept(e, treeId, treeNode) {
-    var zTree = $.fn.zTree.getZTreeObj("treeDemoDeptOrpeo"),
-    nodes = zTree.getSelectedNodes(),
-    v = "";
-    h = "";
-    nodes.sort(function compare(a,b){return a.id-b.id;});
-    for (var i=0, l=nodes.length; i<l; i++) {
-        v += nodes[i].name + ",";
-        h += nodes[i].id + ",";
-    }
-    idsArr = h;
-    idsArr = idsArr.slice(0,-1);//注意处理不为空才切割
-}
+
 
 $(document).ready(function(){
     $.fn.zTree.init($("#treeDemo"), setting, zNodes);
@@ -1024,7 +867,7 @@ $(document).on("click","#m_add",function(e){
                 $("#fenzuPosition").addClass("valNUllBorder");
                 return false
             }else{
-                
+
             }
         }
         ,cancel: function(){ 
