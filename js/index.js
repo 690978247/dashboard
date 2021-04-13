@@ -111,9 +111,11 @@ function onBodyDown(event) {
 
 function showMenuFenzu() {
     var cityObj = $("#fenzuPosition");
+    // let nodes = zTree.getSelectedNodes();
     var cityOffset = $("#fenzuPosition").offset();
     $("#menuContentFenzu").css({left:cityOffset.left + "px", top:cityOffset.top + cityObj.outerHeight() + "px"}).slideDown("fast");
-
+    // zTree.setting.view.fontCss = {color: '#409EFF',background: 'red'}
+    // zTree.updateNode(nodes[0])
     $("body").bind("mousedown", onBodyDown);
 }
 function hideMenuFenzu() {
@@ -881,7 +883,7 @@ $(document).on("click","#m_add",function(e){
                 layer.msg('请填写名称');
                 $("#fenzuName").addClass("valNUllBorder");
                 return false
-            }else if(dataObj==""){
+            }else if(fenzuPositionVal==""){
                 layer.msg('请选择位置');
                 $("#fenzuPosition").addClass("valNUllBorder");
                 return false
@@ -906,7 +908,6 @@ $(document).on("click","#m_add",function(e){
             }
         },
         cancel: function(){ 
-            debugger
             $("#fenzuName")[0].value = ''
             $("#fenzuPosition")[0].value = ''
         }
@@ -945,7 +946,7 @@ $(document).on("click","#m_check",function(e){
                 layer.msg('请填写名称');
                 $("#fenzuName").addClass("valNUllBorder");
                 return false
-            }else if(dataObj==""){
+            }else if(fenzuPositionVal==""){
                 layer.msg('请选择位置');
                 $("#fenzuPosition").addClass("valNUllBorder");
                 return false

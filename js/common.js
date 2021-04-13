@@ -77,12 +77,12 @@ var zNodesAdd =[
   {id:64, pId:6, name:"三明"}
 ];
 
-// 主页右键新增分组树
+// 分组弹窗位置树
 var settingAddFenzu = {
   view: {
       dblClickExpand: false,
       showLine: false,
-      fontCss : {color:"#333333"}
+      fontCss : setFontCss
   },
   data: {
       simpleData: {
@@ -304,6 +304,18 @@ function addDiyDom1(treeId, treeNode) {
 
 function onClick(event, treeId, treeNode) {
    
+};
+
+function setFontCss(treeId, treeNode) {
+  let obj = {}
+  // var str = $("#fenzuPosition").val()
+  // if (treeNode.name == str) {
+  //   obj = {
+  //     color: '#409EFF',
+  //     background: '#F9FAFD'
+  //   }
+  // }
+	return obj
 };
 
 function OnRightClick(event, treeId, treeNode) {
