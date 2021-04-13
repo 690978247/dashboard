@@ -1,5 +1,4 @@
 
-
 function showRMenu(type, x, y) {
     $("#rMenu ul").show();
     if (type=="root") {
@@ -29,7 +28,9 @@ function onBodyMouseDown(event){
 }
 request.get(`bi/${appId}/groups`).then(res => {
     zNodes = res.data.data
+    console.log(res.data.data)
     $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
 })
 function addTreeNode() {
     hideRMenu();
@@ -42,17 +43,30 @@ function addTreeNode() {
     }
 }
 function  removeTreeNode() {
-    debugger
     hideRMenu();
     var nodes = zTree.getSelectedNodes();
     if (nodes && nodes.length>0) {
         if (nodes[0].children && nodes[0].children.length > 0) {
-            debugger
             var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
             if (confirm(msg)==true){
-                request.delete(`/bi/${appId}/groups/{groupId}`)
+                request.delete(`/bi/${appId}/groups/${nodes[0].id}`).then(res => {
+                    if (res.data.code === 0) {
+                        layer.msg('删除成功!');
+                        zTree.removeNode(nodes[0]);
+                    } else {
+                        layer.msg(res.data.msg);
+                    }
+                })
             }
         } else {
+            request.delete(`/bi/${appId}/groups/${nodes[0].id}`).then(res => {
+                if (res.data.code === 0) {
+                    layer.msg('删除成功!');
+                    zTree.removeNode(nodes[0]);
+                } else {
+                    layer.msg(res.data.msg);
+                }
+            })
         }
     }
 }
@@ -126,7 +140,8 @@ $(document).on('click',"#viewTpl i", function(){
 $(document).ready(function(){
     $.fn.zTree.init($("#treeDemo"), setting, zNodes);
     $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodesAdd);
-    $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodesAddFenzu);
+    // 位置
+    $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
     $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
     $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
     $.fn.zTree.init($("#treeDemoDept"), settingDept, zNodesDept);
@@ -843,19 +858,19 @@ $(document).on("click","#m_add",function(e){
         shadeClose: true,
         skin: 'z-addDashboard',
         content: $('#Z-addFenZU') ,
-        area: ['568px', '520px']
-        ,success  : function(layero,index){
+        area: ['568px', '520px'],
+        success  : function(layero,index){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
-        }
-        ,yes: function(index, layero){
+        },
+        yes: function(index, layero){
             layer.close(index);
-        }
-        ,btn2: function(index, layero){
+        },
+        btn2: function(index, layero){
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调
-            var dataObj = idsArr;
-            var fenzuNameVal = $("#fenzuName").val();
-            var fenzuPositionVal = $("#fenzuPosition").val(); 
+            var dataObj = idsArr;   // id
+            var fenzuNameVal = $("#fenzuName").val();   //名称
+            var fenzuPositionVal = $("#fenzuPosition").val();  //位置
             $("#fenzuName").removeClass("valNUllBorder");
             $("#fenzuPosition").removeClass("valNUllBorder");
             if(fenzuNameVal == ""){
@@ -867,10 +882,26 @@ $(document).on("click","#m_add",function(e){
                 $("#fenzuPosition").addClass("valNUllBorder");
                 return false
             }else{
-
+                let nodes = zTree.getSelectedNodes();
+                let isNull = currentParentId ? nodes[0] : null
+                let postData = {
+                    name: fenzuNameVal,
+                    parentId: dataObj,
+                    position: currentParentId,
+                }
+                request.post(`/bi/${appId}/groups`, postData).then(res => {
+                    if (res.data.code === 0) {
+                        layer.msg('添加成功!')
+                        zTree.addNodes(isNull, postData);
+                        $("#fenzuName")[0].value = ''
+                        $("#fenzuPosition")[0].value = ''
+                    } else {
+                        layer.msg(res.data.msg);
+                    }
+                })
             }
-        }
-        ,cancel: function(){ 
+        },
+        cancel: function(){ 
            
         }
     });
@@ -884,14 +915,14 @@ $(document).on("click","#m_check",function(e){
         shadeClose: true,
         skin: 'z-addDashboard',
         content: $('#Z-addFenZU') ,
-        area: ['568px', '520px']
-        ,success  : function(layero,index){
+        area: ['568px', '520px'],
+        success  : function(layero,index){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
-        }
-        ,yes: function(index, layero){
+        },
+        yes: function(index, layero){
             layer.close(index);
-        }
-        ,btn2: function(index, layero){
+        },
+        btn2: function(index, layero){
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调 
             var dataObj = idsArr;
@@ -910,8 +941,8 @@ $(document).on("click","#m_check",function(e){
             }else{
                 
             }
-        }
-        ,cancel: function(){ 
+        },
+        cancel: function(){ 
            
         }
     });

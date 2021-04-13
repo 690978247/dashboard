@@ -2,6 +2,7 @@
 /* 全局data */
 var searchObjData = {};
 var attributeObjData = {};
+var currentParentId = null //此值为分组树 data parentId
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var zNodes = [];
 var addCount = 1;
@@ -348,6 +349,8 @@ function beforeClickAddFenzu(treeId, treeNode) {
 
 
 function onClickAddFenzu(e, treeId, treeNode) {
+  debugger
+  currentParentId = treeNode.parentId
   var zTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu"),
   nodes = zTree.getSelectedNodes(),
   v = "";
