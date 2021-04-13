@@ -861,8 +861,12 @@ $(document).on("click","#m_add",function(e){
         area: ['568px', '520px'],
         success: function(layero,index){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
+            let nodes = zTree.getSelectedNodes();
+            $("#fenzuPosition")[0].value = nodes[0].name
         },
         yes: function(index, layero){
+            $("#fenzuName")[0].value = ''
+            $("#fenzuPosition")[0].value = ''
             layer.close(index);
         },
         btn2: function(index, layero){
@@ -902,7 +906,9 @@ $(document).on("click","#m_add",function(e){
             }
         },
         cancel: function(){ 
-           
+            debugger
+            $("#fenzuName")[0].value = ''
+            $("#fenzuPosition")[0].value = ''
         }
     });
 })
@@ -918,8 +924,13 @@ $(document).on("click","#m_check",function(e){
         area: ['568px', '520px'],
         success  : function(layero,index){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
+            let nodes = zTree.getSelectedNodes();
+            $("#fenzuName")[0].value = nodes[0].name
+            $("#fenzuPosition")[0].value = nodes[0].name
         },
         yes: function(index, layero){
+            $("#fenzuName")[0].value = ''
+            $("#fenzuPosition")[0].value = ''
             layer.close(index);
         },
         btn2: function(index, layero){
@@ -959,7 +970,8 @@ $(document).on("click","#m_check",function(e){
             }
         },
         cancel: function(){ 
-           
+            $("#fenzuName")[0].value = ''
+            $("#fenzuPosition")[0].value = ''
         }
     });
 })
