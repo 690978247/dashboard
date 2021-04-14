@@ -135,7 +135,15 @@ function onBodyDown(event) {
         hideMenuFenzu();
     }
 }
+// 表格初始化
+function initTable () {
+    // groupId 默认展示全部分组id
+    request.get(`/bi/${appId}/panels`, { params: {appId, groupId: '4e1565f09b7eda7607fbfd2772f1d023'}}).then(res => {
+        renderTable(res.data.data.records)
+    })
+}
 
+// 渲染表格
 function renderTable (data) {
     layui.use(['table','laydate','laypage','layer','element'], function(){
         var $ = layui.jquery
@@ -521,7 +529,7 @@ layui.use('laydate', function(){
         }
     });
 });
- renderTable()
+initTable ()
 //加载form模块
 layui.use('form', function() {
         var form = layui.form;
