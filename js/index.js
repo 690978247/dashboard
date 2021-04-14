@@ -26,12 +26,15 @@ function onBodyMouseDown(event){
         rMenu.css({"visibility" : "hidden"});
     }
 }
-request.get(`bi/${appId}/groups`).then(res => {
-    zNodes = res.data.data
-    console.log(res.data.data)
-    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-    $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
-})
+// 获取右侧分组数数据 以及位置树数据
+async function getGruopTree () {
+    await request.get(`bi/${appId}/groups`).then(res => {
+        zNodes = res.data.data
+        console.log(res.data.data)
+        $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+        $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
+    })
+}
 function addTreeNode() {
     hideRMenu();
     var newNode = { name:"增加" + (addCount++)};
@@ -139,9 +142,10 @@ $(document).on('click',"#viewTpl i", function(){
 
 
 
-$(document).ready(function(){
-    $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-    $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodesAdd);
+$(document).ready(async function(){
+    // $.fn.zTree.init($("#treeDemo"), setting, zNodes);
+    // $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodesAdd);
+    await getGruopTree()
     // 位置
     $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
     $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
@@ -898,12 +902,13 @@ $(document).on("click","#m_add",function(e){
                 request.post(`/bi/${appId}/groups`, postData).then(res => {
                     if (res.data.code === 0) {
                         layer.msg('添加成功!')
-                        let data = {
-                            id: res.data.data,
-                            name: fenzuNameVal,
-                            parentId: nodes[0].id ? nodes[0].id : ''
-                        }
-                        zTree.addNodes(isNull, data);
+                        // let data = {
+                        //     id: res.data.data,
+                        //     name: fenzuNameVal,
+                        //     parentId: nodes[0].id ? nodes[0].id : ''
+                        // }
+                        // zTree.addNodes(isNull, data);
+                        getGruopTree()
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
                     } else {
