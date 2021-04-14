@@ -3,7 +3,6 @@
 var searchObjData = {};
 var attributeObjData = {};
 var currentNode = {}  //分组树选中的node
-var positionNode = {} // 位置树点击事件选择的node
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var zNodes = [];
 var addCount = 1;
@@ -349,7 +348,7 @@ function beforeClickAdd(treeId, treeNode) {
 
 
 function onClickAdd(e, treeId, treeNode) {
-  positionNode = treeNode
+  currentNode = treeNode
   let zTree = $.fn.zTree.getZTreeObj("treeDemoAdd"),
   nodes = zTree.getSelectedNodes(),
   v = "";
@@ -374,20 +373,10 @@ function beforeClickAddFenzu(treeId, treeNode) {
 
 
 function onClickAddFenzu(e, treeId, treeNode) {
-  let zTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu"),
-  nodes = zTree.getSelectedNodes(),
-  v = "";
-  h = "";
-  nodes.sort(function compare(a,b){return a.id-b.id;});
-  for (var i=0, l=nodes.length; i<l; i++) {
-      v += nodes[i].name + ",";
-      h += nodes[i].id + ",";
-  }
-  idsArr = h;
-  idsArr = idsArr.slice(0,-1);
-  if (v.length > 0 ) v = v.substring(0, v.length-1);
-  var cityObj = $("#fenzuPosition");
-  cityObj.attr("value", v);
+  nodes = addPTree.getSelectedNodes()
+  currentNode = treeNode
+  let cityObj = $("#fenzuPosition")[0];
+  cityObj.value = treeNode.name
 }
 
 

@@ -644,7 +644,7 @@ $('#addDashboard').on('click', function(){
                     let postData = {
                         appId,
                         name: addDashboardNameVal,
-                        groupId: positionNode.id
+                        groupId: currentNode.id
                     }
                     request.post(`/bi/${appId}/panels`, postData).then(res => {
                         if (res.data.code === 0) {
@@ -901,7 +901,7 @@ $(document).on("click","#m_add",function(e){
                 let isNull = currentNode.parentId ? nodes[0] : null
                 let postData = {
                     name: fenzuNameVal,
-                    parentId: nodes[0].id
+                    parentId: currentNode.parentId
                 }
                 request.post(`/bi/${appId}/groups`, postData).then(res => {
                     if (res.data.code === 0) {
@@ -971,7 +971,7 @@ $(document).on("click","#m_check",function(e){
             }else{
                 let nodes = zTree.getSelectedNodes(); 
                 let postData = {
-                    id: nodes[0].id,
+                    id: currentNode.id,
                     name: fenzuNameVal,
                     parentId: currentNode.parentId
                 }
