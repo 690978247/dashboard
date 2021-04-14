@@ -653,7 +653,7 @@ $('#addDashboard').on('click', function(){
                             getGruopTree()
                             $("#fenzuName")[0].value = ''
                             $("#fenzuPosition")[0].value = ''
-                            // result = false
+                            initTable()
                         } else {
                             layer.msg(res.data.msg)
                         }
