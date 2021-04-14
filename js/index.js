@@ -139,6 +139,10 @@ function onBodyDown(event) {
 function initTable () {
     // groupId 默认展示全部分组id
     request.get(`/bi/${appId}/panels`, { params: {appId, groupId: '4e1565f09b7eda7607fbfd2772f1d023'}}).then(res => {
+        // let data = res.data.data.records.map((item) => ({
+        //     ...item,
+        //     published: item.published === 'wait_published' ? '未发布' : '已发布'
+        // }))
         renderTable(res.data.data.records)
     })
 }
@@ -159,7 +163,7 @@ function renderTable (data) {
             skin:'nob',
             // ,totalRow:true//开启该列的自动合计功能
             height: 890,
-            page: false, //开启分页
+            page: true, //开启分页
             limit: 20, //每页默认显示的数量
             limits:[20],
             cellMinWidth: 60,//全局定义常规单元格的最小宽度，layui 2.2.1 新增

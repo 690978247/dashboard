@@ -310,7 +310,6 @@ function groupNodeClick(event, treeId, treeNode) {
     appId,
     groupId: treeNode.id
   }
-  // renderTable(`/bi/${appId}/panels?appId=68d61d7f990e11eb847e88d7f63cc98f&groupId=2d146b4c21a57d584881976a016919c4`)
   request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
     let { data } = res.data
     renderTable(data.records, data)
