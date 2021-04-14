@@ -456,6 +456,7 @@ $(document).ready(async function(){
 	rMenu = $("#rMenu");
     zTree = $.fn.zTree.getZTreeObj("treeDemo");
     zTree.expandAll(true);
+    addPTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu");
 
     // $(".nicescroll-slideBar").niceScroll({
     //         cursorcolor: "#ddd",
@@ -868,7 +869,7 @@ $(document).on("click","#m_add",function(e){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
             let nodes = zTree.getSelectedNodes();
             $("#fenzuPosition")[0].value = nodes[0].name
-            currentParentId = nodes[0].parentId
+            currentNode = nodes[0]
         },
         yes: function(index, layero){
             $("#fenzuName")[0].value = ''
@@ -894,7 +895,8 @@ $(document).on("click","#m_add",function(e){
                 return false
             }else{
                 let nodes = zTree.getSelectedNodes();
-                let isNull = currentParentId ? nodes[0] : null
+                debugger
+                let isNull = currentNode.parentId ? nodes[0] : null
                 let postData = {
                     name: fenzuNameVal,
                     parentId: nodes[0].id
@@ -940,7 +942,7 @@ $(document).on("click","#m_check",function(e){
             let nodes = zTree.getSelectedNodes();
             $("#fenzuName")[0].value = nodes[0].name
             $("#fenzuPosition")[0].value = nodes[0].name
-            currentParentId = nodes[0].parentId
+            currentNode = nodes[0]
         },
         yes: function(index, layero){
             $("#fenzuName")[0].value = ''
@@ -969,7 +971,7 @@ $(document).on("click","#m_check",function(e){
                 let postData = {
                     id: nodes[0].id,
                     name: fenzuNameVal,
-                    parentId: currentParentId
+                    parentId: currentNode.parentId
                 }
                 request.put(`/bi/${appId}/groups`, postData).then(res => {
                     if (res.data.code === 0) {

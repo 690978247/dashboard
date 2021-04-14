@@ -2,7 +2,7 @@
 /* 全局data */
 var searchObjData = {};
 var attributeObjData = {};
-var currentParentId = null //此值为分组树 data parentId
+var currentNode = {}  //分组树选中的node
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var zNodes = [];
 var addCount = 1;
@@ -52,7 +52,7 @@ var tableData=[
       "updaterName":"2021-05-17 17:04:20",
       "published":"已发布"
   }
-  ]
+]
 let tableDataArr = []
 let show = true
 var pageDataIdMap;//勾选id
@@ -62,6 +62,10 @@ var idsArr = [];//新增仪表板位置  选中树的id集合
 var ConfigureFromidsArr = [];//从其他仪表板复制配置 选中树的id集合
 var ConfigureToidsArr = [];//将配置复制给其他仪表板  选中树的id集合
 var checkDeptArr = [];//自定义权限选择部门的集合
+//树配置初始化
+var rMenu;
+var zTree;  //分组树
+var addPTree // 新建分组树
  //主页面左侧的树
  var setting = {
     view: {
@@ -264,9 +268,6 @@ var zNodesDeptOrpeo =[
   { id:222, pId:22, name:"随意勾选 2-2-2"},
   { id:23, pId:2, name:"随意勾选 2-3"}
 ];
-//树配置初始化
-var rMenu;
-var zTree;
 
 /* zTree事件 */
 function addDiyDom(treeId, treeNode) {
@@ -347,7 +348,7 @@ function beforeClickAdd(treeId, treeNode) {
 
 
 function onClickAdd(e, treeId, treeNode) {
-  var zTree = $.fn.zTree.getZTreeObj("treeDemoAdd"),
+  let zTree = $.fn.zTree.getZTreeObj("treeDemoAdd"),
   nodes = zTree.getSelectedNodes(),
   v = "";
   h = "";
@@ -371,8 +372,7 @@ function beforeClickAddFenzu(treeId, treeNode) {
 
 
 function onClickAddFenzu(e, treeId, treeNode) {
-  // currentParentId = treeNode.parentId
-  var zTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu"),
+  let zTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu"),
   nodes = zTree.getSelectedNodes(),
   v = "";
   h = "";
@@ -458,7 +458,7 @@ function onCheckDept(e,treeId,treeNode){
 
 
 function onClickSelectDept(e, treeId, treeNode) {
-  var zTree = $.fn.zTree.getZTreeObj("treeDemoDeptOrpeo"),
+  let zTree = $.fn.zTree.getZTreeObj("treeDemoDeptOrpeo"),
   nodes = zTree.getSelectedNodes(),
   v = "";
   h = "";
