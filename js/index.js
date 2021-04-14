@@ -136,6 +136,294 @@ function onBodyDown(event) {
     }
 }
 
+function renderTable (data) {
+    layui.use(['table','laydate','laypage','layer','element'], function(){
+        var $ = layui.jquery
+        laydate = layui.laydate //日期
+        laypage = layui.laypage //分页
+        layer = layui.layer //弹层
+        table = layui.table //表格  
+        element = layui.element //元素操作
+        tableObj = table.render({});
+        table.render({
+            elem: '#myTable',
+            data,
+            skin:'nob',
+            // ,totalRow:true//开启该列的自动合计功能
+            height: 890,
+            page: false, //开启分页
+            limit: 20, //每页默认显示的数量
+            limits:[20],
+            cellMinWidth: 60,//全局定义常规单元格的最小宽度，layui 2.2.1 新增
+            cols: [[
+                {type:'checkbox'},
+                {field:'appId', width:'8%', title: '序号'},
+                {field:'name', width:'8%', title: '名称'},
+                {field:'groupName', width:'12%', title: '上级分组'},
+                {field:'creatorName', width:'12%', title: '创建者'},
+                {field:'updaterName', width:'15%', title: '修改人'},
+                {field:'updateTime', title: '最近修改时间', width: '15%',} ,//minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
+                {field:'published', title: '状态',width: '13%',},
+                {field:'score', title: '操作', toolbar: '#barDemo'},
+            ]],
+            done: function (res, curr, count) {  //回调函数
+                var resD = res.data;
+                var that = this.elem.next();
+                var htm = '<i class="z-table-tips"></i>';
+                resD.forEach(function (item, index) {
+                    var div = that.find(".layui-table-box tbody tr[data-index='" + index + "'] td[data-field='state'] div");
+                    if (item.state == "未发布") {//判断条件，符合条件给角标 
+                        div.append(htm);
+                    }
+                });
+                //勾选事件，id集合
+                var len = res.data.length;
+                    pageDataIdMap = new Map();
+                    for(var i = 0;i < len;i++){   //填充当前页的数据
+                        pageDataIdMap[res.data[i].id] = res.data[i].id;
+                    }
+                    var chooseNum = 0;   //记录当前页选中的数据行数
+                    for(var i = 0;i < len;i++){   //勾选行回显
+                        for(var key in idMap){
+                            if(res.data[i].id == key){
+                                res.data[i]["LAY_CHECKED"]='true';
+                                //找到对应数据改变勾选样式，呈现出选中效果
+                                var index= res.data[i]['LAY_TABLE_INDEX'];
+                                $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+                                $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
+                                chooseNum++;
+                            }
+                        }
+                    }
+                    if(len != 0 && chooseNum == len){   //表示该页全选  --  全选按钮样式回显
+                    $('input[lay-filter="layTableAllChoose"]').prop('checked',true);
+                    $('input[lay-filter="layTableAllChoose"]').next().addClass('layui-form-checked');
+                }
+        }
+        });
+        //监听表格复选框选择
+        table.on('checkbox(test)', function(obj){//checkbox(test)中的test对应table标签中lay-filter="test"的test
+            if(obj.type == 'one'){    //单选操作
+                if(obj.checked){     //选中
+                    idMap[obj.data.id] = obj.data.id;
+                    $("#batchRelease").css("background","#409EFF");
+                }else{      //取消选中
+                    $("#batchRelease").css("background","#9FCEFF");
+                    for(var key in idMap){
+                        if(key == obj.data.id){   //移除取消选中的id
+                            delete idMap[obj.data.id];
+                        }
+                    }
+                }
+            }else{      //全选操作
+                if(obj.checked){    //选中
+                    $("#batchRelease").css("background","#409EFF");
+                    for(var pageKey in pageDataIdMap){
+                        idMap[pageKey] = pageKey;
+                    }
+                }else{
+                    $("#batchRelease").css("background","#9FCEFF");     //取消选中
+                    for(var pageKey in pageDataIdMap){
+                        for(var key in idMap){
+                            if(key == pageKey){
+                                delete idMap[pageKey];
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        var active = {
+            getCheckData: function(){
+                batchSubmitWt();
+            }
+        };
+
+        $('#batchRelease').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        //监听工具条
+        table.on('tool(test)', function(obj){//tool(test)中的test对应table标签中lay-filter="test"的test
+            var data = obj.data;
+            if(obj.event === 'edit'){
+            layer.msg('跳转页面');
+            } else if(obj.event === 'del'){
+                layer.confirm("确定要删除" + data.name + "?", {
+                skin: 'z-tipdel',
+                area: ['420px', '136px'],
+                btn: ['取消', '删除'],
+                title: "提示",
+                    }, function(index, layero){
+                        layer.close(index);
+                    }, function(index){//index 当前行的id
+                        obj.del();
+                });
+            } else if(obj.event === 'offline'){
+                layer.confirm("确定要下线" + data.name + "?", {
+                skin: 'z-tipoffline',
+                area: ['420px', '136px'],
+                title: "提示",
+                btn: ['取消', '下线'] //可以无限个按钮
+                    }, function(index, layero){
+                    //按钮【按钮一】的回调
+                    layer.close(index);
+                    }, function(index){
+                        var thisId = data.id;
+                        for(var i=0;i<tableData.length;i++){
+                            if(tableData[i].id==thisId){
+                                tableData[i].state="未发布";
+                            }
+                        }
+                        table.reload('myTable', {
+                            where: {
+                                username:"user-0",
+                            },
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                        });
+                });
+            }else if(obj.event === 'release'){
+                layer.confirm("确定要发布" + data.name + "?", {
+                skin: 'z-tiprelease',
+                area: ['420px', '136px'],
+                title: "提示",
+                btn: ['取消', '发布']
+                    }, function(index, layero){
+                    layer.close(index);
+                    }, function(index){
+                        var thisId = data.id;
+                        for(var i=0;i<tableData.length;i++){
+                            if(tableData[i].id==thisId){
+                                tableData[i].state="已发布";
+                            }
+                        }
+                        table.reload('myTable', {	//myTable为table中的id
+                                page: {
+                                    curr: $(".layui-laypage-em").next().html() //刷新当前页
+                                }
+                            }
+                        )
+                        $(".layui-table-main").niceScroll({
+                            cursorcolor: "#ddd",
+                            cursorwidth:"10px",
+                            cursorborder:"none",
+                            zindex:"99999999",
+                        });
+                });
+            }else if(obj.event === 'attribute'){
+                layer.open({
+                    type: 1,
+                    title: ['属性', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
+                    closeBtn: 1,
+                    shadeClose: true,
+                    skin: 'z-addDashboard',
+                    content: $('#attribute') ,
+                    area: ['598px', '490px'],
+                    btn: ['取消', '保存'],
+                    btn2: function(index, layero){
+                        var name = $("#attribute-name").val();
+                        var position = $("#attribute-position").find("option:selected").val();
+                        var policyRadioVal = $('input[name="sex"]:checked').val();
+                        var describeVal = $("#attribute-describeVal").val();
+                        $("#attribute-name").removeClass("valNUllBorder");
+                        $("#attribute-position-box input").removeClass("valNUllBorder");
+                        if(name == ""){
+                            layer.msg('请填写名称');
+                            $("#attribute-name").addClass("valNUllBorder");
+                            return false
+                        }else if(position==""){
+                            layer.msg('请选择位置');
+                            $("#attribute-position-box input").addClass("valNUllBorder");
+                            return false
+                        }else{
+                            // $.ajax({
+                            //     url: methodsApi.getworkstats1_get,
+                            //     type: "post",
+                            //     contentType: "application/json",
+                            //     data: JSON.stringify(searchObjData),
+                            //     dataType: "json",
+                            //     /* async: false, */
+                            //     success: function (res) {
+                                    
+                            //     },
+                            //     error: function (err) {
+                            //         wui.errorNotice("获取信息失败");
+                            //     }
+                            // });
+                        }
+                    }
+                });
+            } else if(obj.event === 'edit'){
+            layer.alert('编辑行：<br>'+ JSON.stringify(data))
+            }
+        });
+        //表格搜索，重载
+        // var $ = layui.$, activeSearch = {
+        //     reload: function(){
+        //         var userName = $("#userName").val();
+        //         var stastVal = $("#mySelect").find("option:selected").val();
+        //         var revisionTimeVal = $("#revisionTime").val();
+        //         //执行重载
+        //         table.reload('myTable', {	//myTable为table中的id
+        //             page: {
+        //             curr: 1 //重新从第 1 页开始
+        //             }
+        //             ,where: {
+        //                 id:"10000",
+        //             }
+        //             }
+        //         )
+        //     }
+        // };
+        
+        // $('#searchBtn').on('click', function(){	//search为搜索button中设置的id名
+        //     var type = $(this).data('type');
+        //     activeSearch[type] ? activeSearch[type].call(this) : '';
+        // });
+        // 转换时间格式，并转换为时间戳
+        function tranDate (time) {
+            return new Date(time.replace(/-/g, '/')).getTime();
+        }
+        $('#searchBtn').on('click', function(){	
+            var userName = $("#userName").val();
+            var stastVal = $("#mySelect").find("option:selected").text();
+            var revisionTimeVal = $("#revisionTime").val();
+            var start = revisionTimeVal.substring(0,10);
+            var end = revisionTimeVal.substring(13,24);
+            var startTime = tranDate(start);
+            var endTime = tranDate(end);
+            var result = [];
+                tableDataArr.forEach(function (item, index) {
+            var nowTime = tranDate(item.time.substring(0,10));
+                    if(stastVal == "全部"){
+                        if ((item.name.includes(userName) || item.creator.includes(userName) || item.Reviser.includes(userName)) && (nowTime >= startTime && nowTime <= endTime)) {
+                            result.push(item);
+                        }
+                    }else{
+                        if ((item.name.includes(userName) || item.creator.includes(userName) || item.Reviser.includes(userName)) && item.state === stastVal && (nowTime >= startTime && nowTime <= endTime)) {
+                            result.push(item);
+                        }
+                    }
+                })
+                console.log(result);
+            tableData = result;
+            table.reload('myTable', {
+                    page: {
+                    curr: 1
+                    }
+                }
+            )
+            $(".layui-table-main").niceScroll({
+                cursorcolor: "#ddd",
+                cursorwidth:"10px",
+                cursorborder:"none",
+                zindex:"99999999",
+            });
+        });
+    });
+}
 
 
 $(document).on('click',"#viewTpl i", function(){
@@ -233,316 +521,7 @@ layui.use('laydate', function(){
         }
     });
 });
-
-layui.use(['table','laydate','laypage','layer','element'], function(){
-    var $ = layui.jquery
-	  ,laydate = layui.laydate //日期
-	  ,laypage = layui.laypage //分页
-	  ,layer = layui.layer //弹层
-	  ,table = layui.table //表格  
-	  ,element = layui.element //元素操作
-	  ,tableObj = table.render({});
-    table.render({
-        elem: '#myTable'
-        ,url:'/table.json' 
-        ,skin:'nob'
-        // ,totalRow:true//开启该列的自动合计功能
-        ,height: 890
-        ,page: true //开启分页
-        // ,where:{ username:"user-0"}
-        ,limit: 20 //每页默认显示的数量
-        ,limits:[20]
-        ,cellMinWidth: 60 //全局定义常规单元格的最小宽度，layui 2.2.1 新增
-        ,cols: [[
-        {type:'checkbox'}//注意这里不要有，号
-        ,{field:'id', width:'8%', title: '序号'}
-        ,{field:'name', width:'8%', title: '名称'}
-        ,{field:'grouping', width:'12%', title: '上级分组'}
-        ,{field:'creator', width:'12%', title: '创建者'}
-        ,{field:'Reviser', width:'15%', title: '修改人'}
-        ,{field:'time', title: '最近修改时间', width: '15%',} //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
-        ,{field:'state', title: '状态',width: '13%',}
-        ,{field:'score', title: '操作', toolbar: '#barDemo'}
-        ]],
-        parseData: function(res){ //将原始数据解析成 table 组件所规定的数据，res为从url中get到的数据
-            if(show){//只有第一次拿到全部的值
-                tableData = res.data;
-                tableDataArr = res.data
-                show = false
-            }
-            var result;
-            // console.log(this);
-            // console.log(JSON.stringify(res));
-            // if(this.page.curr){
-            //     result = res.data.slice(this.limit*(this.page.curr-1),this.limit*this.page.curr);
-            // }
-            // else{
-            //     result=res.data.slice(0,this.limit);
-            // }
-            return {
-                "code": res.code, //解析接口状态
-                "msg": res.msg, //解析提示文本
-                "count": res.count, //解析数据长度
-                "data":  tableData//解析数据列表
-            };
-        },
-        done: function (res, curr, count) {  //回调函数
-            var resD = res.data;
-            var that = this.elem.next();
-            var htm = '<i class="z-table-tips"></i>';
-            resD.forEach(function (item, index) {
-                var div = that.find(".layui-table-box tbody tr[data-index='" + index + "'] td[data-field='state'] div");
-                if (item.state == "未发布") {//判断条件，符合条件给角标 
-                    div.append(htm);
-                }
-            });
-            //勾选事件，id集合
-            var len = res.data.length;
-                pageDataIdMap = new Map();
-                for(var i = 0;i < len;i++){   //填充当前页的数据
-                    pageDataIdMap[res.data[i].id] = res.data[i].id;
-                }
-                var chooseNum = 0;   //记录当前页选中的数据行数
-                for(var i = 0;i < len;i++){   //勾选行回显
-                    for(var key in idMap){
-                        if(res.data[i].id == key){
-                            res.data[i]["LAY_CHECKED"]='true';
-                            //找到对应数据改变勾选样式，呈现出选中效果
-                            var index= res.data[i]['LAY_TABLE_INDEX'];
-                            $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
-                            $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
-                            chooseNum++;
-                        }
-                    }
-                }
-                if(len != 0 && chooseNum == len){   //表示该页全选  --  全选按钮样式回显
-                $('input[lay-filter="layTableAllChoose"]').prop('checked',true);
-                $('input[lay-filter="layTableAllChoose"]').next().addClass('layui-form-checked');
-            }
-    }
-    });
-    //监听表格复选框选择
-    table.on('checkbox(test)', function(obj){//checkbox(test)中的test对应table标签中lay-filter="test"的test
-        if(obj.type == 'one'){    //单选操作
-            if(obj.checked){     //选中
-                idMap[obj.data.id] = obj.data.id;
-                $("#batchRelease").css("background","#409EFF");
-            }else{      //取消选中
-                $("#batchRelease").css("background","#9FCEFF");
-                for(var key in idMap){
-                    if(key == obj.data.id){   //移除取消选中的id
-                        delete idMap[obj.data.id];
-                    }
-                }
-            }
-        }else{      //全选操作
-            if(obj.checked){    //选中
-                $("#batchRelease").css("background","#409EFF");
-                for(var pageKey in pageDataIdMap){
-                    idMap[pageKey] = pageKey;
-                }
-            }else{
-                $("#batchRelease").css("background","#9FCEFF");     //取消选中
-                for(var pageKey in pageDataIdMap){
-                    for(var key in idMap){
-                        if(key == pageKey){
-                            delete idMap[pageKey];
-                        }
-                    }
-                }
-            }
-        }
-    });
-    var active = {
-        getCheckData: function(){
-            batchSubmitWt();
-        }
-    };
-
-    $('#batchRelease').on('click', function(){
-        var type = $(this).data('type');
-        active[type] ? active[type].call(this) : '';
-     });
-    //监听工具条
-    table.on('tool(test)', function(obj){//tool(test)中的test对应table标签中lay-filter="test"的test
-        var data = obj.data;
-        if(obj.event === 'edit'){
-        layer.msg('跳转页面');
-        } else if(obj.event === 'del'){
-            layer.confirm("确定要删除" + data.name + "?", {
-            skin: 'z-tipdel',
-            area: ['420px', '136px'],
-            btn: ['取消', '删除'],
-            title: "提示",
-                }, function(index, layero){
-                    layer.close(index);
-                }, function(index){//index 当前行的id
-                    obj.del();
-            });
-        } else if(obj.event === 'offline'){
-            layer.confirm("确定要下线" + data.name + "?", {
-            skin: 'z-tipoffline',
-            area: ['420px', '136px'],
-            title: "提示",
-            btn: ['取消', '下线'] //可以无限个按钮
-                }, function(index, layero){
-                //按钮【按钮一】的回调
-                layer.close(index);
-                }, function(index){
-                    var thisId = data.id;
-                    for(var i=0;i<tableData.length;i++){
-                        if(tableData[i].id==thisId){
-                            tableData[i].state="未发布";
-                        }
-                    }
-                    table.reload('myTable', {
-                        where: {
-                            username:"user-0",
-                        },
-                        page: {
-                            curr: 1 //重新从第 1 页开始
-                        }
-                    });
-            });
-        }else if(obj.event === 'release'){
-            layer.confirm("确定要发布" + data.name + "?", {
-            skin: 'z-tiprelease',
-            area: ['420px', '136px'],
-            title: "提示",
-            btn: ['取消', '发布']
-                }, function(index, layero){
-                layer.close(index);
-                }, function(index){
-                    var thisId = data.id;
-                    for(var i=0;i<tableData.length;i++){
-                        if(tableData[i].id==thisId){
-                            tableData[i].state="已发布";
-                        }
-                    }
-                    table.reload('myTable', {	//myTable为table中的id
-                            page: {
-                                curr: $(".layui-laypage-em").next().html() //刷新当前页
-                            }
-                        }
-                    )
-                    $(".layui-table-main").niceScroll({
-                        cursorcolor: "#ddd",
-                        cursorwidth:"10px",
-                        cursorborder:"none",
-                        zindex:"99999999",
-                    });
-            });
-        }else if(obj.event === 'attribute'){
-            layer.open({
-                type: 1,
-                title: ['属性', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-                closeBtn: 1,
-                shadeClose: true,
-                skin: 'z-addDashboard',
-                content: $('#attribute') ,
-                area: ['598px', '490px'],
-                btn: ['取消', '保存'],
-                btn2: function(index, layero){
-                    var name = $("#attribute-name").val();
-                    var position = $("#attribute-position").find("option:selected").val();
-                    var policyRadioVal = $('input[name="sex"]:checked').val();
-                    var describeVal = $("#attribute-describeVal").val();
-                    $("#attribute-name").removeClass("valNUllBorder");
-                    $("#attribute-position-box input").removeClass("valNUllBorder");
-                    if(name == ""){
-                        layer.msg('请填写名称');
-                        $("#attribute-name").addClass("valNUllBorder");
-                        return false
-                    }else if(position==""){
-                        layer.msg('请选择位置');
-                        $("#attribute-position-box input").addClass("valNUllBorder");
-                        return false
-                    }else{
-                        // $.ajax({
-                        //     url: methodsApi.getworkstats1_get,
-                        //     type: "post",
-                        //     contentType: "application/json",
-                        //     data: JSON.stringify(searchObjData),
-                        //     dataType: "json",
-                        //     /* async: false, */
-                        //     success: function (res) {
-                                
-                        //     },
-                        //     error: function (err) {
-                        //         wui.errorNotice("获取信息失败");
-                        //     }
-                        // });
-                    }
-                }
-            });
-        } else if(obj.event === 'edit'){
-        layer.alert('编辑行：<br>'+ JSON.stringify(data))
-        }
-    });
-    //表格搜索，重载
-    // var $ = layui.$, activeSearch = {
-    //     reload: function(){
-    //         var userName = $("#userName").val();
-    //         var stastVal = $("#mySelect").find("option:selected").val();
-    //         var revisionTimeVal = $("#revisionTime").val();
-    //         //执行重载
-    //         table.reload('myTable', {	//myTable为table中的id
-    //             page: {
-    //             curr: 1 //重新从第 1 页开始
-    //             }
-    //             ,where: {
-    //                 id:"10000",
-    //             }
-    //             }
-    //         )
-    //     }
-    // };
-    
-    // $('#searchBtn').on('click', function(){	//search为搜索button中设置的id名
-    //     var type = $(this).data('type');
-    //     activeSearch[type] ? activeSearch[type].call(this) : '';
-    // });
-    // 转换时间格式，并转换为时间戳
-    function tranDate (time) {
-        return new Date(time.replace(/-/g, '/')).getTime();
-    }
-    $('#searchBtn').on('click', function(){	
-        var userName = $("#userName").val();
-        var stastVal = $("#mySelect").find("option:selected").text();
-        var revisionTimeVal = $("#revisionTime").val();
-        var start = revisionTimeVal.substring(0,10);
-        var end = revisionTimeVal.substring(13,24);
-        var startTime = tranDate(start);
-        var endTime = tranDate(end);
-        var result = [];
-            tableDataArr.forEach(function (item, index) {
-        var nowTime = tranDate(item.time.substring(0,10));
-                if(stastVal == "全部"){
-                    if ((item.name.includes(userName) || item.creator.includes(userName) || item.Reviser.includes(userName)) && (nowTime >= startTime && nowTime <= endTime)) {
-                        result.push(item);
-                    }
-                }else{
-                    if ((item.name.includes(userName) || item.creator.includes(userName) || item.Reviser.includes(userName)) && item.state === stastVal && (nowTime >= startTime && nowTime <= endTime)) {
-                        result.push(item);
-                    }
-                }
-            })
-            console.log(result);
-        tableData = result;
-        table.reload('myTable', {
-                page: {
-                curr: 1
-                }
-            }
-        )
-        $(".layui-table-main").niceScroll({
-            cursorcolor: "#ddd",
-            cursorwidth:"10px",
-            cursorborder:"none",
-            zindex:"99999999",
-        });
-    });
-});
+ renderTable()
 //加载form模块
 layui.use('form', function() {
         var form = layui.form;

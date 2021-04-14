@@ -6,7 +6,53 @@ var currentParentId = null //此值为分组树 data parentId
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var zNodes = [];
 var addCount = 1;
-var tableData=[];
+var tableData=[
+    {
+      "appId":1,
+      "name":"化工生产情况1",
+      "groupName":"分组1",
+      "creatorName":"张天依1",
+      "updateTime":"张天明1",
+      "updaterName":"2021-05-12 17:04:20",
+      "published":"已发布"
+  },
+  {
+      "appId":2,
+      "name":"化工生产情况2",
+      "groupName":"分组1",
+      "creatorName":"张天依2",
+      "updateTime":"张天明2",
+      "updaterName":"2021-05-13 17:04:20",
+      "published":"已发布"
+  },
+  {
+      "appId":3,
+      "name":"化工生产情况3",
+      "groupName":"分组1",
+      "creatorName":"张天依3",
+      "updateTime":"张天明3",
+      "updaterName":"2021-05-13 17:04:20",
+      "published":"未发布"
+  },
+  {
+      "appId":4,
+      "name":"化工生产情况",
+      "groupName":"分组1",
+      "creatorName":"张天依",
+      "updateTime":"张天明",
+      "updaterName":"2021-05-15 17:04:20",
+      "published":"未发布"
+  },
+  {
+      "appId":5,
+      "name":"化工生产情况",
+      "groupName":"分组1",
+      "creatorName":"张天依",
+      "updateTime":"张天明",
+      "updaterName":"2021-05-17 17:04:20",
+      "published":"已发布"
+  }
+  ]
 let tableDataArr = []
 let show = true
 var pageDataIdMap;//勾选id
@@ -32,7 +78,7 @@ var checkDeptArr = [];//自定义权限选择部门的集合
         }
     },
     callback: {
-        onClick: onClick,
+        onClick: groupNodeClick,
         onRightClick: OnRightClick,
     }
 };
@@ -55,28 +101,6 @@ var settingAdd = {
   }
 };
 
-var zNodesAdd =[
-  {id:1, pId:0, name:"北京"},
-  {id:2, pId:0, name:"天津"},
-  {id:3, pId:0, name:"上海"},
-  {id:6, pId:0, name:"重庆"},
-  {id:4, pId:0, name:"河北省", open:true},
-  {id:41, pId:4, name:"石家庄"},
-  {id:42, pId:4, name:"保定"},
-  {id:43, pId:4, name:"邯郸"},
-  {id:44, pId:4, name:"承德"},
-  {id:5, pId:0, name:"广东省", open:true},
-  {id:51, pId:5, name:"广州"},
-  {id:52, pId:5, name:"深圳"},
-  {id:53, pId:5, name:"东莞"},
-  {id:54, pId:5, name:"佛山"},
-  {id:6, pId:0, name:"福建省", open:true},
-  {id:61, pId:6, name:"福州"},
-  {id:62, pId:6, name:"厦门"},
-  {id:63, pId:6, name:"泉州"},
-  {id:64, pId:6, name:"三明"}
-];
-
 // 分组弹窗位置树
 var settingAddFenzu = {
   view: {
@@ -94,28 +118,6 @@ var settingAddFenzu = {
       onClick: onClickAddFenzu,
   }
 };
-
-var zNodesAddFenzu =[
-  {id:1, pId:0, name:"北京"},
-  {id:2, pId:0, name:"天津"},
-  {id:3, pId:0, name:"上海"},
-  {id:6, pId:0, name:"重庆"},
-  {id:4, pId:0, name:"河北省", open:true},
-  {id:41, pId:4, name:"石家庄"},
-  {id:42, pId:4, name:"保定"},
-  {id:43, pId:4, name:"邯郸"},
-  {id:44, pId:4, name:"承德"},
-  {id:5, pId:0, name:"广东省", open:true},
-  {id:51, pId:5, name:"广州"},
-  {id:52, pId:5, name:"深圳"},
-  {id:53, pId:5, name:"东莞"},
-  {id:54, pId:5, name:"佛山"},
-  {id:6, pId:0, name:"福建省", open:true},
-  {id:61, pId:6, name:"福州"},
-  {id:62, pId:6, name:"厦门"},
-  {id:63, pId:6, name:"泉州"},
-  {id:64, pId:6, name:"三明"}
-];
 
 //选择要将权限配置复制到的仪表板树
 var settingCopeto = {
@@ -302,8 +304,18 @@ function addDiyDom1(treeId, treeNode) {
   if (btn) btn.bind("click", function(){alert("diy Button for " + treeNode.name);});
 };
 
-function onClick(event, treeId, treeNode) {
-   
+function groupNodeClick(event, treeId, treeNode) {
+  let postData = {
+    appId,
+    groupId: treeNode.parentId
+  }
+  // renderTable(`/bi/${appId}/panels?appId=68d61d7f990e11eb847e88d7f63cc98f&groupId=2d146b4c21a57d584881976a016919c4`)
+  request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
+    let { data } = res.data
+    if (data) {
+      renderTable(data.records, data)
+    }
+  })
 };
 
 function setFontCss(treeId, treeNode) {
