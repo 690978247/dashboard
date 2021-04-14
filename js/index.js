@@ -33,6 +33,7 @@ async function getGruopTree (name) {
         console.log(res.data.data)
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
+        $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodes);
     })
 }
 // 右侧树查询
@@ -148,10 +149,10 @@ $(document).on('click',"#viewTpl i", function(){
 
 $(document).ready(async function(){
     // $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-    // $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodesAdd);
+    // $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodes);
     await getGruopTree()
     // 位置
-    $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
+    // $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
     $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
     $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
     $.fn.zTree.init($("#treeDemoDept"), settingDept, zNodesDept);
@@ -976,7 +977,7 @@ $(document).on("click","#m_check",function(e){
                     if (res.data.code === 0) {
                         layer.msg('编辑成功!')
                         nodes[0].name = fenzuNameVal
-                        zTree.updateNode(nodes[0]);
+                        getGruopTree()
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
                     } else {
