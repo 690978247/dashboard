@@ -901,7 +901,7 @@ $(document).on("click","#m_add",function(e){
                 let isNull = currentNode.parentId ? nodes[0] : null
                 let postData = {
                     name: fenzuNameVal,
-                    parentId: currentNode.parentId
+                    parentId: currentNode.id
                 }
                 request.post(`/bi/${appId}/groups`, postData).then(res => {
                     if (res.data.code === 0) {
