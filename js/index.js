@@ -641,15 +641,18 @@ $('#addDashboard').on('click', function(){
                     $("#citySel").addClass("valNUllBorder");
                     return false
                 }else{
-                    // let nodes = zTree.getSelectedNodes();
                     let postData = {
                         appId,
-                        name: addDashboardNameVal
-                        // groupId: 
+                        name: addDashboardNameVal,
+                        groupId: positionNode.id
                     }
                     request.post(`/bi/${appId}/panels`, postData).then(res => {
                         if (res.data.code === 0) {
                             layer.msg('添加成功!')
+                            layer.close(index);
+                            getGruopTree()
+                            $("#fenzuName")[0].value = ''
+                            $("#fenzuPosition")[0].value = ''
                             // result = false
                         } else {
                             layer.msg(res.data.msg)
@@ -895,7 +898,6 @@ $(document).on("click","#m_add",function(e){
                 return false
             }else{
                 let nodes = zTree.getSelectedNodes();
-                debugger
                 let isNull = currentNode.parentId ? nodes[0] : null
                 let postData = {
                     name: fenzuNameVal,

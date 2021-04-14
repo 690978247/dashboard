@@ -3,6 +3,7 @@
 var searchObjData = {};
 var attributeObjData = {};
 var currentNode = {}  //分组树选中的node
+var positionNode = {} // 位置树点击事件选择的node
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var zNodes = [];
 var addCount = 1;
@@ -348,6 +349,7 @@ function beforeClickAdd(treeId, treeNode) {
 
 
 function onClickAdd(e, treeId, treeNode) {
+  positionNode = treeNode
   let zTree = $.fn.zTree.getZTreeObj("treeDemoAdd"),
   nodes = zTree.getSelectedNodes(),
   v = "";
