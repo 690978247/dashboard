@@ -865,6 +865,7 @@ $(document).on("click","#m_add",function(e){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
             let nodes = zTree.getSelectedNodes();
             $("#fenzuPosition")[0].value = nodes[0].name
+            currentParentId = nodes[0].parentId
         },
         yes: function(index, layero){
             $("#fenzuName")[0].value = ''
@@ -897,7 +898,12 @@ $(document).on("click","#m_add",function(e){
                 request.post(`/bi/${appId}/groups`, postData).then(res => {
                     if (res.data.code === 0) {
                         layer.msg('添加成功!')
-                        zTree.addNodes(isNull, postData);
+                        let data = {
+                            id: res.data.data,
+                            name: fenzuNameVal,
+                            parentId: nodes[0].id ? nodes[0].id : ''
+                        }
+                        zTree.addNodes(isNull, data);
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
                     } else {
@@ -927,6 +933,7 @@ $(document).on("click","#m_check",function(e){
             let nodes = zTree.getSelectedNodes();
             $("#fenzuName")[0].value = nodes[0].name
             $("#fenzuPosition")[0].value = nodes[0].name
+            currentParentId = nodes[0].parentId
         },
         yes: function(index, layero){
             $("#fenzuName")[0].value = ''
@@ -952,7 +959,7 @@ $(document).on("click","#m_check",function(e){
             }else{
                 let nodes = zTree.getSelectedNodes(); 
                 let postData = {
-                    id: dataObj,
+                    id: nodes[0].id,
                     name: fenzuNameVal,
                     parentId: currentParentId
                 }

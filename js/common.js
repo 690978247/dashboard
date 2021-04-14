@@ -361,7 +361,7 @@ function beforeClickAddFenzu(treeId, treeNode) {
 
 
 function onClickAddFenzu(e, treeId, treeNode) {
-  currentParentId = treeNode.parentId
+  // currentParentId = treeNode.parentId
   var zTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu"),
   nodes = zTree.getSelectedNodes(),
   v = "";
