@@ -27,13 +27,17 @@ function onBodyMouseDown(event){
     }
 }
 // 获取右侧分组数数据 以及位置树数据
-async function getGruopTree () {
-    await request.get(`bi/${appId}/groups`).then(res => {
+async function getGruopTree (name) {
+    await request.get(`bi/${appId}/groups`, {params: { appId, name }}).then(res => {
         zNodes = res.data.data
         console.log(res.data.data)
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
     })
+}
+// 右侧树查询
+function searchGroupTree (e) {
+    getGruopTree(e.target.previousElementSibling.value)
 }
 function addTreeNode() {
     hideRMenu();
