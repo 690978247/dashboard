@@ -607,7 +607,7 @@ function batchSubmitWt() {
     // });
 } 
 $('#addDashboard').on('click', function(){
-        layer.open({
+    layer.open({
             type: 1,
             title: ['新增仪表板', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
             closeBtn: 1,
@@ -615,16 +615,17 @@ $('#addDashboard').on('click', function(){
             shadeClose: true,
             skin: 'z-addDashboard',
             content: $('#addDashboardContent') ,
-            area: ['568px', '520px']
-            ,success  : function(layero,index){
+            area: ['568px', '520px'],
+            success  : function(layero,index){
                 //完成后的回调
-            }
-            ,yes: function(index, layero){
+            },
+            yes: function(index, layero){
                 layer.close(index);
-            }
-            ,btn2: function(index, layero){
+            },
+            btn2: function(index, layero){
                 //return false 开启该代码可禁止点击该按钮关闭
                 //保存的回调
+                let result = false;
                 var dataObj = idsArr;
                 var addDashboardNameVal = $("#addDashboardName").val();
                 var grouping = $("#citySel").val(); 
@@ -639,30 +640,34 @@ $('#addDashboard').on('click', function(){
                     $("#citySel").addClass("valNUllBorder");
                     return false
                 }else{
-                    tableData.push({
-                        "id":"21",
-                        "name":addDashboardNameVal,
-                        "grouping":grouping,
-                        "creator":"王大海",
-                        "Reviser":"王大海",
-                        "time":"2021-05-12 17:04:20",
-                        "state":"已发布"
-                    })
-                    layui.table.reload('myTable', {	//myTable为table中的id
-                            page: {
-                            curr: 1 //重新从第 1 页开始
-                            }
+                    let postData = {
+                        appId,
+                        panelName: addDashboardNameVal
+                    }
+                    request.post(`/bi/${appId}/panels`, postData).then(res => {
+                        if (res.data.code === 0) {
+                            layer.msg('添加成功!')
+                            // result = false
+                        } else {
+                            layer.msg(res.data.msg)
                         }
-                    )
-                    $(".layui-table-main").niceScroll({
-                        cursorcolor: "#ddd",
-                        cursorwidth:"10px",
-                        cursorborder:"none",
-                        zindex:"99999999",
-                    });
+                    })
+                    // layui.table.reload('myTable', {	//myTable为table中的id
+                    //         page: {
+                    //         curr: 1 //重新从第 1 页开始
+                    //         }
+                    //     }
+                    // )
+                    // $(".layui-table-main").niceScroll({
+                    //     cursorcolor: "#ddd",
+                    //     cursorwidth:"10px",
+                    //     cursorborder:"none",
+                    //     zindex:"99999999",
+                    // });
                 }
-            }
-            ,cancel: function(){ 
+                return result
+            },
+            cancel: function(){ 
                
             }
         });
@@ -872,6 +877,7 @@ $(document).on("click","#m_add",function(e){
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调
             var dataObj = idsArr;   // id
+            let result = false;
             var fenzuNameVal = $("#fenzuName").val();   //名称
             var fenzuPositionVal = $("#fenzuPosition").val();  //位置
             $("#fenzuName").removeClass("valNUllBorder");
@@ -900,6 +906,7 @@ $(document).on("click","#m_add",function(e){
                         //     parentId: nodes[0].id ? nodes[0].id : ''
                         // }
                         // zTree.addNodes(isNull, data);
+                        layer.close(index);
                         getGruopTree()
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
@@ -908,6 +915,7 @@ $(document).on("click","#m_add",function(e){
                     }
                 })
             }
+            return result
         },
         cancel: function(){ 
             $("#fenzuName")[0].value = ''
@@ -941,6 +949,7 @@ $(document).on("click","#m_check",function(e){
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调 
             var dataObj = idsArr;   //id
+            let result = false
             var fenzuNameVal = $("#fenzuName").val();   //名称
             var fenzuPositionVal = $("#fenzuPosition").val();   //位置
             $("#fenzuName").removeClass("valNUllBorder");
@@ -964,6 +973,7 @@ $(document).on("click","#m_check",function(e){
                     if (res.data.code === 0) {
                         layer.msg('编辑成功!')
                         nodes[0].name = fenzuNameVal
+                        layer.close(index);
                         getGruopTree()
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
@@ -972,6 +982,7 @@ $(document).on("click","#m_check",function(e){
                     }
                 })
             }
+            return result
         },
         cancel: function(){ 
             $("#fenzuName")[0].value = ''
