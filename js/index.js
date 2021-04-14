@@ -37,7 +37,7 @@ async function getGruopTree (name) {
 }
 // 右侧树查询
 function searchGroupTree (e) {
-    getGruopTree(e.target.previousElementSibling.value)
+    getGruopTree(e.target.value)
 }
 function addTreeNode() {
     hideRMenu();
