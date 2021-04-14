@@ -144,7 +144,7 @@ function initTable () {
         //     published: item.published === 'wait_published' ? '未发布' : '已发布'
         // }))
         renderTable(res.data.data.records)
-        setDefaultChoice()
+        setGroupChoice()
     })
 }
 
@@ -439,11 +439,21 @@ function renderTable (data) {
 }
 
 // 设置分组树默认选中
-function setDefaultChoice () {
+function setGroupChoice () {
     let nodes = zTree.getNodes();
     nodes.forEach((item,index) => {
         if (item.name == '全部分组') {
             zTree.selectNode(nodes[index]);
+        }
+    })
+}
+
+// 设置位置树默认选中
+function setPositionChoice (name) {
+    let addNodes = addPTree.getNodes();
+    addNodes.forEach((item,index) => {
+        if (item.name == name) {
+            addPTree.selectNode(addNodes[index]);
         }
     })
 }
@@ -666,8 +676,8 @@ $('#addDashboard').on('click', function(){
                             layer.msg('添加成功!')
                             layer.close(index);
                             getGruopTree()
-                            $("#fenzuName")[0].value = ''
-                            $("#fenzuPosition")[0].value = ''
+                            $("#addDashboardName")[0].value = ''
+                            $("#citySel")[0].value = ''
                             initTable()
                         } else {
                             layer.msg(res.data.msg)
@@ -888,6 +898,7 @@ $(document).on("click","#m_add",function(e){
             let nodes = zTree.getSelectedNodes();
             $("#fenzuPosition")[0].value = nodes[0].name
             currentNode = nodes[0]
+            setPositionChoice(nodes[0].name)
         },
         yes: function(index, layero){
             $("#fenzuName")[0].value = ''
@@ -960,6 +971,7 @@ $(document).on("click","#m_check",function(e){
             $("#fenzuName")[0].value = nodes[0].name
             $("#fenzuPosition")[0].value = nodes[0].name
             currentNode = nodes[0]
+            setPositionChoice(nodes[0].name)
         },
         yes: function(index, layero){
             $("#fenzuName")[0].value = ''
