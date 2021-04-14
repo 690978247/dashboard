@@ -640,9 +640,11 @@ $('#addDashboard').on('click', function(){
                     $("#citySel").addClass("valNUllBorder");
                     return false
                 }else{
+                    // let nodes = zTree.getSelectedNodes();
                     let postData = {
                         appId,
-                        panelName: addDashboardNameVal
+                        name: addDashboardNameVal
+                        // groupId: 
                     }
                     request.post(`/bi/${appId}/panels`, postData).then(res => {
                         if (res.data.code === 0) {

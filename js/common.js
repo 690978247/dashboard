@@ -329,7 +329,7 @@ function setFontCss(treeId, treeNode) {
 };
 
 function OnRightClick(event, treeId, treeNode) {
-  var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+  let zTree = $.fn.zTree.getZTreeObj("treeDemo");
   if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
       zTree.cancelSelectedNode();
       showRMenu("root", event.clientX, event.clientY);
