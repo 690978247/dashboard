@@ -144,6 +144,7 @@ function initTable () {
         //     published: item.published === 'wait_published' ? '未发布' : '已发布'
         // }))
         renderTable(res.data.data.records)
+        setDefaultChoice()
     })
 }
 
@@ -437,6 +438,16 @@ function renderTable (data) {
     });
 }
 
+// 设置分组树默认选中
+function setDefaultChoice () {
+    let nodes = zTree.getNodes();
+    nodes.forEach((item,index) => {
+        if (item.name == '全部分组') {
+            zTree.selectNode(nodes[index]);
+        }
+    })
+}
+
 
 $(document).on('click',"#viewTpl i", function(){
     //上面删除了哪个节点，也要修改获取选中节点数组nodes
@@ -461,7 +472,6 @@ $(document).ready(async function(){
     zTree = $.fn.zTree.getZTreeObj("treeDemo");
     zTree.expandAll(true);
     addPTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu");
-
     // $(".nicescroll-slideBar").niceScroll({
     //         cursorcolor: "#ddd",
     //         cursorwidth:"10px",
@@ -521,6 +531,8 @@ $(document).ready(async function(){
         zindex:"99999999",
     });
     addNode();//给后台返回的tree数据添加属性
+    initTable ()
+
 });
 layui.use('laydate', function(){
   var laydate = layui.laydate;
@@ -534,7 +546,6 @@ layui.use('laydate', function(){
         }
     });
 });
-initTable ()
 //加载form模块
 layui.use('form', function() {
         var form = layui.form;
