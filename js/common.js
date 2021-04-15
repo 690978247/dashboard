@@ -4,6 +4,7 @@ var searchObjData = {};
 var attributeObjData = {};
 var currentNode = {}  //分组树选中的node
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
+var defaultTd = '8ecd52dcd312f9dd21beb42a1a2345ce'  //表格全部分组id
 var zNodes = [];
 var addCount = 1;
 var tableData=[

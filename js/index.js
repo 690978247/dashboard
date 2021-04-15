@@ -138,7 +138,7 @@ function onBodyDown(event) {
 // 表格初始化
 function initTable () {
     // groupId 默认展示全部分组id
-    request.get(`/bi/${appId}/panels`, { params: {appId, groupId: '4e1565f09b7eda7607fbfd2772f1d023'}}).then(res => {
+    request.get(`/bi/${appId}/panels`, { params: {appId, groupId: defaultTd}}).then(res => {
         // let data = res.data.data.records.map((item) => ({
         //     ...item,
         //     published: item.published === 'wait_published' ? '未发布' : '已发布'
@@ -652,16 +652,15 @@ $('#addDashboard').on('click', function(){
                 //return false 开启该代码可禁止点击该按钮关闭
                 //保存的回调
                 let result = false;
-                var dataObj = idsArr;
-                var addDashboardNameVal = $("#addDashboardName").val();
-                var grouping = $("#citySel").val(); 
+                let addDashboardNameVal = $("#addDashboardName").val();
+                let grouping = $("#citySel").val(); 
                 $("#addDashboardName").removeClass("valNUllBorder");
                 $("#citySel").removeClass("valNUllBorder");
                 if(addDashboardNameVal == ""){
                     layer.msg('请填写名称');
                     $("#addDashboardName").addClass("valNUllBorder");
                     return false
-                }else if(dataObj==""){
+                }else if(grouping==""){
                     layer.msg('请选择位置');
                     $("#citySel").addClass("valNUllBorder");
                     return false
