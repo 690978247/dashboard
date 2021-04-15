@@ -590,6 +590,7 @@ function batchSubmitWt() {
     if(tableCheckList.length === 0) {
         return false;
     } else {
+        let result = false;
         layer.confirm("确定要批量发布仪表板?", {
             skin: 'z-batchRelease',
             title:"提示",
@@ -599,7 +600,6 @@ function batchSubmitWt() {
                 layer.close(index);
             },
             function(index){
-                let result = false;
                 let data = tableCheckList.join(',')
                 request.put(`/bi/${appId}/panels/publish?ids=${data}`).then (res => {
                     if (res.data.code === 0) {
