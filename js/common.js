@@ -306,20 +306,9 @@ function beforeClickAdd(treeId, treeNode) {
 
 function onClickAdd(e, treeId, treeNode) {
   currentPositionNode = treeNode
-  let zTree = $.fn.zTree.getZTreeObj("treeDemoAdd"),
-  nodes = zTree.getSelectedNodes(),
-  v = "";
-  h = "";
-  nodes.sort(function compare(a,b){return a.id-b.id;});
-  for (var i=0, l=nodes.length; i<l; i++) {
-      v += nodes[i].name + ",";
-      h += nodes[i].id + ",";
-  }
-  idsArr = h;
-  idsArr = idsArr.slice(0,-1);
-  if (v.length > 0 ) v = v.substring(0, v.length-1);
-  var cityObj = $("#citySel");
-  cityObj.attr("value", v);
+  nodes = zTree.getSelectedNodes()
+  let cityObj = $("#citySel")[0];
+  cityObj.value = treeNode.name
 }
 
 function beforeClickAddFenzu(treeId, treeNode) {

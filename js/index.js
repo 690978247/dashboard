@@ -626,6 +626,8 @@ $('#addDashboard').on('click', function(){
                 //完成后的回调
             },
             yes: function(index, layero){
+                $("#addDashboardName")[0].value = ''
+                $("#citySel")[0].value = ''
                 layer.close(index);
             },
             btn2: function(index, layero){
