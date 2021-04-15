@@ -1,11 +1,12 @@
 .z-contentBox{
     /* display: flex; */
+    height: 100%;
     padding-top: 10px;
 }
 .z-contentBoxLeft{
     float:left;
     width: 300px;
-    height: 950px;
+    height: 100%;
     border: 1px solid #eee;
     padding-top: 10px;
 }

@@ -401,7 +401,7 @@ function renderTable (data) {
             return new Date(time.replace(/-/g, '/')).getTime();
         }
         $('#searchBtn').on('click', function(){	
-            let userName = $("#userName").val();
+            let name = $("#userName").val();
             let stateVal = $('#mySelect option:selected').val();
             let revisionTimeVal = $("#revisionTime").val();
             let startTime = revisionTimeVal.split(' - ')[0]
@@ -412,7 +412,7 @@ function renderTable (data) {
                 updateTimeBegin: startTime,
                 updateTimeEnd: endTime,
                 published: stateVal,
-                creatorName: userName,
+                name: name,
             }
             request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
                 let { data } = res.data
