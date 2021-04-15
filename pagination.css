@@ -19,6 +19,15 @@
   border-color: #409eff;
 }
 
+.popup-pagination button {
+  border: none;
+  outline: none;
+  padding: 0 6px;
+}
+.popup-pagination button:disabled:hover i{
+  color: #c0c4cc;
+}
+
 /* 分页部分 */
 .popup-pagination {
   height: 35px;
