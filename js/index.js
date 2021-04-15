@@ -540,10 +540,10 @@ layui.use('laydate', function(){
   var laydate = layui.laydate;
   //日期范围
     laydate.render({
-        elem: '#revisionTime'
-        ,range: true
-        ,value:"2020-03-01 - 2021-06-30"
-        ,change: function(value, date, endDate){
+        elem: '#revisionTime',
+        range: true,
+        value:"",
+        change: function(value, date, endDate){
             searchObjData.revision = value//得到日期生成的值，如：2017-08-18
         }
     });
