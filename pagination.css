@@ -1,0 +1,86 @@
+.popup-pagination input {
+  width: 100%;
+  padding-right: 30px;
+  cursor: pointer;
+  background-color: #fff;
+  background-image: none;
+  border: 1px solid #dcdfe6;
+  box-sizing: border-box;
+  color: #606266;
+  display: inline-block;
+  font-size: inherit;
+  height: 30px;
+  line-height: 30px;
+  outline: none;
+  padding: 0 15px;
+  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
+}
+.popup-pagination select:focus, .popup-pagination input:focus, .popup-pagination textarea:focus {
+  border-color: #409eff;
+}
+
+/* 分页部分 */
+.popup-pagination {
+  height: 35px;
+  line-height: 35px;
+}
+.activePage {
+  color: #409EFF;
+}
+.popup-pagination button:disabled {
+  color: #c0c4cc;
+  background-color: #fff;
+  cursor: not-allowed
+}
+.visual-pagination {
+  display: flex;
+  align-items: center;
+}
+.visual-pagination span:nth-of-type(2) {
+  margin-left: 20px;
+}
+.visual-pagination-button {
+  cursor: pointer;
+  height: 35px;
+  line-height: 35px;
+  color: #909399;
+  background: #fff;
+  font-weight: 700;
+}
+.visual-pagination-button i{
+  font-size: 12px;
+}
+.visual-pagination-button:hover i, .visual-pager li:hover {
+  color: #409eff;
+}
+.visual-pager {
+  margin: 0;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  user-select: none;
+}
+.visual-pager li {
+  padding: 0 4px;
+  background: #fff;
+  vertical-align: top;
+  display: inline-block;
+  font-size: 13px;
+  min-width: 35.5px;
+  height: 28px;
+  line-height: 30px;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-align: center;
+  margin: 0;
+}
+.visual-pagination-select {
+  width: 105px;
+  border-radius: 4px;
+  margin: 0 20px;
+}
+.pager-input {
+  width: 50px;
+  border-radius: 4px;
+  margin: 0 4px
+}

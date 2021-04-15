@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="./index.css">
     <link rel="stylesheet" href="./styles/iconfont/iconfont.css">
     <link rel="stylesheet" href="./libs/zTree_v3/css/zTreeStyle/zTreeStyle.css">
+    <link rel="stylesheet" href="./pagination.css">
 </head>
 <body>
     <div class="z-contentBox">
@@ -64,6 +65,9 @@
                 </div>
                 <div class="z-contentBoxRight-table">
                     <table class="layui-hide" id="myTable" lay-filter="test"></table>
+                </div>
+                <!-- 分页 -->
+                <div class="popup-pagination" id="popup-pagination">
                 </div>
             </div>
         </div>
@@ -292,6 +296,7 @@
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script> <!-- 引入axiox -->
     <script src="./utils/request.js"></script>
     <script src="./libs/layui/layui.all.js"></script>
+    <script src="./utils/pagination.js"></script>  <!-- 引入分组组件 -->
     <script src="./libs/zTree_v3/js/jquery.ztree.all.min.js"></script>
     <script src="./libs/zTree_v3/js/jquery.ztree.core.min.js"></script>
     <script src="./libs/zTree_v3/js/jquery.ztree.exedit.js"></script>

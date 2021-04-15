@@ -146,6 +146,14 @@ function initTable (id) {
         // }))
         renderTable(res.data.data.records)
         setGroupChoice(currentPositionNode.name)
+        // pageData = {
+        //     totalCount: res.data.data.records.length, // 总条数
+        //     totalPage: 1, // 总页数
+        //     pageIndex: 1, // 当前页
+        //     pageSize: 10, // 每页显示条数
+        // }
+        // renderPagination(0, 'popup-pagination')
+        // renderLis ()
     })
 }
 
@@ -166,8 +174,8 @@ function renderTable (data) {
             data,
             skin:'nob',
             // ,totalRow:true//开启该列的自动合计功能
-            height: 870,
-            page: true, //开启分页
+            // height: 870,
+            page: false, //开启分页
             limit: 20, //每页默认显示的数量
             limits:[20],
             cellMinWidth: 60,//全局定义常规单元格的最小宽度，layui 2.2.1 新增
@@ -474,6 +482,7 @@ $(document).ready(async function(){
     zTree.expandAll(true);
     pTree = $.fn.zTree.getZTreeObj("treeDemoAdd");
     addPTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu");
+
     // $(".nicescroll-slideBar").niceScroll({
     //         cursorcolor: "#ddd",
     //         cursorwidth:"10px",
@@ -534,7 +543,6 @@ $(document).ready(async function(){
     });
     addNode();//给后台返回的tree数据添加属性
     initTable ()
-
 });
 layui.use('laydate', function(){
   var laydate = layui.laydate;
