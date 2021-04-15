@@ -682,7 +682,9 @@ $('#addDashboard').on('click', function(){
                 return result
             },
             cancel: function(){ 
-               
+                $("#addDashboardName")[0].value = ''
+                $("#citySel")[0].value = ''
+                pTree.cancelSelectedNode()
             }
         });
 });
