@@ -790,7 +790,7 @@ $('#z-selectDeptInp').on('click', function(){
 //表头重置方法
 $("#resetBtn").on('click',function(){
     $("#userName").val("");
-    // $("#revisionTime").val("2020-04-01 - 2021-03-30");
+    $("#revisionTime").val("");
     $("#mySelect").siblings("div.layui-form-select").find("dd:first").click();
 })
 //自定义权限中的职位勾选事件
