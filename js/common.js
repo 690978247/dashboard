@@ -8,57 +8,12 @@ var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var defaultTd = '8ecd52dcd312f9dd21beb42a1a2345ce'  //表格全部分组id
 var zNodes = [];
 var addCount = 1;
-var tableData=[
-    {
-      "appId":1,
-      "name":"化工生产情况1",
-      "groupName":"分组1",
-      "creatorName":"张天依1",
-      "updateTime":"张天明1",
-      "updaterName":"2021-05-12 17:04:20",
-      "published":"已发布"
-  },
-  {
-      "appId":2,
-      "name":"化工生产情况2",
-      "groupName":"分组1",
-      "creatorName":"张天依2",
-      "updateTime":"张天明2",
-      "updaterName":"2021-05-13 17:04:20",
-      "published":"已发布"
-  },
-  {
-      "appId":3,
-      "name":"化工生产情况3",
-      "groupName":"分组1",
-      "creatorName":"张天依3",
-      "updateTime":"张天明3",
-      "updaterName":"2021-05-13 17:04:20",
-      "published":"未发布"
-  },
-  {
-      "appId":4,
-      "name":"化工生产情况",
-      "groupName":"分组1",
-      "creatorName":"张天依",
-      "updateTime":"张天明",
-      "updaterName":"2021-05-15 17:04:20",
-      "published":"未发布"
-  },
-  {
-      "appId":5,
-      "name":"化工生产情况",
-      "groupName":"分组1",
-      "creatorName":"张天依",
-      "updateTime":"张天明",
-      "updaterName":"2021-05-17 17:04:20",
-      "published":"已发布"
-  }
-]
+var tableData=[]
 let tableDataArr = []
 let show = true
 var pageDataIdMap;//勾选id
 var idMap = new Map();
+var tableCheckList = [] //表格 
 //声明变量注意区分类型，数组或对象或字符串
 var idsArr = [];//新增仪表板位置  选中树的id集合
 var ConfigureFromidsArr = [];//从其他仪表板复制配置 选中树的id集合

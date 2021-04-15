@@ -151,6 +151,8 @@ function initTable (id) {
 
 // 渲染表格
 function renderTable (data) {
+    tableData = data
+    tableCheckList = []
     layui.use(['table','laydate','laypage','layer','element'], function(){
         var $ = layui.jquery
         laydate = layui.laydate //日期
@@ -219,44 +221,36 @@ function renderTable (data) {
         table.on('checkbox(test)', function(obj){//checkbox(test)中的test对应table标签中lay-filter="test"的test
             if(obj.type == 'one'){    //单选操作
                 if(obj.checked){     //选中
-                    idMap[obj.data.id] = obj.data.id;
-                    $("#batchRelease").css("background","#409EFF");
+                    tableCheckList.push(obj.data.id)
                 }else{      //取消选中
-                    $("#batchRelease").css("background","#9FCEFF");
-                    for(var key in idMap){
-                        if(key == obj.data.id){   //移除取消选中的id
-                            delete idMap[obj.data.id];
+                    tableCheckList.forEach((item, index) => {
+                        if (item === obj.data.id) {
+                        tableCheckList.splice(index, 1)
                         }
-                    }
+                    })
                 }
             }else{      //全选操作
                 if(obj.checked){    //选中
-                    $("#batchRelease").css("background","#409EFF");
-                    for(var pageKey in pageDataIdMap){
-                        idMap[pageKey] = pageKey;
-                    }
-                }else{
-                    $("#batchRelease").css("background","#9FCEFF");     //取消选中
-                    for(var pageKey in pageDataIdMap){
-                        for(var key in idMap){
-                            if(key == pageKey){
-                                delete idMap[pageKey];
-                            }
+                    tableData.forEach(item => {
+                        if (!tableCheckList.includes(item.id) ){
+                            tableCheckList.push(item.id)
                         }
-                    }
+                    })
+                }else{
+                    tableCheckList = []
                 }
             }
-        });
-        var active = {
-            getCheckData: function(){
-                batchSubmitWt();
+            console.log(tableCheckList)
+            if (tableCheckList.length !== 0) {
+                $("#batchRelease").css("background","#409EFF");
+                // $("#batchRelease").css("pointer-events", "auto")
+            } else {
+                $("#batchRelease").css("background","#9FCEFF"); 
+                // $("#batchRelease").css("pointer-events", "none")
             }
-        };
-
-        $('#batchRelease').on('click', function(){
-            var type = $(this).data('type');
-            active[type] ? active[type].call(this) : '';
         });
+
+        $('#batchRelease').on('click', batchSubmitWt);
         //监听工具条
         table.on('tool(test)', function(obj){//tool(test)中的test对应table标签中lay-filter="test"的test
             var data = obj.data;
@@ -591,44 +585,33 @@ layui.use('form', function() {
     });
 });
 function batchSubmitWt() {
-    var ids = "";
-    for(var key in idMap){
-        ids += key + ",";
-    }
-    if(ids == ''){
-        // layer.open({title:'提示',content:'请勾选要发布的仪表板'});
+    if(tableCheckList.length === 0) {
         return false;
-    }else{
-        $("#batchRelease").css("background","");
+    } else {
         layer.confirm("确定要批量发布仪表板?", {
-                    skin: 'z-batchRelease',
-                    title:"提示",
-                    area: ['420px', '136px'],
-                    btn: ['取消', '发布']
-                    }, function(index, layero){
+            skin: 'z-batchRelease',
+            title:"提示",
+            area: ['420px', '136px'],
+            btn: ['取消', '发布']}, 
+            function(index, layero){
+                layer.close(index);
+            },
+            function(index){
+                let result = false;
+                let data = tableCheckList.join(',')
+                request.put(`/bi/${appId}/panels/publish?ids=${data}`).then (res => {
+                    if (res.data.code === 0) {
+                        layer.msg('发布成功!')
+                        initTable(currentGroupNode.id)
                         layer.close(index);
-                    }, function(index){
-            });
+                    } else {
+                        layer.msg(res.data.msg)
+                    }
+                })
+                return result
+            }
+        )
     }
-    ids = ids.slice(0,-1);
-    // $.ajax({
-    //     type : "POST",
-    //     url : '../jzqy/batchSubmitWt',
-    //     data : {
-    //         'id' : ids
-    //     },
-    //     dataType : "json",
-    //     success: function (data) {
-    //         if(data.status == 'success'){
-    //             table.reload('jzqyListTable', {
-    //                 where: {},
-    //                 page: {
-    //                     curr: 1 //重新从第 1 页开始
-    //                 }
-    //             });
-    //         }
-    //     }
-    // });
 } 
 $('#addDashboard').on('click', function(){
     layer.open({
