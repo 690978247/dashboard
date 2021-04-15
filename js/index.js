@@ -166,7 +166,7 @@ function renderTable (data) {
             data,
             skin:'nob',
             // ,totalRow:true//开启该列的自动合计功能
-            height: 890,
+            height: 870,
             page: true, //开启分页
             limit: 20, //每页默认显示的数量
             limits:[20],
