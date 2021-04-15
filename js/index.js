@@ -136,15 +136,16 @@ function onBodyDown(event) {
     }
 }
 // 表格初始化
-function initTable () {
+function initTable (id) {
+    id = id || defaultTd
     // groupId 默认展示全部分组id
-    request.get(`/bi/${appId}/panels`, { params: {appId, groupId: defaultTd}}).then(res => {
+    request.get(`/bi/${appId}/panels`, { params: {appId, groupId: id}}).then(res => {
         // let data = res.data.data.records.map((item) => ({
         //     ...item,
         //     published: item.published === 'wait_published' ? '未发布' : '已发布'
         // }))
         renderTable(res.data.data.records)
-        setGroupChoice()
+        setGroupChoice(currentNode.name)
     })
 }
 
@@ -439,10 +440,11 @@ function renderTable (data) {
 }
 
 // 设置分组树默认选中
-function setGroupChoice () {
+function setGroupChoice (name) {
+    name = name || '全部分组'
     let nodes = zTree.getNodes();
     nodes.forEach((item,index) => {
-        if (item.name == '全部分组') {
+        if (item.name == name) {
             zTree.selectNode(nodes[index]);
         }
     })
@@ -677,7 +679,7 @@ $('#addDashboard').on('click', function(){
                             getGruopTree()
                             $("#addDashboardName")[0].value = ''
                             $("#citySel")[0].value = ''
-                            initTable()
+                            initTable(currentNode.id)
                         } else {
                             layer.msg(res.data.msg)
                         }
