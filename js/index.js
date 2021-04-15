@@ -145,7 +145,7 @@ function initTable (id) {
         //     published: item.published === 'wait_published' ? '未发布' : '已发布'
         // }))
         renderTable(res.data.data.records)
-        setGroupChoice(currentNode.name)
+        setGroupChoice(currentPositionNode.name)
     })
 }
 
@@ -401,34 +401,29 @@ function renderTable (data) {
             return new Date(time.replace(/-/g, '/')).getTime();
         }
         $('#searchBtn').on('click', function(){	
-            var userName = $("#userName").val();
-            var stastVal = $("#mySelect").find("option:selected").text();
-            var revisionTimeVal = $("#revisionTime").val();
-            var start = revisionTimeVal.substring(0,10);
-            var end = revisionTimeVal.substring(13,24);
-            var startTime = tranDate(start);
-            var endTime = tranDate(end);
-            var result = [];
-                tableDataArr.forEach(function (item, index) {
-            var nowTime = tranDate(item.time.substring(0,10));
-                    if(stastVal == "全部"){
-                        if ((item.name.includes(userName) || item.creator.includes(userName) || item.Reviser.includes(userName)) && (nowTime >= startTime && nowTime <= endTime)) {
-                            result.push(item);
-                        }
-                    }else{
-                        if ((item.name.includes(userName) || item.creator.includes(userName) || item.Reviser.includes(userName)) && item.state === stastVal && (nowTime >= startTime && nowTime <= endTime)) {
-                            result.push(item);
-                        }
-                    }
-                })
-                console.log(result);
-            tableData = result;
-            table.reload('myTable', {
-                    page: {
-                    curr: 1
-                    }
-                }
-            )
+            let userName = $("#userName").val();
+            let stateVal = $("#mySelect").find("option:selected").text();
+            let revisionTimeVal = $("#revisionTime").val();
+            let startTime = revisionTimeVal.split(' - ')[0]
+            let endTime = revisionTimeVal.split(' - ')[1]
+            let postData = {
+                appId,
+                groupId: currentGroupNode.id,
+                updateTimeBegin: startTime,
+                updateTimeEnd: endTime,
+                published: stateVal,
+                creatorName: userName,
+            }
+            request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
+                let { data } = res.data
+                renderTable(data.records, data)
+              })
+            // table.reload('myTable', {
+            //         page: {
+            //         curr: 1
+            //         }
+            //     }
+            // )
             $(".layui-table-main").niceScroll({
                 cursorcolor: "#ddd",
                 cursorwidth:"10px",
@@ -446,6 +441,7 @@ function setGroupChoice (name) {
     nodes.forEach((item,index) => {
         if (item.name == name) {
             zTree.selectNode(nodes[index]);
+            currentGroupNode = nodes[index]
         }
     })
 }
@@ -670,7 +666,7 @@ $('#addDashboard').on('click', function(){
                     let postData = {
                         appId,
                         name: addDashboardNameVal,
-                        groupId: currentNode.id
+                        groupId: currentPositionNode.id
                     }
                     request.post(`/bi/${appId}/panels`, postData).then(res => {
                         if (res.data.code === 0) {
@@ -679,7 +675,7 @@ $('#addDashboard').on('click', function(){
                             getGruopTree()
                             $("#addDashboardName")[0].value = ''
                             $("#citySel")[0].value = ''
-                            initTable(currentNode.id)
+                            initTable(currentPositionNode.id)
                         } else {
                             layer.msg(res.data.msg)
                         }
@@ -898,7 +894,7 @@ $(document).on("click","#m_add",function(e){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
             let nodes = zTree.getSelectedNodes();
             $("#fenzuPosition")[0].value = nodes[0].name
-            currentNode = nodes[0]
+            currentPositionNode = nodes[0]
             setPositionChoice(nodes[0].name)
         },
         yes: function(index, layero){
@@ -925,10 +921,10 @@ $(document).on("click","#m_add",function(e){
                 return false
             }else{
                 let nodes = zTree.getSelectedNodes();
-                let isNull = currentNode.parentId ? nodes[0] : null
+                let isNull = currentPositionNode.parentId ? nodes[0] : null
                 let postData = {
                     name: fenzuNameVal,
-                    parentId: currentNode.id
+                    parentId: currentPositionNode.id
                 }
                 request.post(`/bi/${appId}/groups`, postData).then(res => {
                     if (res.data.code === 0) {
@@ -971,7 +967,7 @@ $(document).on("click","#m_check",function(e){
             let nodes = zTree.getSelectedNodes();
             $("#fenzuName")[0].value = nodes[0].name
             $("#fenzuPosition")[0].value = nodes[0].name
-            currentNode = nodes[0]
+            currentPositionNode = nodes[0]
             setPositionChoice(nodes[0].name)
         },
         yes: function(index, layero){
@@ -999,9 +995,9 @@ $(document).on("click","#m_check",function(e){
             }else{
                 let nodes = zTree.getSelectedNodes(); 
                 let postData = {
-                    id: currentNode.id,
+                    id: currentPositionNode.id,
                     name: fenzuNameVal,
-                    parentId: currentNode.parentId
+                    parentId: currentPositionNode.parentId
                 }
                 request.put(`/bi/${appId}/groups`, postData).then(res => {
                     if (res.data.code === 0) {

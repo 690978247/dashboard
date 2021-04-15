@@ -111,9 +111,9 @@ h5 {
     clear: both;
     visibility: hidden;
 }
-.clearfix {
+/* .clearfix {
     *+height: 1%;
-}
+} */
 .g-left{
   float: left;
 }
