@@ -146,14 +146,14 @@ function initTable (id) {
         // }))
         renderTable(res.data.data.records)
         setGroupChoice(currentPositionNode.name)
-        // pageData = {
-        //     totalCount: res.data.data.records.length, // 总条数
-        //     totalPage: 1, // 总页数
-        //     pageIndex: 1, // 当前页
-        //     pageSize: 10, // 每页显示条数
-        // }
-        // renderPagination(0, 'popup-pagination')
-        // renderLis ()
+        pageData = {
+            totalCount: res.data.data.records.length, // 总条数
+            totalPage: 1, // 总页数
+            pageIndex: 1, // 当前页
+            pageSize: 10, // 每页显示条数
+        }
+        renderPagination(0, 'popup-pagination')
+        renderLis ()
     })
 }
 
