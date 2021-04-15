@@ -398,7 +398,7 @@ function renderTable (data) {
         }
         $('#searchBtn').on('click', function(){	
             let userName = $("#userName").val();
-            let stateVal = $("#mySelect").find("option:selected").text();
+            let stateVal = $('#mySelect option:selected').val();
             let revisionTimeVal = $("#revisionTime").val();
             let startTime = revisionTimeVal.split(' - ')[0]
             let endTime = revisionTimeVal.split(' - ')[1]
@@ -414,12 +414,6 @@ function renderTable (data) {
                 let { data } = res.data
                 renderTable(data.records, data)
               })
-            // table.reload('myTable', {
-            //         page: {
-            //         curr: 1
-            //         }
-            //     }
-            // )
             $(".layui-table-main").niceScroll({
                 cursorcolor: "#ddd",
                 cursorwidth:"10px",
