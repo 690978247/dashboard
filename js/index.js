@@ -187,8 +187,8 @@ function renderTable (data) {
                 var that = this.elem.next();
                 var htm = '<i class="z-table-tips"></i>';
                 resD.forEach(function (item, index) {
-                    var div = that.find(".layui-table-box tbody tr[data-index='" + index + "'] td[data-field='state'] div");
-                    if (item.state == "未发布") {//判断条件，符合条件给角标 
+                    var div = that.find(".layui-table-box tbody tr[data-index='" + index + "'] td[data-field='published'] div");
+                    if (item.hasWaitPublish) {//判断条件，符合条件给角标 
                         div.append(htm);
                     }
                 });
