@@ -153,6 +153,10 @@ function initTable (id) {
 function renderTable (data) {
     tableData = data
     tableCheckList = []
+    data = data.map(item => ({
+        ...item,
+        published: item.published === 'published' ? '发布' : '未发布' 
+    }))
     layui.use(['table','laydate','laypage','layer','element'], function(){
         var $ = layui.jquery
         laydate = layui.laydate //日期
