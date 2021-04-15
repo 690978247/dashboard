@@ -472,6 +472,7 @@ $(document).ready(async function(){
 	rMenu = $("#rMenu");
     zTree = $.fn.zTree.getZTreeObj("treeDemo");
     zTree.expandAll(true);
+    pTree = $.fn.zTree.getZTreeObj("treeDemoAdd");
     addPTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu");
     // $(".nicescroll-slideBar").niceScroll({
     //         cursorcolor: "#ddd",
@@ -628,6 +629,7 @@ $('#addDashboard').on('click', function(){
             yes: function(index, layero){
                 $("#addDashboardName")[0].value = ''
                 $("#citySel")[0].value = ''
+                pTree.cancelSelectedNode()
                 layer.close(index);
             },
             btn2: function(index, layero){
