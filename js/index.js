@@ -265,60 +265,62 @@ function renderTable (data) {
                     }, function(index, layero){
                         layer.close(index);
                     }, function(index){//index 当前行的id
-                        obj.del();
+                        request.delete(`/bi/${appId}/panels/${data.id}`).then(res => {
+                            if (res.data.code === 0) {
+                                layer.msg('删除成功!')
+                                initTable(currentGroupNode.id)
+                                layer.close(index);
+                            } else {
+                                layer.msg(res.data.msg) 
+                            }
+                        })
                 });
             } else if(obj.event === 'offline'){
                 layer.confirm("确定要下线" + data.name + "?", {
                 skin: 'z-tipoffline',
                 area: ['420px', '136px'],
                 title: "提示",
-                btn: ['取消', '下线'] //可以无限个按钮
-                    }, function(index, layero){
+                btn: ['取消', '下线']},
+                function(index, layero){
                     //按钮【按钮一】的回调
                     layer.close(index);
-                    }, function(index){
-                        var thisId = data.id;
-                        for(var i=0;i<tableData.length;i++){
-                            if(tableData[i].id==thisId){
-                                tableData[i].state="未发布";
-                            }
+                },
+                function(index){
+                    request.put(`/bi/${appId}/panels/${data.id}/offline`).then(res => {
+                        if (res.data.code === 0) {
+                            layer.msg('下线成功!')
+                            initTable(currentGroupNode.id)
+                            layer.close(index);
+                        } else {
+                            layer.msg(res.data.msg)
                         }
-                        table.reload('myTable', {
-                            where: {
-                                username:"user-0",
-                            },
-                            page: {
-                                curr: 1 //重新从第 1 页开始
-                            }
-                        });
+                    })
                 });
             }else if(obj.event === 'release'){
                 layer.confirm("确定要发布" + data.name + "?", {
                 skin: 'z-tiprelease',
                 area: ['420px', '136px'],
                 title: "提示",
-                btn: ['取消', '发布']
-                    }, function(index, layero){
+                btn: ['取消', '发布']},
+                function(index, layero){
                     layer.close(index);
-                    }, function(index){
-                        var thisId = data.id;
-                        for(var i=0;i<tableData.length;i++){
-                            if(tableData[i].id==thisId){
-                                tableData[i].state="已发布";
-                            }
+                },
+                function(index){
+                    request.put(`/bi/${appId}/panels/publish?ids=${data.id}`).then (res => {
+                        if (res.data.code === 0) {
+                            layer.msg('发布成功!')
+                            initTable(currentGroupNode.id)
+                            layer.close(index);
+                        } else {
+                            layer.msg(res.data.msg)
                         }
-                        table.reload('myTable', {	//myTable为table中的id
-                                page: {
-                                    curr: $(".layui-laypage-em").next().html() //刷新当前页
-                                }
-                            }
-                        )
                         $(".layui-table-main").niceScroll({
                             cursorcolor: "#ddd",
                             cursorwidth:"10px",
                             cursorborder:"none",
                             zindex:"99999999",
                         });
+                    })
                 });
             }else if(obj.event === 'attribute'){
                 layer.open({
