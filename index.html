@@ -47,10 +47,10 @@
                             </div>
                         </li>
                         <li class="g-left">
-                            <input class="g-search-input crname" type="text" id="userName" placeholder="请输入名称、创建者、修改人">
+                            <input class="g-search-input crname" type="text" id="userName" autocomplete="off" placeholder="请输入名称、创建者、修改人">
                         </li>
                         <li class="g-left">
-                            <button type="button" id="searchBtn" data-type="reload" class="layui-btn layui-btn-normal layui-btn-sm search"><i class="icon iconfont iconsousuo"></i>查询</button>
+                            <button type="button" id="searchBtn" data-type="reload" onclick="searchTableData()" class="layui-btn layui-btn-normal layui-btn-sm search"><i class="icon iconfont iconsousuo"></i>查询</button>
                         </li>
                         <li class="g-left">
                             <button type="button" id="resetBtn" class="layui-btn layui-btn-normal layui-btn-sm reset"><i class="icon iconfont iconzhongzhi"></i>重置</button>

@@ -153,10 +153,6 @@ function initTable (id) {
 function renderTable (data) {
     tableData = data
     tableCheckList = []
-    data = data.map(item => ({
-        ...item,
-        published: item.published === 'published' ? '发布' : '未发布' 
-    }))
     layui.use(['table','laydate','laypage','layer','element'], function(){
         var $ = layui.jquery
         laydate = layui.laydate //日期
@@ -400,31 +396,34 @@ function renderTable (data) {
         function tranDate (time) {
             return new Date(time.replace(/-/g, '/')).getTime();
         }
-        $('#searchBtn').on('click', function(){	
-            let name = $("#userName").val();
-            let stateVal = $('#mySelect option:selected').val();
-            let revisionTimeVal = $("#revisionTime").val();
-            let startTime = revisionTimeVal.split(' - ')[0]
-            let endTime = revisionTimeVal.split(' - ')[1]
-            let postData = {
-                appId,
-                groupId: currentGroupNode.id,
-                updateTimeBegin: startTime,
-                updateTimeEnd: endTime,
-                published: stateVal,
-                name: name,
-            }
-            request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
-                let { data } = res.data
-                renderTable(data.records, data)
-              })
-            $(".layui-table-main").niceScroll({
-                cursorcolor: "#ddd",
-                cursorwidth:"10px",
-                cursorborder:"none",
-                zindex:"99999999",
-            });
-        });
+    });
+}
+
+
+// 查询表格数据
+function searchTableData () {
+    let name = $("#userName").val();
+    let stateVal = $('#mySelect option:selected').val();
+    let revisionTimeVal = $("#revisionTime").val();
+    let startTime = revisionTimeVal.split(' - ')[0]
+    let endTime = revisionTimeVal.split(' - ')[1]
+    let postData = {
+        appId,
+        groupId: currentGroupNode.id,
+        updateTimeBegin: startTime,
+        updateTimeEnd: endTime,
+        published: stateVal,
+        name: name,
+    }
+    request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
+        let { data } = res.data
+        renderTable(data.records, data)
+    })
+    $(".layui-table-main").niceScroll({
+        cursorcolor: "#ddd",
+        cursorwidth:"10px",
+        cursorborder:"none",
+        zindex:"99999999",
     });
 }
 
