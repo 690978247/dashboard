@@ -342,18 +342,16 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                     },
                     btn2: function(index, layero){
                         var name = $("#attrName").val();
-                        var position = $("#attribute-position").find("option:selected").val();
-                        var policyRadioVal = $('input[name="sex"]:checked').val();
-                        var describeVal = $("#attribute-describeVal").val();
+                        var position = $("#attrPosition").val();
                         $("#attrName").removeClass("valNUllBorder");
-                        $("#attribute-position-box input").removeClass("valNUllBorder");
+                        $("#attrPosition").removeClass("valNUllBorder");
                         if(name == ""){
                             layer.msg('请填写名称');
                             $("#attrName").addClass("valNUllBorder");
                             return false
                         }else if(position==""){
                             layer.msg('请选择位置');
-                            $("#attribute-position-box input").addClass("valNUllBorder");
+                            $("#attrPosition").addClass("valNUllBorder");
                             return false
                         }else{
                             // $.ajax({
@@ -375,6 +373,8 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                     end: function () {
                         $("#attrName").val('');
                         $("#attrPosition").val('');
+                        $("#attrName").removeClass("valNUllBorder");
+                        $("#attrPosition").removeClass("valNUllBorder");
                         attrTree.cancelSelectedNode()
                     },
                 });
@@ -640,12 +640,6 @@ $('#addDashboard').on('click', function(){
             success  : function(layero,index){
                 //完成后的回调
             },
-            // yes: function(index, layero){
-            //     $("#addDashboardName")[0].value = ''
-            //     $("#citySel")[0].value = ''
-            //     pTree.cancelSelectedNode()
-            //     layer.close(index);
-            // },
             btn2: function(index, layero){
                 //return false 开启该代码可禁止点击该按钮关闭
                 //保存的回调
@@ -698,13 +692,10 @@ $('#addDashboard').on('click', function(){
             end: function () {
                 $("#addDashboardName")[0].value = ''
                 $("#citySel")[0].value = ''
+                $("#addDashboardName").removeClass("valNUllBorder");
+                $("#citySel").removeClass("valNUllBorder");
                 pTree.cancelSelectedNode()
             }
-            // cancel: function(){ 
-            //     $("#addDashboardName")[0].value = ''
-            //     $("#citySel")[0].value = ''
-            //     pTree.cancelSelectedNode()
-            // }
         });
 });
 $('#copeConfigureTo').on('click', function(){
@@ -904,11 +895,6 @@ $(document).on("click","#m_add",function(e){
             currentPositionNode = nodes[0]
             setPositionChoice(nodes[0].name)
         },
-        // yes: function(index, layero){
-        //     $("#fenzuName")[0].value = ''
-        //     $("#fenzuPosition")[0].value = ''
-        //     layer.close(index);
-        // },
         btn2: function(index, layero){
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调
@@ -956,11 +942,9 @@ $(document).on("click","#m_add",function(e){
         end: function () {
             $("#fenzuName")[0].value = ''
             $("#fenzuPosition")[0].value = ''
+            $("#fenzuName").removeClass("valNUllBorder");
+            $("#fenzuPosition").removeClass("valNUllBorder");
         }
-        // cancel: function(){ 
-        //     $("#fenzuName")[0].value = ''
-        //     $("#fenzuPosition")[0].value = ''
-        // }
     });
 })
 $(document).on("click","#m_check",function(e){
@@ -981,11 +965,6 @@ $(document).on("click","#m_check",function(e){
             currentPositionNode = nodes[0]
             setPositionChoice(nodes[0].name)
         },
-        // yes: function(index, layero){
-        //     $("#fenzuName")[0].value = ''
-        //     $("#fenzuPosition")[0].value = ''
-        //     layer.close(index);
-        // },
         btn2: function(index, layero){
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调 
@@ -1028,10 +1007,8 @@ $(document).on("click","#m_check",function(e){
         end: function () {
             $("#fenzuName")[0].value = ''
             $("#fenzuPosition")[0].value = ''
+            $("#fenzuName").removeClass("valNUllBorder");
+            $("#fenzuPosition").removeClass("valNUllBorder");
         }
-        // cancel: function(){ 
-        //     $("#fenzuName")[0].value = ''
-        //     $("#fenzuPosition")[0].value = ''
-        // }
     });
 })
