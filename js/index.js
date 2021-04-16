@@ -97,7 +97,7 @@ function addNode(){
 }
 
 
-
+// 位置树打开展示
 
 function showMenu() {
     var cityObj = $("#citySel");
@@ -110,13 +110,7 @@ function hideMenu() {
     $("#menuContent").fadeOut("fast");
     $("body").unbind("mousedown", onBodyDown);
 }
-function onBodyDown(event) {
-    if (!(event.target.id == "menuBtn" || event.target.id == "menuContent" || $(event.target).parents("#menuContent").length>0)) {
-        hideMenu();
-    }
-}
 
-// 位置树打开展示
 function showMenuFenzu() {
     var cityObj = $("#fenzuPosition");
     // let nodes = zTree.getSelectedNodes();
@@ -145,7 +139,9 @@ function hideAttrTree() {
 
 function onBodyDown(event) {
     if (!(event.target.id == "menuBtn" || event.target.id == "menuContentFenzu" || $(event.target).parents("#menuContentFenzu").length>0)) {
+        hideMenu();
         hideMenuFenzu();
+        hideAttrTree()
     }
 }
 // 表格初始化
