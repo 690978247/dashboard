@@ -78,8 +78,9 @@ function renderLis () {
 // 获取表格数据
 function getTableData (postData) {
   request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
+    debugger
     let { data } = res.data
-    renderTable(data.records, data)
+    renderTable(data.records, {size: res.data.data.size})
     renderPagination('popup-pagination')
     renderLis ()
   })

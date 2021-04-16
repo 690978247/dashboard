@@ -142,7 +142,7 @@ function initTable (id, pager) {
     // groupId 默认展示全部分组id
     request.get(`/bi/${appId}/panels`, { params: {appId, groupId: id, current: pager.current, size: pager.size }}).then(res => {
 
-        renderTable(res.data.data.records)
+        renderTable(res.data.data.records, {size: res.data.data.size,})
         setGroupChoice(currentPositionNode.name)
         pageData = {
             totalCount: res.data.data.total, // 总条数
@@ -156,7 +156,8 @@ function initTable (id, pager) {
 }
 
 // 渲染表格
-function renderTable (data) {
+function renderTable (data, pager) {
+    pager = pager ? pager : pager.size = 10
     tableData = data
     tableCheckList = []
     layui.use(['table','laydate','laypage','layer','element'], function(){
@@ -174,8 +175,7 @@ function renderTable (data) {
             // ,totalRow:true//开启该列的自动合计功能
             // height: 870,
             page: false, //开启分页
-            limit: 20, //每页默认显示的数量
-            limits:[20],
+            limit: pager.size, //每页默认显示的数量
             cellMinWidth: 60,//全局定义常规单元格的最小宽度，layui 2.2.1 新增
             cols: [[
                 {type:'checkbox'},
@@ -423,7 +423,7 @@ function searchTableData () {
     }
     request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
         let { data } = res.data
-        renderTable(data.records, data)
+        renderTable(data.records, {size: res.data.data.size,})
     })
     $(".layui-table-main").niceScroll({
         cursorcolor: "#ddd",
