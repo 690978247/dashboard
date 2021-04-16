@@ -136,21 +136,19 @@ function onBodyDown(event) {
     }
 }
 // 表格初始化
-function initTable (id) {
+function initTable (id, pager) {
     id = id || defaultTd
+    pager = { current: 1 , size: 10 } || pager
     // groupId 默认展示全部分组id
-    request.get(`/bi/${appId}/panels`, { params: {appId, groupId: id}}).then(res => {
-        // let data = res.data.data.records.map((item) => ({
-        //     ...item,
-        //     published: item.published === 'wait_published' ? '未发布' : '已发布'
-        // }))
+    request.get(`/bi/${appId}/panels`, { params: {appId, groupId: id, current: pager.current, size: pager.size }}).then(res => {
+
         renderTable(res.data.data.records)
         setGroupChoice(currentPositionNode.name)
         pageData = {
-            totalCount: res.data.data.records.length, // 总条数
-            totalPage: 1, // 总页数
-            pageIndex: 1, // 当前页
-            pageSize: 10, // 每页显示条数
+            totalCount: res.data.data.total, // 总条数
+            totalPage: res.data.data.pages, // 总页数
+            pageIndex: res.data.data.current, // 当前页
+            pageSize: res.data.data.size, // 每页显示条数
         }
         renderPagination(0, 'popup-pagination')
         renderLis ()

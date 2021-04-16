@@ -292,6 +292,7 @@
 }
 .z-contentBoxRight-table {
     height: calc(100% - 85px);
+    overflow: auto;
 }
 .z-contentBoxRight-table .layui-laypage .layui-laypage-curr .layui-laypage-em {
     background-color: #409EFF;

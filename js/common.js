@@ -268,11 +268,21 @@ function groupNodeClick(event, treeId, treeNode) {
   currentGroupNode = treeNode
   let postData = {
     appId,
-    groupId: treeNode.id
+    groupId: treeNode.id,
+    current: 1,
+    size: 10
   }
   request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
     let { data } = res.data
     renderTable(data.records, data)
+    pageData = {
+        totalCount: res.data.data.total, // 总条数
+        totalPage: res.data.data.pages, // 总页数
+        pageIndex: res.data.data.current, // 当前页
+        pageSize: res.data.data.size, // 每页显示条数
+    }
+    renderPagination(0, 'popup-pagination')
+    renderLis ()
   })
 };
 

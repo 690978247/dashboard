@@ -26,7 +26,7 @@ function renderLis () {
   let lis = ``
   let cur = pageData.pageIndex - 1
   let pager = document.getElementById('visual-pager')
-  let items = Math.ceil(tableData.length / pageData.pageSize )
+  let items = Math.ceil(pageData.totalCount / pageData.pageSize )
   for (var i = 0; i <= items - 1; i++) {
     if (i === cur) {
       lis += `<li class="activePage" >${i + 1}</li>`
@@ -146,32 +146,32 @@ function homePage () {
 }
 // 选择每页显示多少条数据
 function perPage (e, index) {
-  let tbody = document.getElementById('popup-tbody')
   let pagerInput = document.getElementById('pager-input')
   let html = ``
   pageData.pageIndex = 1
   pageData.pageSize = Number(e.target.value)
   pagerInput.value =  pageData.pageIndex
-  pageData.totalPage = Math.ceil(tableData.length / pageData.pageSize )
-  homePage ()
-  data.forEach((item,i) => {
-    html += `<tr>
-      <td rowspan="1" colspan="1" class="table-checkbox" ><div><input type="checkbox" name="pop-check" ${check === item.data2 ? 'checked' : ''} onchange="choiceRow(event, ${i}, ${index})" ></div></td>
-      <td rowspan="1" colspan="1"><div>${item.data1}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data2}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data3}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data4}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data5}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data6}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data7}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data8}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data9}</div></td>
-    </tr>`
-  })
-  tbody.setAttribute('data-index', index)
-  tbody.innerHTML = html
+  pageData.totalPage = Math.ceil(pageData.totalCount / pageData.pageSize )
   renderLis()
   setDisable ()
+  let postData = {
+    appId,
+    groupId: currentGroupNode.id,
+    current: pageData.pageIndex,
+    size: pageData.pageSize
+  }
+  request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
+    let { data } = res.data
+    renderTable(data.records, data)
+    // pageData = {
+    //     totalCount: res.data.data.total, // 总条数
+    //     totalPage: res.data.data.pages, // 总页数
+    //     pageIndex: res.data.data.current, // 当前页
+    //     pageSize: res.data.data.size, // 每页显示条数
+    // }
+    renderPagination(0, 'popup-pagination')
+    renderLis ()
+  })
 }
 // 页码点击
 function changePage (e, index, type) {
