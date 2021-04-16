@@ -354,25 +354,26 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                             $("#attrPosition").addClass("valNUllBorder");
                             return false
                         }else{
-                            // $.ajax({
-                            //     url: methodsApi.getworkstats1_get,
-                            //     type: "post",
-                            //     contentType: "application/json",
-                            //     data: JSON.stringify(searchObjData),
-                            //     dataType: "json",
-                            //     /* async: false, */
-                            //     success: function (res) {
-                                    
-                            //     },
-                            //     error: function (err) {
-                            //         wui.errorNotice("获取信息失败");
-                            //     }
-                            // });
+                            let panelName = $('#attrName').val()
+                            let groupId = currentPositionNode.id
+                            let description = $('#attribute-describeVal').val()
+                            let accessType = $("input[name='permission']:checked").val();
+                            let postData = {
+                                panelName,
+                                groupId,
+                                description,
+                                accessType
+                            }
+                            console.log(postData)
+                            // request.post(`/bi/${appId}/panel-permissions`).then(res => {
+
+                            // })
                         }
                     },
                     end: function () {
                         $("#attrName").val('');
                         $("#attrPosition").val('');
+                        $('#attribute-describeVal').val('')
                         $("#attrName").removeClass("valNUllBorder");
                         $("#attrPosition").removeClass("valNUllBorder");
                         attrTree.cancelSelectedNode()
@@ -589,7 +590,7 @@ layui.use('form', function() {
     // });
     form.on('radio(policyRadio)', function(data){
           policyRadioVal = data.value //被点击的 radio 的 value 值
-          if( policyRadioVal =="自定义"){
+          if( policyRadioVal =="custom"){
             $("#z-selectDept").show();
             $("#layui-form-margin9").css("margin-bottom","0px");
           }else{
