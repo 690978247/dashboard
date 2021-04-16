@@ -1,22 +1,22 @@
 /* 分页部分 */
 let data = []
 // 渲染分页组件
-function renderPagination (index, ref) { // 第一个参数当前组件下标（即：Controls.ControlList）， 第二个参数为渲染根元素
+function renderPagination (ref) { // ref参数为渲染根元素
   let pagination = document.getElementById(ref)
   let page = `<div class="visual-pagination">
     <span>共 ${pageData.totalCount} 条</span>
-    <select class="visual-pagination-select" onchange="perPage(event, ${index})" >
+    <select class="visual-pagination-select" onchange="perPage(event)" >
       <option value="10" ${pageData.pageSize === 10 ? 'selected': '' }>10条/页</option>
       <option value="30" ${pageData.pageSize === 30 ? 'selected': '' }>30条/页</option>
       <option value="50" ${pageData.pageSize === 50 ? 'selected': '' }>50条/页</option>
       <option value="80" ${pageData.pageSize === 80 ? 'selected': '' }>80条/页</option>
     </select>
-    <button type="button" onclick="nextPage(event, ${index})" id="pager-left-btn" class="visual-pagination-button" ${pageData.pageIndex <= 1 ? 'disabled' : ''}><i class="iconfont iconzuojiantou"></i></button>
-    <ul class="visual-pager" id="visual-pager" onclick="changePage(event, ${index})" >
+    <button type="button" onclick="nextPage(event)" id="pager-left-btn" class="visual-pagination-button" ${pageData.pageIndex <= 1 ? 'disabled' : ''}><i class="iconfont iconzuojiantou"></i></button>
+    <ul class="visual-pager" id="visual-pager" onclick="changePage(event)" >
     </ul>
-    <button type="button" onclick="prevPage(event, ${index})" id="pager-right-btn"  class="visual-pagination-button"  ${pageData.pageIndex === pageData.totalPage || pageData.pageIndex <= 0 ? 'disabled' : ''}><i class="iconfont iconyoujiantou_huaban"></i></button>
+    <button type="button" onclick="prevPage(event)" id="pager-right-btn"  class="visual-pagination-button"  ${pageData.pageIndex === pageData.totalPage || pageData.pageIndex <= 0 ? 'disabled' : ''}><i class="iconfont iconyoujiantou_huaban"></i></button>
     <span>前往</span>
-    <input type="text" class="pager-input" id="pager-input" onblur="jumpPage(event, ${index})" value="${pageData.pageIndex}" >
+    <input type="text" class="pager-input" id="pager-input" onblur="jumpPage(event)" value="${pageData.pageIndex}" >
     <span>页</span>
   </div>`
   pagination.innerHTML = page
@@ -80,7 +80,7 @@ function getTableData (postData) {
   request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
     let { data } = res.data
     renderTable(data.records, data)
-    renderPagination(0, 'popup-pagination')
+    renderPagination('popup-pagination')
     renderLis ()
   })
 }
@@ -101,23 +101,23 @@ function setDisable () {
   }
 }
 // 下一页
-function nextPage (e, index) {
+function nextPage (e) {
   let pagerInput = document.getElementById('pager-input')
   pageData.pageIndex--
-  changePage(e, index, 'prev')
+  changePage(e, 'prev')
   pagerInput.value = pageData.pageIndex
   addActice ()
 }
 // 上一页
-function prevPage (e, index) {
+function prevPage (e) {
   let pagerInput = document.getElementById('pager-input')
   pageData.pageIndex++
-  changePage(e, index, 'prev')
+  changePage(e, 'prev')
   pagerInput.value = pageData.pageIndex
   addActice ()
 }
 // 页面跳转
-function jumpPage (e, index) {
+function jumpPage (e) {
   let value = null
   if (e.target.value <= pageData.totalPage) {
     value = Number(e.target.value) 
@@ -131,7 +131,7 @@ function jumpPage (e, index) {
   }
   
   pageData.pageIndex = value
-  changePage(e, index, 'prev')
+  changePage(e, 'prev')
   addActice ()
 }
 // 设置当前页高亮
@@ -156,7 +156,7 @@ function homePage () {
   return data
 }
 // 选择每页显示多少条数据
-function perPage (e, index) {
+function perPage (e) {
   let pagerInput = document.getElementById('pager-input')
   let html = ``
   pageData.pageIndex = 1
@@ -175,7 +175,7 @@ function perPage (e, index) {
 }
 
 // 页码点击
-function changePage (e, index, type) {
+function changePage (e, type) {
   let pagerInput = document.getElementById('pager-input')
   let html = ``
   if (!type) {

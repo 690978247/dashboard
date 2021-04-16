@@ -150,7 +150,7 @@ function initTable (id, pager) {
             pageIndex: res.data.data.current, // 当前页
             pageSize: res.data.data.size, // 每页显示条数
         }
-        renderPagination(0, 'popup-pagination')
+        renderPagination('popup-pagination')
         renderLis ()
     })
 }
