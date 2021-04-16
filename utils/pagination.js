@@ -74,6 +74,17 @@ function renderLis () {
   }
   pager.innerHTML = lis
 }
+
+// 获取表格数据
+function getTableData (postData) {
+  request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
+    let { data } = res.data
+    renderTable(data.records, data)
+    renderPagination(0, 'popup-pagination')
+    renderLis ()
+  })
+}
+
 // 设置左右按钮禁用
 function setDisable () {
   let left = document.getElementById('pager-left-btn')
@@ -160,22 +171,11 @@ function perPage (e, index) {
     current: pageData.pageIndex,
     size: pageData.pageSize
   }
-  request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
-    let { data } = res.data
-    renderTable(data.records, data)
-    // pageData = {
-    //     totalCount: res.data.data.total, // 总条数
-    //     totalPage: res.data.data.pages, // 总页数
-    //     pageIndex: res.data.data.current, // 当前页
-    //     pageSize: res.data.data.size, // 每页显示条数
-    // }
-    renderPagination(0, 'popup-pagination')
-    renderLis ()
-  })
+  getTableData (postData)
 }
+
 // 页码点击
 function changePage (e, index, type) {
-  let tbody = document.getElementById('popup-tbody')
   let pagerInput = document.getElementById('pager-input')
   let html = ``
   if (!type) {
@@ -185,24 +185,14 @@ function changePage (e, index, type) {
       pageData.pageIndex = Number(e.target.innerText)
     }
   }
-  homePage ()
   pagerInput.value =  pageData.pageIndex
-  data.forEach((item,i) => {
-    html += `<tr>
-      <td rowspan="1" colspan="1" class="table-checkbox" ><div><input type="checkbox" name="pop-check" ${check === item.data2 ? 'checked' : ''} onchange="choiceRow(event, ${i}, ${index})" ></div></td>
-      <td rowspan="1" colspan="1"><div>${item.data1}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data2}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data3}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data4}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data5}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data6}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data7}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data8}</div></td>
-      <td rowspan="1" colspan="1"><div>${item.data9}</div></td>
-    </tr>`
-  })
-  tbody.setAttribute('data-index', index)
-  tbody.innerHTML = html
+  let postData = {
+    appId,
+    groupId: currentGroupNode.id,
+    current: pageData.pageIndex,
+    size: pageData.pageSize
+  } 
+  getTableData(postData)
   renderLis()
   setDisable ()
 }
