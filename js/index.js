@@ -494,59 +494,59 @@ $(document).ready(async function(){
     //         cursorwidth:"10px",
     //         cursorborder:"none"
     // });
-    $(".layui-layer-content").niceScroll({
-            cursorcolor: "#ddd",
-            cursorwidth:"10px",
-            cursorborder:"none"
-    });
-    $(".treeDemoAddNicescroll").niceScroll({
-        cursorcolor: "#ddd",
-        cursorwidth:"10px",
-        cursorborder:"none",
-        zindex:"99999999",
-    });
-    $(".treeDemoCopeFromScroll").niceScroll({
-        cursorcolor: "#ddd",
-        cursorwidth:"10px",
-        cursorborder:"none",
-        zindex:"99999999",
-    });
-    $(".treeDemoCopetoScroll").niceScroll({
-        cursorcolor: "#ddd",
-        cursorwidth:"10px",
-        cursorborder:"none",
-        zindex:"99999999",
-    });
-    $(".treeSelectShowScroll").niceScroll({
-        cursorcolor: "#ddd",
-        cursorwidth:"10px",
-        cursorborder:"none",
-        zindex:"99999999",
-    });
-    $(".z-selectDeptInp .ztree").niceScroll({
-        cursorcolor: "#ddd",
-        cursorwidth:"10px",
-        cursorborder:"none",
-        zindex:"99999999",
-    });
-    $(".rankScroll").niceScroll({
-        cursorcolor: "#ddd",
-        cursorwidth:"10px",
-        cursorborder:"none",
-        zindex:"99999999",
-    });
-    $(".selectPeopleScroll").niceScroll({
-        cursorcolor: "#ddd",
-        cursorwidth:"10px",
-        cursorborder:"none",
-        zindex:"99999999",
-    });
-    $(".layui-table-main").niceScroll({
-        cursorcolor: "#ddd",
-        cursorwidth:"10px",
-        cursorborder:"none",
-        zindex:"99999999",
-    });
+    // $(".layui-layer-content").niceScroll({
+    //         cursorcolor: "#ddd",
+    //         cursorwidth:"10px",
+    //         cursorborder:"none"
+    // });
+    // $(".treeDemoAddNicescroll").niceScroll({
+    //     cursorcolor: "#ddd",
+    //     cursorwidth:"10px",
+    //     cursorborder:"none",
+    //     zindex:"99999999",
+    // });
+    // $(".treeDemoCopeFromScroll").niceScroll({
+    //     cursorcolor: "#ddd",
+    //     cursorwidth:"10px",
+    //     cursorborder:"none",
+    //     zindex:"99999999",
+    // });
+    // $(".treeDemoCopetoScroll").niceScroll({
+    //     cursorcolor: "#ddd",
+    //     cursorwidth:"10px",
+    //     cursorborder:"none",
+    //     zindex:"99999999",
+    // });
+    // $(".treeSelectShowScroll").niceScroll({
+    //     cursorcolor: "#ddd",
+    //     cursorwidth:"10px",
+    //     cursorborder:"none",
+    //     zindex:"99999999",
+    // });
+    // $(".z-selectDeptInp .ztree").niceScroll({
+    //     cursorcolor: "#ddd",
+    //     cursorwidth:"10px",
+    //     cursorborder:"none",
+    //     zindex:"99999999",
+    // });
+    // $(".rankScroll").niceScroll({
+    //     cursorcolor: "#ddd",
+    //     cursorwidth:"10px",
+    //     cursorborder:"none",
+    //     zindex:"99999999",
+    // });
+    // $(".selectPeopleScroll").niceScroll({
+    //     cursorcolor: "#ddd",
+    //     cursorwidth:"10px",
+    //     cursorborder:"none",
+    //     zindex:"99999999",
+    // });
+    // $(".layui-table-main").niceScroll({
+    //     cursorcolor: "#ddd",
+    //     cursorwidth:"10px",
+    //     cursorborder:"none",
+    //     zindex:"99999999",
+    // });
     addNode();//给后台返回的tree数据添加属性
     initTable ()
 });

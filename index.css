@@ -282,6 +282,12 @@
     border: none;
 }
 
+.ztree {
+    height: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
 .layui-table[lay-even] tr:nth-child(even) {
     /* background-color: #aaffaa; */
     background-color: red;
