@@ -326,6 +326,13 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                     content: $('#attribute') ,
                     area: ['598px', '490px'],
                     btn: ['取消', '保存'],
+                    success: function (res, curr, count) {  //回调函数
+                        $("#attribute-name").val(data.name)
+                    },
+                    yes: function(index, layero){
+                        //按钮【按钮一】的回调
+                        layer.close(index);
+                    },
                     btn2: function(index, layero){
                         var name = $("#attribute-name").val();
                         var position = $("#attribute-position").find("option:selected").val();

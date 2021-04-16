@@ -203,6 +203,10 @@
     position: relative;
     top: 12px;
 }
+.z-attribute {
+    height: 100%;
+    overflow: auto;
+}
 .z-attribute .safe .intro{
     width: 187px;
     height: 28px;
@@ -242,12 +246,26 @@
 .z-attribute .layui-form-item{
     padding-left: 21px;
 }
+.z-attribute .form-block:first-child {
+    margin-top: 25px;
+}
+.z-attribute .attr-pos {
+    width: 398px;
+    height: 36px;
+    padding-left: 10px;
+    box-sizing: border-box;
+    border: 1px solid #E6E6E6;
+
+}
 .z-attribute .layui-textarea{
     width: 398px;
     height: 72px;
 }
 .z-attribute .name{
     margin-top: 24px;
+}
+.z-attribute .safe  {
+    margin-top: 8px;
 }
 .z-attribute .safe .safeDiv{
     padding-top: 4px;
@@ -259,6 +277,11 @@
     left: 25px;
     min-width: 81%;
 }
+.attr-wrap {
+    margin-left: 128px;
+    border: none;
+}
+
 .layui-table[lay-even] tr:nth-child(even) {
     /* background-color: #aaffaa; */
     background-color: red;
@@ -416,6 +439,14 @@
 }
 .addDashboardContent .citySel{
     height: 32px;
+    background: #FFFFFF;
+    border: 1px solid #DCDFE6;
+    border-radius: 4px;
+    padding-left: 10px;
+    width: 386px!important;
+}
+.z-attribute .attrPosiiton {
+    height: 36px;
     background: #FFFFFF;
     border: 1px solid #DCDFE6;
     border-radius: 4px;

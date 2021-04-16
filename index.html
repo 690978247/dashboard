@@ -91,7 +91,7 @@
             <ul id="treeDemoAdd" class="ztree"></ul>
         </div>
     </div>
-    <div class="addDashboardContent nicescroll-add" id="Z-addFenZU" style="display: none;">
+    <!-- <div class="addDashboardContent nicescroll-add" id="Z-addFenZU" style="display: none;">
         <div class="layui-form-item" >
             <label class="layui-form-label name"><i class="g-star">*</i>名称：</label>
             <div class="layui-input-block">
@@ -109,28 +109,28 @@
         <div id="menuContentFenzu" class="menuContent z-contentBoxLeft treeDemoAddNicescroll" style="display:none;height: 250px;">
             <ul id="treeDemoAddFenzu" class="ztree"></ul>
         </div>
-    </div>
+    </div> -->
     <!-- 属性表单div -->
     <form class="layui-form z-attribute" action="" id="attribute" style="display: none;" lay-filter="attribute">
-        <div class="layui-form-item name">
-          <label class="layui-form-label"><i class="g-star">*</i>名称：</label>
-          <div class="layui-input-block">
-            <input type="text" name="username" id="attribute-name" placeholder="请输入" autocomplete="off" class="layui-input">
-          </div>
-        </div>   
-        <div class="layui-form-item">
-          <label class="layui-form-label"><i class="g-star">*</i>位置：</label>
-          <div class="layui-input-block" id="attribute-position-box">
-            <select name="interest" lay-filter="aihao" id="attribute-position" >
-              <option value=""></option>
-              <option value="0">写作</option>
-              <option value="1">阅读</option>
-              <option value="2">游戏</option>
-              <option value="3">音乐</option>
-              <option value="4">旅行</option>
-            </select>
-          </div>
+        <div class="layui-form-item form-block" >
+            <label class="layui-form-label"><i class="g-star">*</i>名称：</label>
+            <div class="layui-input-block">
+              <input type="text" name="title" required  lay-verify="required" placeholder="请输入标题" autocomplete="off" class="layui-input" id="fenzuName">
+            </div>
         </div>
+        <div class="layui-form-item form-block clearfix" style="margin-bottom: 0;">
+            <label class="layui-form-label"><i class="g-star">*</i>位置：</label>
+            <div class="layui-form g-left" lay-filter="myDiv">
+                <ul class="list">
+                    <li class="title"><input id="fenzuPosition" class="attr-pos" placeholder="请选择位置" type="text" readonly value=""  id="menuBtnFenzu" href="#" onclick="showMenuFenzu(); return false;"/></li>
+                </ul>
+            </div>
+        </div>
+        <div id="menuContentFenzu" class="menuContent z-contentBoxLeft treeDemoAddNicescroll attr-wrap" style="display:none;height: 250px;">
+            <ul id="treeDemoAddFenzu" class="ztree"></ul>
+        </div>
+
+
         <div class="layui-form-item safe">
             <label class="layui-form-label">安全策略：</label>
             <div class="layui-input-block clearfix safeDiv">
