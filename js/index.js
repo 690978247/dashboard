@@ -116,7 +116,7 @@ function onBodyDown(event) {
     }
 }
 
-
+// 位置树打开展示
 function showMenuFenzu() {
     var cityObj = $("#fenzuPosition");
     // let nodes = zTree.getSelectedNodes();
@@ -130,6 +130,19 @@ function hideMenuFenzu() {
     $("#menuContentFenzu").fadeOut("fast");
     $("body").unbind("mousedown", onBodyDown);
 }
+
+function openAttrTree () {
+    let position = $('#attrPosition')
+    let posOffset = $("#attrPosition").offset();
+    $("#attrwrap").css({left:posOffset.left + "px", top:posOffset.top + position.outerHeight() + "px"}).slideDown("fast");
+    $("body").bind("mousedown", onBodyDown);
+}
+
+function hideAttrTree() {
+    $("#attrwrap").fadeOut("fast");
+    $("body").unbind("mousedown", onBodyDown);
+}
+
 function onBodyDown(event) {
     if (!(event.target.id == "menuBtn" || event.target.id == "menuContentFenzu" || $(event.target).parents("#menuContentFenzu").length>0)) {
         hideMenuFenzu();
