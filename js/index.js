@@ -34,6 +34,7 @@ async function getGruopTree (name) {
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
         $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodes);
+        $.fn.zTree.init($("#treeAttr"), settingAttr, zNodes);
     })
 }
 // 右侧树查询
@@ -125,14 +126,14 @@ function hideMenuFenzu() {
     $("body").unbind("mousedown", onBodyDown);
 }
 
-function openAttrTree () {
+function openTreeAttr () {
     let position = $('#attrPosition')
     let posOffset = $("#attrPosition").offset();
     $("#attrwrap").css({left:posOffset.left + "px", top:posOffset.top + position.outerHeight() + "px"}).slideDown("fast");
     $("body").bind("mousedown", onBodyDown);
 }
 
-function hideAttrTree() {
+function hideTreeAttr() {
     $("#attrwrap").fadeOut("fast");
     $("body").unbind("mousedown", onBodyDown);
 }
@@ -141,7 +142,7 @@ function onBodyDown(event) {
     if (!(event.target.id == "menuBtn" || event.target.id == "menuContentFenzu" || $(event.target).parents("#menuContentFenzu").length>0)) {
         hideMenu();
         hideMenuFenzu();
-        hideAttrTree()
+        hideTreeAttr()
     }
 }
 // 表格初始化
@@ -336,22 +337,22 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                     area: ['598px', '490px'],
                     btn: ['取消', '保存'],
                     success: function (res, curr, count) {  //回调函数
-                        $("#attribute-name").val(data.name)
+                        $("#attrName").val(data.name)
                     },
                     yes: function(index, layero){
                         //按钮【按钮一】的回调
                         layer.close(index);
                     },
                     btn2: function(index, layero){
-                        var name = $("#attribute-name").val();
+                        var name = $("#attrName").val();
                         var position = $("#attribute-position").find("option:selected").val();
                         var policyRadioVal = $('input[name="sex"]:checked').val();
                         var describeVal = $("#attribute-describeVal").val();
-                        $("#attribute-name").removeClass("valNUllBorder");
+                        $("#attrName").removeClass("valNUllBorder");
                         $("#attribute-position-box input").removeClass("valNUllBorder");
                         if(name == ""){
                             layer.msg('请填写名称');
-                            $("#attribute-name").addClass("valNUllBorder");
+                            $("#attrName").addClass("valNUllBorder");
                             return false
                         }else if(position==""){
                             layer.msg('请选择位置');

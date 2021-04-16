@@ -64,6 +64,24 @@ var settingAdd = {
   }
 };
 
+// 属性位置的树
+var settingAttr = {
+  view: {
+      dblClickExpand: false,
+      showLine: false,
+      fontCss : {color:"#333333"}
+  },
+  data: {
+      simpleData: {
+          enable: true
+      }
+  },
+  callback: {
+      beforeClick: beforeClickAdd,
+      onClick: onClickAttr,
+  }
+};
+
 // 分组弹窗位置树
 var settingAddFenzu = {
   view: {
@@ -321,6 +339,13 @@ function onClickAdd(e, treeId, treeNode) {
   nodes = zTree.getSelectedNodes()
   let cityObj = $("#citySel")[0];
   cityObj.value = treeNode.name
+}
+
+function onClickAttr (e, treeId, treeNode) {
+  currentPositionNode = treeNode
+  nodes = zTree.getSelectedNodes()
+  let pos = $("#attrPosition")[0];
+  pos.value = treeNode.name
 }
 
 function beforeClickAddFenzu(treeId, treeNode) {
