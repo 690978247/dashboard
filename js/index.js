@@ -156,10 +156,13 @@ function initTable (id, pager) {
 }
 
 // 渲染表格
-function renderTable (data, pager) {
+function renderTable (data, pager , type) { // type 勾选缓存tableCheckList， 不清除
     pager = pager ? pager : pager.size = 10
     tableData = data
-    tableCheckList = []
+    if (!type) {
+        tableCheckList = []
+    }
+    console.log(tableCheckList)
     layui.use(['table','laydate','laypage','layer','element'], function(){
         var $ = layui.jquery
         laydate = layui.laydate //日期
@@ -199,28 +202,13 @@ function renderTable (data, pager) {
                     }
                 });
                 //勾选事件，id集合
-                var len = res.data.length;
-                    pageDataIdMap = new Map();
-                    for(var i = 0;i < len;i++){   //填充当前页的数据
-                        pageDataIdMap[res.data[i].id] = res.data[i].id;
+                tableData.forEach((item, index) => {
+                    if (tableCheckList.includes(item.id)) {
+                        res.data[index]["LAY_CHECKED"]='true';
+                        $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
+                        $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
                     }
-                    var chooseNum = 0;   //记录当前页选中的数据行数
-                    for(var i = 0;i < len;i++){   //勾选行回显
-                        for(var key in idMap){
-                            if(res.data[i].id == key){
-                                res.data[i]["LAY_CHECKED"]='true';
-                                //找到对应数据改变勾选样式，呈现出选中效果
-                                var index= res.data[i]['LAY_TABLE_INDEX'];
-                                $('tr[data-index=' + index + '] input[type="checkbox"]').prop('checked', true);
-                                $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
-                                chooseNum++;
-                            }
-                        }
-                    }
-                    if(len != 0 && chooseNum == len){   //表示该页全选  --  全选按钮样式回显
-                    $('input[lay-filter="layTableAllChoose"]').prop('checked',true);
-                    $('input[lay-filter="layTableAllChoose"]').next().addClass('layui-form-checked');
-                }
+                })
         }
         });
         //监听表格复选框选择
