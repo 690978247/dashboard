@@ -25,6 +25,7 @@ var rMenu
 var zTree  //分组树
 var pTree   // 新增仪表板树
 var addPTree // 新建分组树
+var attrTree  //属性位置树
  //主页面左侧的树
  var setting = {
     view: {

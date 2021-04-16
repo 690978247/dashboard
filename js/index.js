@@ -334,14 +334,11 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                     shadeClose: true,
                     skin: 'z-addDashboard',
                     content: $('#attribute') ,
+                    // shadeClose: false,
                     area: ['598px', '490px'],
                     btn: ['取消', '保存'],
                     success: function (res, curr, count) {  //回调函数
                         $("#attrName").val(data.name)
-                    },
-                    yes: function(index, layero){
-                        //按钮【按钮一】的回调
-                        layer.close(index);
                     },
                     btn2: function(index, layero){
                         var name = $("#attrName").val();
@@ -374,7 +371,12 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                             //     }
                             // });
                         }
-                    }
+                    },
+                    end: function () {
+                        $("#attrName").val('');
+                        $("#attrPosition").val('');
+                        attrTree.cancelSelectedNode()
+                    },
                 });
             } else if(obj.event === 'edit'){
             layer.alert('编辑行：<br>'+ JSON.stringify(data))
@@ -485,6 +487,7 @@ $(document).ready(async function(){
     zTree.expandAll(true);
     pTree = $.fn.zTree.getZTreeObj("treeDemoAdd");
     addPTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu");
+    attrTree = $.fn.zTree.getZTreeObj("treeAttr");
 
     // $(".nicescroll-slideBar").niceScroll({
     //         cursorcolor: "#ddd",
@@ -637,12 +640,12 @@ $('#addDashboard').on('click', function(){
             success  : function(layero,index){
                 //完成后的回调
             },
-            yes: function(index, layero){
-                $("#addDashboardName")[0].value = ''
-                $("#citySel")[0].value = ''
-                pTree.cancelSelectedNode()
-                layer.close(index);
-            },
+            // yes: function(index, layero){
+            //     $("#addDashboardName")[0].value = ''
+            //     $("#citySel")[0].value = ''
+            //     pTree.cancelSelectedNode()
+            //     layer.close(index);
+            // },
             btn2: function(index, layero){
                 //return false 开启该代码可禁止点击该按钮关闭
                 //保存的回调
@@ -692,11 +695,16 @@ $('#addDashboard').on('click', function(){
                 }
                 return result
             },
-            cancel: function(){ 
+            end: function () {
                 $("#addDashboardName")[0].value = ''
                 $("#citySel")[0].value = ''
                 pTree.cancelSelectedNode()
             }
+            // cancel: function(){ 
+            //     $("#addDashboardName")[0].value = ''
+            //     $("#citySel")[0].value = ''
+            //     pTree.cancelSelectedNode()
+            // }
         });
 });
 $('#copeConfigureTo').on('click', function(){
@@ -896,11 +904,11 @@ $(document).on("click","#m_add",function(e){
             currentPositionNode = nodes[0]
             setPositionChoice(nodes[0].name)
         },
-        yes: function(index, layero){
-            $("#fenzuName")[0].value = ''
-            $("#fenzuPosition")[0].value = ''
-            layer.close(index);
-        },
+        // yes: function(index, layero){
+        //     $("#fenzuName")[0].value = ''
+        //     $("#fenzuPosition")[0].value = ''
+        //     layer.close(index);
+        // },
         btn2: function(index, layero){
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调
@@ -945,10 +953,14 @@ $(document).on("click","#m_add",function(e){
             }
             return result
         },
-        cancel: function(){ 
+        end: function () {
             $("#fenzuName")[0].value = ''
             $("#fenzuPosition")[0].value = ''
         }
+        // cancel: function(){ 
+        //     $("#fenzuName")[0].value = ''
+        //     $("#fenzuPosition")[0].value = ''
+        // }
     });
 })
 $(document).on("click","#m_check",function(e){
@@ -969,11 +981,11 @@ $(document).on("click","#m_check",function(e){
             currentPositionNode = nodes[0]
             setPositionChoice(nodes[0].name)
         },
-        yes: function(index, layero){
-            $("#fenzuName")[0].value = ''
-            $("#fenzuPosition")[0].value = ''
-            layer.close(index);
-        },
+        // yes: function(index, layero){
+        //     $("#fenzuName")[0].value = ''
+        //     $("#fenzuPosition")[0].value = ''
+        //     layer.close(index);
+        // },
         btn2: function(index, layero){
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调 
@@ -1013,9 +1025,13 @@ $(document).on("click","#m_check",function(e){
             }
             return result
         },
-        cancel: function(){ 
+        end: function () {
             $("#fenzuName")[0].value = ''
             $("#fenzuPosition")[0].value = ''
         }
+        // cancel: function(){ 
+        //     $("#fenzuName")[0].value = ''
+        //     $("#fenzuPosition")[0].value = ''
+        // }
     });
 })
