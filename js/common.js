@@ -38,9 +38,11 @@ var fromTree //其他仪表板复制
     
     },
     data: {
-        simpleData: {
-            enable: true
-        }
+      simpleData: {
+          enable: true,
+          idKey: "id",
+          pIdKey: "parentId"
+      }
     },
     callback: {
         onClick: groupNodeClick,
@@ -57,7 +59,9 @@ var settingAdd = {
   },
   data: {
       simpleData: {
-          enable: true
+          enable: true,
+          idKey: "id",
+          pIdKey: "parentId"
       }
   },
   callback: {
@@ -75,7 +79,9 @@ var settingAttr = {
   },
   data: {
       simpleData: {
-          enable: true
+          enable: true,
+          idKey: "id",
+          pIdKey: "parentId"
       }
   },
   callback: {
@@ -93,7 +99,9 @@ var settingAddFenzu = {
   },
   data: {
       simpleData: {
-          enable: true
+          enable: true,
+          idKey: "id",
+          pIdKey: "parentId"
       }
   },
   callback: {
@@ -114,7 +122,9 @@ var settingCopeto = {
   },
   data: {
       simpleData: {
-          enable: true
+          enable: true,
+          idKey: "id",
+          pIdKey: "parentId"
       }
   },
   callback: {
@@ -139,7 +149,9 @@ var settingCopeFrom = {
   },
   data: {
       simpleData: {
-          enable: true
+          enable: true,
+          idKey: "id",
+          pIdKey: "parentId"
       }
   },
   callback: {
@@ -162,7 +174,9 @@ var settingDept = {
   },
   data: {
       simpleData: {
-          enable: true
+          enable: true,
+          idKey: "id",
+          pIdKey: "parentId"
       }
   },
   callback: {
@@ -196,7 +210,9 @@ var settingDeptOrPeo = {
   },
   data: {
       simpleData: {
-          enable: true
+          enable: true,
+          idKey: "id",
+          pIdKey: "parentId"
       }
   },
   callback: {

@@ -140,9 +140,11 @@ function hideTreeAttr() {
 
 function onBodyDown(event) {
     if (!(event.target.id == "menuBtn" || event.target.id == "menuContentFenzu" || $(event.target).parents("#menuContentFenzu").length>0)) {
-        hideMenu();
-        hideMenuFenzu();
-        hideTreeAttr()
+        if (!([...event.target.classList].includes('noline_close') || [...event.target.classList].includes('noline_open'))) {
+            hideMenu();
+            hideMenuFenzu();
+            hideTreeAttr()
+        }
     }
 }
 // 表格初始化
