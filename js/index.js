@@ -497,8 +497,8 @@ $(document).ready(async function(){
     await getGruopTree()
     // 位置
     // $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
-    $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
-    $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
+    // $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
+    // $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
     $.fn.zTree.init($("#treeDemoDept"), settingDept, zNodesDept);
     $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
 	rMenu = $("#rMenu");
@@ -726,14 +726,17 @@ $('#copeConfigureTo').on('click', function(){
                 shadeClose: true,
                 skin: 'z-addDashboard',
                 content: $('.copeConfigureForm') ,
-                area: ['599px', '620px']
-                ,success  : function(layero,index){
+                area: ['599px', '620px'],
+                success  : function(layero,index){
                     //完成后的回调
-                }
-                ,yes: function(index, layero){
+                    request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
+                        $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
+                    })
+                },
+                yes: function(index, layero){
                     layer.close(index);
-                }
-                ,btn2: function(index, layero){
+                },
+                btn2: function(index, layero){
                     var dataObj = ConfigureFromidsArr;
                     if(dataObj == ""){
                         layer.msg('请选择仪表板');
@@ -766,8 +769,14 @@ $('#copeConfigureFrom').on('click', function(){
                 shadeClose: true,
                 skin: 'z-addDashboard',
                 content: $('.copeConfigureTo1') ,
-                area: ['599px', '620px']
-                ,btn2: function(index, layero){
+                area: ['599px', '620px'],
+                success  : function(layero,index){
+                    //完成后的回调
+                    request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
+                        $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
+                    })
+                },
+                btn2: function(index, layero){
                     var dataObj = ConfigureToidsArr;
                     if(dataObj == ""){
                         layer.msg('请选择仪表板');

@@ -103,6 +103,7 @@ var settingAddFenzu = {
 };
 
 //选择要将权限配置复制到的仪表板树
+var zNodesCopeto =[]
 var settingCopeto = {
   view:{
       showLine: false,
@@ -125,22 +126,6 @@ settingCopeto.check.chkboxType = { "Y" : "s", "N" : "s" };
 //N 属性定义 checkbox 取消勾选后的情况； 
 //"p" 表示操作会影响父级节点； 
 //"s" 表示操作会影响子级节点。
-
-var zNodesCopeto =[
-  { id:1, pId:0, name:"随意勾选 1", open:true},
-  { id:11, pId:1, name:"随意勾选 1-1", open:true},
-  { id:111, pId:11, name:"随意勾选 1-1-1"},
-  { id:112, pId:11, name:"随意勾选 1-1-2"},
-  { id:12, pId:1, name:"随意勾选 1-2", open:true},
-  { id:121, pId:12, name:"随意勾选 1-2-1"},
-  { id:122, pId:12, name:"随意勾选 1-2-2"},
-  { id:2, pId:0, name:"随意勾选 2", open:true},
-  { id:21, pId:2, name:"随意勾选 2-1"},
-  { id:22, pId:2, name:"随意勾选 2-2", open:true},
-  { id:221, pId:22, name:"随意勾选 2-2-1"},
-  { id:222, pId:22, name:"随意勾选 2-2-2"},
-  { id:23, pId:2, name:"随意勾选 2-3"}
-];
 //选择从哪个仪表板复制权限配置
 var settingCopeFrom = {
   view:{
@@ -163,21 +148,7 @@ var settingCopeFrom = {
   },
 };
 
-var zNodesCopeFrom =[
-  { id:1, pId:0, name:"随意勾选 1", open:true},
-  { id:11, pId:1, name:"随意勾选 1-1", open:true},
-  { id:111, pId:11, name:"随意勾选 1-1-1"},
-  { id:112, pId:11, name:"随意勾选 1-1-2"},
-  { id:12, pId:1, name:"随意勾选 1-2", open:true},
-  { id:121, pId:12, name:"随意勾选 1-2-1"},
-  { id:122, pId:12, name:"随意勾选 1-2-2"},
-  { id:2, pId:0, name:"随意勾选 2", open:true},
-  { id:21, pId:2, name:"随意勾选 2-1"},
-  { id:22, pId:2, name:"随意勾选 2-2", open:true},
-  { id:221, pId:22, name:"随意勾选 2-2-1"},
-  { id:222, pId:22, name:"随意勾选 2-2-2"},
-  { id:23, pId:2, name:"随意勾选 2-3"}
-];
+var zNodesCopeFrom =[];
 //自定义按钮的部门树
 var settingDept = {
   view:{
