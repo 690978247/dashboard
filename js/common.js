@@ -417,7 +417,6 @@ function onCheckDept(e,treeId,treeNode){
 
 
 function onClickSelectDept(e, treeId, treeNode) {
-  debugger
   let str = ``
   userList = []
   let value = $('#search-user').val()
