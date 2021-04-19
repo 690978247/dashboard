@@ -730,6 +730,7 @@ $('#copeConfigureTo').on('click', function(){
                 success  : function(layero,index){
                     //完成后的回调
                     request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
+                        zNodesCopeFrom = res.data.data
                         $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
                     })
                 },
@@ -773,6 +774,7 @@ $('#copeConfigureFrom').on('click', function(){
                 success: function(layero,index){
                     //完成后的回调
                     request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
+                        zNodesCopeto = res.data.data
                         $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
                     })
                 },
