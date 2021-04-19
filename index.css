@@ -770,6 +770,7 @@ body .layui-layer-page .layui-layer-content {
 }
 .z-selectDeptInp .selectPeople{
     height: 240px;
+    overflow: auto;
 }
 .g-line-right{
     width: 1px;

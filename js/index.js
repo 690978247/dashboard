@@ -899,12 +899,19 @@ layui.use('element', function(){
             return
         }
         if (ele.index === 2) {
+            let html =``
             request.get(`/bi/${appId}/departments`).then(res => {
                 zNodesDeptOrpeo = res.data.data
                 $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
             })
             request.get(`/bi/${appId}/users`).then(res => {
-                
+                res.data.data.forEach(item => {
+                    html+= `<li class="clearfix">
+                        <i class="g-left"></i>
+                        <span class="g-left">${item.name}</span>
+                    </li>`
+                })
+             $('#peopleSelect').html(html)
             })
             return
         } 
