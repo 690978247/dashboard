@@ -471,11 +471,29 @@ $(document).on('click',"#viewTpl i", function(){
     treeObjDept.checkNode(myNodes[selectId], false, true,true);
 });
 
+async function getToken () {
+    let postData = {
+        account: 15865516442,
+        origin: 0,
+        password: 123456,
+      }
+      
+    await request.post(`/bi/tokens`,null, { params: postData }).then(res => {
+        if (res.data.code === 0) {
+          localStorage.setItem("token", res.data.data.token)
+          appId = res.data.data.appId
+          console.log(localStorage.getItem('token'))
+        }
+      })
+}
+
 
 
 $(document).ready(async function(){
+    await getToken()
     // $.fn.zTree.init($("#treeDemo"), setting, zNodes);
     // $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodes);
+    
     await getGruopTree()
     // 位置
     // $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);

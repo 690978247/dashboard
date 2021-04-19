@@ -1,31 +1,35 @@
 // // 配置axios
-
 const request = axios.create({
   baseURL: 'http://apidev.sycdev.com:80', // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 900000 // request timeout
 })
 
+
 // // request interceptor
-// request.interceptors.request.use(
-//   config => {
-//     // do something before request is sent
-//     // if (store.getters.token) {
-//     //   // let each request carry token
-//     //   // ['X-Token'] is a custom headers key
-//     //   // please modify it according to the actual situation
-//     //   config.headers['X-Token'] = getToken()
-//     //   config.headers.common['Authorization'] = 'Bearer ' + getToken()
-//     // }
-//     // startLoad()
-//     return config
-//   },
-//   error => {
-//     // do something with request error
-//     console.log(error) // for debug
-//     return Promise.reject(error)
-//   }
-// )
+request.interceptors.request.use(
+  config => {
+    // do something before request is sent
+    // if (store.getters.token) {
+    //   // let each request carry token
+    //   // ['X-Token'] is a custom headers key
+    //   // please modify it according to the actual situation
+    //   config.headers['X-Token'] = getToken()
+    //   config.headers.common['Authorization'] = 'Bearer ' + getToken()
+    // }
+    // startLoad()
+    if (localStorage.getItem('token')) {
+      config.headers['X-Token'] = localStorage.getItem('token')
+      config.headers.common['Authorization'] = localStorage.getItem('token')
+      return config
+    }
+  },
+  error => {
+    // do something with request error
+    console.log(error) // for debug
+    return Promise.reject(error)
+  }
+)
 
 // // response interceptor
 // request.interceptors.response.use(
