@@ -176,7 +176,7 @@ var settingDept = {
       simpleData: {
           enable: true,
           idKey: "id",
-          pIdKey: "parentId"
+          pIdKey: "parentNodeId"
       }
   },
   callback: {
