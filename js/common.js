@@ -56,7 +56,8 @@ var settingAdd = {
   view: {
       dblClickExpand: false,
       showLine: false,
-      fontCss : {color:"#333333"}
+      fontCss : {color:"#333333"},
+      addDiyDom: addDiyDom,
   },
   data: {
       simpleData: {
@@ -76,7 +77,8 @@ var settingAttr = {
   view: {
       dblClickExpand: false,
       showLine: false,
-      fontCss : {color:"#333333"}
+      fontCss : {color:"#333333"},
+      addDiyDom: addDiyDom,
   },
   data: {
       simpleData: {
@@ -96,6 +98,7 @@ var settingAddFenzu = {
   view: {
       dblClickExpand: false,
       showLine: false,
+      addDiyDom: addDiyDom,
       fontCss : setFontCss
   },
   data: {
@@ -193,10 +196,11 @@ var settingDeptOrPeo = {
   view:{
     showLine: false,
     fontCss : {color:"#333333"},
-    showIcon: false
+    showIcon: false,
+    addDiyDom: addDiyDom,
   },
   check: {
-      enable: true,
+      // enable: true,
       // chkboxType: { "Y": "p", "N": "s" }
   },
   data: {
@@ -210,7 +214,6 @@ var settingDeptOrPeo = {
       onClick: onClickSelectDept,
   },
 };
-settingDept.check.chkboxType = { "Y" : "s", "N" : "s" };
 var zNodesDeptOrpeo =[
   // { id:1, pId:0, name:"随意勾选 1", open:true},
   // { id:11, pId:1, name:"随意勾选 1-1", open:true},
