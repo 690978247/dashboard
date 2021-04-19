@@ -16,6 +16,7 @@ var pageDataIdMap;//勾选id
 var idMap = new Map();
 var tableCheckList = [] //表格 
 var staffList = [] //访问权限人员用户
+var userList = []
 //声明变量注意区分类型，数组或对象或字符串
 var idsArr = [];//新增仪表板位置  选中树的id集合
 var ConfigureFromidsArr = [];//从其他仪表板复制配置 选中树的id集合
@@ -416,15 +417,22 @@ function onCheckDept(e,treeId,treeNode){
 
 
 function onClickSelectDept(e, treeId, treeNode) {
-  let zTree = $.fn.zTree.getZTreeObj("treeDemoDeptOrpeo"),
-  nodes = zTree.getSelectedNodes(),
-  v = "";
-  h = "";
-  nodes.sort(function compare(a,b){return a.id-b.id;});
-  for (var i=0, l=nodes.length; i<l; i++) {
-      v += nodes[i].name + ",";
-      h += nodes[i].id + ",";
-  }
-  idsArr = h;
-  idsArr = idsArr.slice(0,-1);//注意处理不为空才切割
+  debugger
+  let str = ``
+  userList = []
+  let value = $('#search-user').val()
+  staffList.forEach(item => {
+    if (item.parentId === treeNode.id) {
+      userList.push(item)
+    }
+  })
+  userList.forEach(item => {
+    if (item.name.indexOf(value) !== -1) {
+      str += `<li class="clearfix">
+          <i class="g-left"></i>
+          <span class="g-left">${item.name}</span>
+      </li>`
+    }
+  })
+  $('#peopleSelect').html(str)
 }

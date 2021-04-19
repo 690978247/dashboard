@@ -906,6 +906,7 @@ layui.use('element', function(){
             })
             request.get(`/bi/${appId}/users`).then(res => {
                 staffList = res.data.data
+                userList = res.data.data
                 staffList.forEach(item => {
                     html+= `<li class="clearfix">
                         <i class="g-left"></i>
@@ -949,7 +950,7 @@ function searchDept (event) {
 // 搜索用户
 function searchName (event) {
     let str =``
-    staffList.forEach(item => {
+    userList.forEach(item => {
         if (item.name.indexOf(event.target.value) !== -1) {
             str += `<li class="clearfix">
                 <i class="g-left"></i>
