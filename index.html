@@ -204,14 +204,14 @@
             <div class="layui-tab-content z-contentBoxLeft">
                 <div class="layui-tab-item copeConfigureTo layui-show">
                     <div class="layui-tab-item-inpbox">
-                        <input type="text" placeholder="搜索部门名称">
+                        <input type="text" onblur="searchDept(event)" placeholder="搜索部门名称">
                         <i class="icon iconfont iconsousuo"></i>
                     </div>
                     <ul id="treeDept" class="ztree"></ul>
                 </div>
                 <div class="layui-tab-item">
                     <div class="layui-tab-item-inpbox">
-                        <input type="text" placeholder="搜索职位名称">
+                        <input type="text" onblur="searchJob(event)" placeholder="搜索职位名称">
                         <i class="icon iconfont iconsousuo"></i>
                     </div>
                     <ul class="rank rankScroll" id="rankSelect">

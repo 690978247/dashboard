@@ -917,6 +917,34 @@ layui.use('element', function(){
         } 
     });
 });
+// 搜索职位
+function searchJob (event) {
+    let html = ''
+    let postData = {
+        appId,
+        positionName: event.target.value
+    }
+    request.get(`/bi/${appId}/positions`, { params: postData }).then(res => {
+        res.data.data.forEach(item => {
+            html += `<li class="clearfix">
+            <span class="g-left">${item.name}</span>
+            <i class="g-right"></i>
+        </li>`
+        })
+        $('#rankSelect').html(html)
+    })
+}
+// 搜索部门
+function searchDept (event) {
+    let postData = {
+        appId,
+        deptName: event.target.value
+    }
+    request.get(`/bi/${appId}/departments`, { params: postData} ).then(res => {
+        zNodesDept = res.data.data
+        $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
+    })
+}
 var peopleArr = [];
 $(document).on("click","#peopleSelect i",function(e){
     if($(this).hasClass("active")){
