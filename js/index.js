@@ -499,8 +499,8 @@ $(document).ready(async function(){
     // $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
     // $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
     // $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
-    $.fn.zTree.init($("#treeDemoDept"), settingDept, zNodesDept);
-    $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
+    // $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
+    // $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
 	rMenu = $("#rMenu");
     zTree = $.fn.zTree.getZTreeObj("treeDemo");
     zTree.expandAll(true);
@@ -770,7 +770,7 @@ $('#copeConfigureFrom').on('click', function(){
                 skin: 'z-addDashboard',
                 content: $('.copeConfigureTo1') ,
                 area: ['599px', '620px'],
-                success  : function(layero,index){
+                success: function(layero,index){
                     //完成后的回调
                     request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
                         $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
@@ -810,8 +810,14 @@ $('#z-selectDeptInp').on('click', function(){
                 shadeClose: true,
                 skin: 'z-addDashboard',
                 content: $('.z-selectDeptInp') ,
-                area: ['498px', '590px']
-                ,btn2: function(index, layero){
+                area: ['498px', '590px'],
+                success: function(layero,index) {
+                    request.get(`/bi/${appId}/departments`).then(res => {
+                        zNodesDept = res.data.data
+                        $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
+                    })
+                },
+                btn2: function(index, layero){
                     $("#z-selectDeptInp").val("");
                     if(checkDeptArr === ""){
                         checkDeptArr = checkDeptArr.split(",");
@@ -863,6 +869,41 @@ $(document).on("click","#rankSelect i",function(e){
             }
         }); 
 })
+// 监听tabs页面
+layui.use('element', function(){
+    var element = layui.element;
+    //一些事件触发
+    element.on('tab(docDemoTabBrief)', function(ele){
+        if (ele.index === 0) {
+            request.get(`/bi/${appId}/departments`).then(res => {
+                zNodesDept = res.data.data
+                $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
+            })
+            return
+        }
+        if (ele.index === 1) {
+            let html = ''
+            request.get(`/bi/${appId}/positions`).then(res => {
+                res.data.data.forEach(item => {
+                    html += `<li class="clearfix">
+                    <span class="g-left">${item.name}</span>
+                    <i class="g-right"></i>
+                </li>`
+                })
+                $('#rankSelect').html(html)
+            })
+            return
+        }
+        if (ele.index === 2) {
+            request.get(`/bi/${appId}/users`).then(res => {
+                zNodesDeptOrpeo = res.data.data
+                $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
+            })
+            return
+            // $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
+        } 
+    });
+});
 var peopleArr = [];
 $(document).on("click","#peopleSelect i",function(e){
     if($(this).hasClass("active")){

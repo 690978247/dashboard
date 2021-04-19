@@ -696,6 +696,7 @@ body .layui-layer-page .layui-layer-content {
 .z-selectDeptInp .layui-tab-content .rank{
     width: 474px;
     height: 248px;
+    overflow: auto;
 }
 .z-selectDeptInp  .z-contentBoxLeft .treeDemoDeptOrpeo .ztree li span.button.noline_open, .z-selectDeptInp  .z-contentBoxLeft .treeDemoDeptOrpeo .ztree li span.button.noline_close {
     top: 6px;
