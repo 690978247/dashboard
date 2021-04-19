@@ -539,6 +539,48 @@
     width: 14px;
     height: 14px;
 }
+/*  */
+.treeDemoDeptOrpeo .z-contentBoxLeft{
+    border: none;
+    width: 398px;
+    height: 300px;
+    float:none;
+    margin-left: 69px;
+}
+.treeDemoDeptOrpeo .ztree li span.button.chk {
+    margin: 7px 3px 0px 9px;
+}
+.treeDemoDeptOrpeo .z-contentBoxLeft .ztree li span.button.noline_close,.treeDemoDeptOrpeo .z-contentBoxLeft .ztree li span.button.noline_open{
+    top: 4px;
+}
+.treeDemoDeptOrpeo .z-contentBoxLeft .ztree li span.button.noline_close,.treeDemoDeptOrpeo .z-contentBoxLeft .ztree li span.button.noline_open{
+    top: 4px;
+}
+.treeDemoDeptOrpeo .ztree li span.button.chk.checkbox_true_part,.treeDemoDeptOrpeo .ztree li span.button.chk.checkbox_true_part_focus {
+    background-position: 0 0;
+    background: url(./img/icon_sel_pre2.png);
+    width: 14px;
+    height: 14px;
+}
+.treeDemoDeptOrpeo .ztree li span.button.chk.checkbox_false_part,.treeDemoDeptOrpeo .ztree li span.button.chk.checkbox_false_part_focus {
+    background-position: 0 0;
+    background: url(./img/icon_sel_nor2.png);
+    width: 14px;
+    height: 14px;
+}
+.treeDemoDeptOrpeo .ztree li span.button.chk.checkbox_true_full,.treeDemoDeptOrpeo .ztree li span.button.chk.checkbox_true_full_focus{
+    background-position: 0 0;
+    background: url(./img/icon_sel_pre2.png);
+    width: 14px;
+    height: 14px;
+}
+.treeDemoDeptOrpeo .ztree li span.button.chk.checkbox_false_full,.treeDemoDeptOrpeo .ztree li span.button.chk.checkbox_false_full_focus{
+    background-position: 0 0;
+    background: url(./img/icon_sel_nor2.png);
+    width: 14px;
+    height: 14px;
+}
+
 body .layui-layer-page .layui-layer-content {
     overflow: hidden;
 }

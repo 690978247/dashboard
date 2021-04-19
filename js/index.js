@@ -899,12 +899,14 @@ layui.use('element', function(){
             return
         }
         if (ele.index === 2) {
-            request.get(`/bi/${appId}/users`).then(res => {
+            request.get(`/bi/${appId}/departments`).then(res => {
                 zNodesDeptOrpeo = res.data.data
                 $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
             })
+            request.get(`/bi/${appId}/users`).then(res => {
+                
+            })
             return
-            // $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
         } 
     });
 });
