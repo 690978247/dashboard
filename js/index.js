@@ -905,7 +905,8 @@ layui.use('element', function(){
                 $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
             })
             request.get(`/bi/${appId}/users`).then(res => {
-                res.data.data.forEach(item => {
+                staffList = res.data.data
+                staffList.forEach(item => {
                     html+= `<li class="clearfix">
                         <i class="g-left"></i>
                         <span class="g-left">${item.name}</span>
@@ -944,6 +945,19 @@ function searchDept (event) {
         zNodesDept = res.data.data
         $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
     })
+}
+// 搜索用户
+function searchName (event) {
+    let str =``
+    staffList.forEach(item => {
+        if (item.name.indexOf(event.target.value) !== -1) {
+            str += `<li class="clearfix">
+                <i class="g-left"></i>
+                <span class="g-left">${item.name}</span>
+            </li>`
+        }
+    })
+    $('#peopleSelect').html(str)
 }
 var peopleArr = [];
 $(document).on("click","#peopleSelect i",function(e){
