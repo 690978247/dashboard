@@ -507,12 +507,16 @@
     background: url(./img/icon_sel_pre2.png);
     width: 14px;
     height: 14px;
+    position: relative;
+    z-index: 100;
 }
 .copeConfigureTo .ztree li span.button.chk.checkbox_false_full,.copeConfigureTo .ztree li span.button.chk.checkbox_false_full_focus{
     background-position: 0 0;
     background: url(./img/icon_sel_nor2.png);
     width: 14px;
     height: 14px;
+    position: relative;
+    z-index: 100;
 }
 
 .copeConfigureForm .ztree li span.button.chk.radio_true_part,.copeConfigureForm .ztree li span.button.chk.radio_true_part_focus {
