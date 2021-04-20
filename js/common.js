@@ -435,10 +435,21 @@ function onClickSelectDept(e, treeId, treeNode) {
     if (item.name.indexOf(value) !== -1) {
       str += `<li class="clearfix">
           <i class="g-left  ${peopleArr.includes(item.name) ? 'active' : ''} "></i>
-          <span  data-id="${item.id}" class="g-left">${item.name}</span>
+          <span data-id="${item.id}" class="g-left">${item.name}</span>
       </li>`
     }
-    // $('#viewTpl3').html('')
   })
   $('#peopleSelect').html(str)
+  let lis = [...$('#peopleSelect li')]
+    let peopleNames = []
+    peopleArr.forEach(item => {
+        peopleNames.push(item.bizName)
+    })
+    lis.forEach((item, index) => {
+        if (peopleNames.includes(item.lastElementChild.innerText)) {
+            $(item.firstElementChild).addClass("active");
+        } else {
+            $(item.firstElementChild).removeClass("active");
+        }
+    })
 }

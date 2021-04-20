@@ -1058,8 +1058,12 @@ function searchJob (event) {
         })
         $('#rankSelect').html(html)
         let lis = [...$('#rankSelect li')]
+        let jobNames = []
+        jobArr.forEach(item => {
+            jobNames.push(item.bizName)
+        })
         lis.forEach((item, index) => {
-            if (jobArr.includes(item.firstElementChild.innerText)) {
+            if (jobNames.includes(item.firstElementChild.innerText)) {
                 $(item.lastElementChild).addClass("active");
             } else {
                 $(item.lastElementChild).removeClass("active");
@@ -1075,7 +1079,17 @@ function searchDept (event) {
     }
     request.get(`/bi/${appId}/departments`, { params: postData} ).then(res => {
         zNodesDept = res.data.data
+        let departNames = []
+        checkDeptArr.forEach(item => {
+            departNames.push(item.bizName)
+        })
+        zNodesDept.forEach((item,index) => {
+            if (departNames.includes(item.name)) {
+                zNodesDept[index].checked = true
+            } 
+        })
         $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
+        departTree.expandAll(true)
     })
 }
 // 搜索用户
@@ -1092,6 +1106,18 @@ function searchName (event) {
         })
     }
     $('#peopleSelect').html(str)
+    let lis = [...$('#peopleSelect li')]
+    let peopleNames = []
+    peopleArr.forEach(item => {
+        peopleNames.push(item.bizName)
+    })
+    lis.forEach((item, index) => {
+        if (peopleNames.includes(item.lastElementChild.innerText)) {
+            $(item.firstElementChild).addClass("active");
+        } else {
+            $(item.firstElementChild).removeClass("active");
+        }
+    })
 }
 // 人员复选框点击事件
 $(document).on("click","#peopleSelect i",function(e){
