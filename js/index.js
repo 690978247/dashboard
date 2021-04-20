@@ -828,6 +828,18 @@ $('#z-selectDeptInp').on('click', function(){
                         $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
                         departTree = $.fn.zTree.getZTreeObj("treeDept");
                         departTree.expandAll(true)
+                        layui.use('laytpl', function(){
+                            let laytpl = layui.laytpl;
+                            //第三步：渲染模版
+                            let data =checkDeptArr;
+                            let getTpl = demoTpl.innerHTML;
+                            view = document.getElementById('viewTpl');
+                            if(data.length != 0){
+                                laytpl(getTpl).render(data, function(html){
+                                    view.innerHTML = html;
+                                });
+                            }
+                        }); 
                     })
                     // 职位
                     request.get(`/bi/${appId}/positions`).then(res => {
@@ -838,6 +850,19 @@ $('#z-selectDeptInp').on('click', function(){
                             </li>`
                         })
                         $('#rankSelect').html(html)
+                        //模板引擎
+                        layui.use('laytpl', function(){
+                            let laytpl = layui.laytpl;
+                            //第三步：渲染模版
+                            let jobArrdata = jobArr;
+                            let getTpl = jobArrTpl.innerHTML;
+                            view = document.getElementById('viewTpl2');
+                            if(jobArrdata.length >= 0){
+                                laytpl(getTpl).render(jobArrdata, function(html){
+                                    view.innerHTML = html;
+                                });
+                            }
+                        }); 
                     })
                     // 人员
                     request.get(`/bi/${appId}/departments`).then(res => {
@@ -845,17 +870,48 @@ $('#z-selectDeptInp').on('click', function(){
                         $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
                         peopleTree = $.fn.zTree.getZTreeObj("treeDemoDeptOrpeo");
                         peopleTree.expandAll(true)
+                        peopleTree.selectNode(currentPeopleNode)
+                        // userList.forEach(item => {
+                        //     if (item.name.indexOf(event.target.value) !== -1) {
+                        //         str += `<li class="clearfix" data-id="${item.id}" >
+                        //             <i class="g-left"></i>
+                        //             <span class="g-left">${item.name}</span>
+                        //         </li>`
+                        //     }
+                        // })
+                        // $('#peopleSelect').html(str)
                     })
                     request.get(`/bi/${appId}/users`).then(res => {
                         staffList = res.data.data
-                        userList = res.data.data
-                        staffList.forEach(item => {
+                        if (JSON.stringify(currentPeopleNode) !== "{}" && currentPeopleNode.name) {
+                            userList = []
+                            staffList.forEach(item => {
+                                if (item.parentId === currentPeopleNode.id) {
+                                  userList.push(item)
+                                }
+                            })
+                        } else {
+                            userList = res.data.data
+                        }
+                        userList.forEach(item => {
                             str+= `<li class="clearfix" data-id="${item.id}">
                                 <i class="g-left ${peopleArr.includes(item.name) ? 'active' : ''} "></i>
                                 <span class="g-left">${item.name}</span>
                             </li>`
                         })
+                       
                         $('#peopleSelect').html(str)
+                        layui.use('laytpl', function(){
+                            var laytpl = layui.laytpl;
+                            var jobArrdata = peopleArr;
+                            var getTpl = jobArrTpl.innerHTML;
+                            view = document.getElementById('viewTpl3');
+                            if(jobArrdata.length >= 0){
+                                laytpl(getTpl).render(jobArrdata, function(html){
+                                    view.innerHTML = html;
+                                });
+                            }
+                        });
                     })
                 },
                 btn2: function(index, layero){
@@ -994,14 +1050,16 @@ function searchDept (event) {
 // 搜索用户
 function searchName (event) {
     let str =``
-    userList.forEach(item => {
-        if (item.name.indexOf(event.target.value) !== -1) {
-            str += `<li class="clearfix" data-id="${item.id}" >
-                <i class="g-left"></i>
-                <span class="g-left">${item.name}</span>
-            </li>`
-        }
-    })
+    if (event) {
+        userList.forEach(item => {
+            if (item.name.indexOf(event.target.value) !== -1) {
+                str += `<li class="clearfix" data-id="${item.id}" >
+                    <i class="g-left"></i>
+                    <span class="g-left">${item.name}</span>
+                </li>`
+            }
+        })
+    }
     $('#peopleSelect').html(str)
 }
 var peopleArr = [];

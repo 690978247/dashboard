@@ -421,6 +421,7 @@ function onCheckDept(e,treeId,treeNode){
 
 
 function onClickSelectDept(e, treeId, treeNode) {
+  currentPeopleNode = treeNode
   let str = ``
   userList = []
   let value = $('#input-user').val()
