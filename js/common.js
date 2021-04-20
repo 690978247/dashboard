@@ -1,20 +1,20 @@
 // 全局data 以及zTree事件
 /* 全局data */
-var searchObjData = {};
-var attributeObjData = {};
+var searchObjData = {}
+var attributeObjData = {}
 var currentPositionNode = {}  //位置树选中的node
 var currentGroupNode = {}  //分组树选中的node
 var currentPeopleNode  = {} //人员树选中的node
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var defaultTd = '8ecd52dcd312f9dd21beb42a1a2345ce'  //表格全部分组id
-var zNodes = [];
-var addCount = 1;
+var zNodes = []
+var addCount = 1
 var pageData = {}
 var tableData=[]
 let tableDataArr = []
 let show = true
 var pageDataIdMap;//勾选id
-var idMap = new Map();
+var idMap = new Map()
 var tableCheckList = [] //表格 
 var staffList = [] //访问权限人员用户
 var userList = []
@@ -22,11 +22,14 @@ var cloneDepart = []
 var cloneJob = []
 var clonePeople = []
 //声明变量注意区分类型，数组或对象或字符串
-var idsArr = [];//新增仪表板位置  选中树的id集合
-var ConfigureFromidsArr = [];//从其他仪表板复制配置 选中树的id集合
-var ConfigureToidsArr = [];//将配置复制给其他仪表板  选中树的id集合
-var checkDeptArr = [];//自定义权限选择部门的集合
+var idsArr = []//新增仪表板位置  选中树的id集合
+var ConfigureFromidsArr = []//从其他仪表板复制配置 选中树的id集合
+var ConfigureToidsArr = []//将配置复制给其他仪表板  选中树的id集合
+var checkDeptArr = []//自定义权限选择部门的集合
 var permissionList = []
+var jobArr = []
+var peopleArr = []
+
 //树配置初始化
 var rMenu
 var zTree  //分组树
@@ -388,31 +391,26 @@ function zTreeBeforeCheck(treeId, treeNode) {
 }
 
 function onCheckDept(e,treeId,treeNode){
-  treeObjDept=$.fn.zTree.getZTreeObj("treeDept"),
-  myNodes=treeObjDept.getCheckedNodes(true),
-  v1="";
-  h1="";
-  for(var i=0;i<myNodes.length;i++){
-      v1+=myNodes[i].name + ",";
-      h1+=myNodes[i].id + ",";  
-  }
-  checkDeptArr = v1;
-  checkDeptArrIds =h1;
-  if(checkDeptArr!=""){
-     checkDeptArr = checkDeptArr.slice(0,-1);
-     checkDeptArr = checkDeptArr.split(",");
-  }
-  if(checkDeptArrIds!=""){
-      checkDeptArrIds = checkDeptArrIds.slice(0,-1);
-      checkDeptArrIds = checkDeptArrIds.split(",");
-   }
+  myNodes=departTree.getCheckedNodes(true)
+  let arr = []
+  myNodes.forEach((item,index) => {
+    arr.push({
+      bizId: item.id,
+      bizName: item.name,
+      type: 'department'
+    })
+  })
+  checkDeptArr = arr
   $("#viewTpl li").remove();
   //模板引擎
   layui.use('laytpl', function(){
-      var laytpl = layui.laytpl;
+      let laytpl = layui.laytpl;
+      let data = []
       //第三步：渲染模版
-      var data =checkDeptArr;
-      var getTpl = demoTpl.innerHTML;
+      checkDeptArr.forEach(item => {
+        data.push(item.bizName)
+      })
+      let getTpl = demoTpl.innerHTML;
       view = document.getElementById('viewTpl');
       if(data.length != 0){
           laytpl(getTpl).render(data, function(html){
@@ -435,9 +433,9 @@ function onClickSelectDept(e, treeId, treeNode) {
   })
   userList.forEach(item => {
     if (item.name.indexOf(value) !== -1) {
-      str += `<li class="clearfix" data-id="${item.id}">
+      str += `<li class="clearfix">
           <i class="g-left  ${peopleArr.includes(item.name) ? 'active' : ''} "></i>
-          <span class="g-left">${item.name}</span>
+          <span  data-id="${item.id}" class="g-left">${item.name}</span>
       </li>`
     }
     // $('#viewTpl3').html('')

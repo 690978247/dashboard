@@ -850,7 +850,7 @@ $('#z-selectDeptInp').on('click', function(){
                     request.get(`/bi/${appId}/positions`).then(res => {
                         res.data.data.forEach(item => {
                             html += `<li class="clearfix">
-                                <span class="g-left">${item.name}</span>
+                                <span class="g-left" data-id="${item.id}" >${item.name}</span>
                                 <i class="g-right ${jobArr.includes(item.name) ? 'active' : ''} "></i>
                             </li>`
                         })
@@ -899,9 +899,9 @@ $('#z-selectDeptInp').on('click', function(){
                             userList = res.data.data
                         }
                         userList.forEach(item => {
-                            str+= `<li class="clearfix" data-id="${item.id}">
+                            str+= `<li class="clearfix">
                                 <i class="g-left ${peopleArr.includes(item.name) ? 'active' : ''} "></i>
-                                <span class="g-left">${item.name}</span>
+                                <span class="g-left" data-id="${item.id}" >${item.name}</span>
                             </li>`
                         })
                         $('#peopleSelect').html(str)
@@ -924,16 +924,12 @@ $('#z-selectDeptInp').on('click', function(){
                     cloneJob = JSON.parse(JSON.stringify(jobArr))
                     clonePeople = JSON.parse(JSON.stringify(peopleArr))
                     $("#z-selectDeptInp").val("");
-                    if(checkDeptArr === ""){
-                        checkDeptArr = checkDeptArr.split(",");
-                    }
-                    permissionList = jobArr.concat(peopleArr);
-                    if(checkDeptArr != ""){
-                        permissionList = permissionList.concat(checkDeptArr);                        
-                        $("#z-selectDeptInp").val(permissionList);
-                    }else{
-                        $("#z-selectDeptInp").val(permissionList);
-                    }
+                    permissionList = checkDeptArr.concat(jobArr).concat(peopleArr)
+                    let permissionNames = []
+                    permissionList.forEach(item => {
+                        permissionNames.push(item.bizName)
+                    })
+                    $("#z-selectDeptInp").val(permissionNames);
                     if(($("#viewTpl li").length == 0) && ($("#viewTpl2 li").length==0) && ($("#viewTpl3 li").length==0)){
                         layer.msg('请配置权限');
                         return false;
@@ -965,22 +961,35 @@ $("#resetBtn").on('click',function(){
     $("#mySelect").siblings("div.layui-form-select").find("dd:first").click();
 })
 //自定义权限中的职位勾选事件
-var jobArr = [];
 $(document).on("click","#rankSelect i",function(e){
         if($(this).hasClass("active")){
             $(this).removeClass("active");
-            jobArr.splice($.inArray($(this).siblings().text(),jobArr),1);
+            let id = []
+            id.push($(this).siblings().data().id)
+            jobArr.forEach((item, index) => {
+                if (id.includes(item.bizId)) {
+                    jobArr.splice(index, 1)
+                }
+            })
+            // jobArr.splice($.inArray($(this).siblings().text(),jobArr),1);
         }else{
             $(this).addClass("active");
-            jobArr.push($(this).siblings().text());
+            jobArr.push({
+                bizId: $(this).siblings().data().id,
+                bizName: $(this).siblings().text(),
+                type: 'position'
+            })
         }
 
         //模板引擎
         layui.use('laytpl', function(){
-            var laytpl = layui.laytpl;
+            let laytpl = layui.laytpl;
             //第三步：渲染模版
-            var jobArrdata = jobArr;
-            var getTpl = jobArrTpl.innerHTML;
+            let jobArrdata = [];
+            jobArr.forEach(item => {
+                jobArrdata.push(item.bizName)
+            })
+            let getTpl = jobArrTpl.innerHTML;
             view = document.getElementById('viewTpl2');
             if(jobArrdata.length >= 0){
                 laytpl(getTpl).render(jobArrdata, function(html){
@@ -1032,7 +1041,7 @@ function searchJob (event) {
     request.get(`/bi/${appId}/positions`, { params: postData }).then(res => {
         res.data.data.forEach(item => {
             html += `<li class="clearfix">
-            <span class="g-left">${item.name}</span>
+            <span class="g-left" data-id="${item.id}">${item.name}</span>
             <i class="g-right"></i>
         </li>`
         })
@@ -1073,19 +1082,32 @@ function searchName (event) {
     }
     $('#peopleSelect').html(str)
 }
-var peopleArr = [];
+// 人员复选框点击事件
 $(document).on("click","#peopleSelect i",function(e){
     if($(this).hasClass("active")){
         $(this).removeClass("active");
-        peopleArr.splice($.inArray($(this).siblings().text(),peopleArr),1);
+        let id = []
+        id.push($(this).siblings().data().id)
+        peopleArr.forEach((item, index) => {
+            if (id.includes(item.bizId)) {
+                peopleArr.splice(index, 1)
+            }
+        })
     }else{
         $(this).addClass("active");
-        peopleArr.push($(this).siblings().text());
+        peopleArr.push({
+            bizId: $(this).siblings().data().id,
+            bizName: $(this).siblings().text(),
+            type: 'user'
+        })
     }
     layui.use('laytpl', function(){
-        var laytpl = layui.laytpl;
-        var jobArrdata = peopleArr;
-        var getTpl = jobArrTpl.innerHTML;
+        let laytpl = layui.laytpl;
+        let jobArrdata = [];
+        peopleArr.forEach(item => {
+            jobArrdata.push(item.bizName)
+        })
+        let getTpl = jobArrTpl.innerHTML;
         view = document.getElementById('viewTpl3');
         if(jobArrdata.length >= 0){
             laytpl(getTpl).render(jobArrdata, function(html){
