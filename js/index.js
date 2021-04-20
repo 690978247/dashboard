@@ -986,6 +986,14 @@ function searchJob (event) {
         </li>`
         })
         $('#rankSelect').html(html)
+        let lis = [...$('#rankSelect li')]
+        lis.forEach((item, index) => {
+            if (jobArr.includes(item.firstElementChild.innerText)) {
+                $(item.lastElementChild).addClass("active");
+            } else {
+                $(item.lastElementChild).removeClass("active");
+            }
+        })
     })
 }
 // 搜索部门
