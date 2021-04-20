@@ -501,6 +501,8 @@
     background: url(./img/icon_sel_nor2.png);
     width: 14px;
     height: 14px;
+    position: relative;
+    z-index: 100;
 }
 .copeConfigureTo .ztree li span.button.chk.checkbox_true_full,.copeConfigureTo .ztree li span.button.chk.checkbox_true_full_focus{
     background-position: 0 0;

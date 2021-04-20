@@ -174,7 +174,6 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
     if (!type) {
         tableCheckList = []
     }
-    console.log(tableCheckList)
     layui.use(['table','laydate','laypage','layer','element'], function(){
         var $ = layui.jquery
         laydate = layui.laydate //日期
@@ -246,7 +245,6 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                     tableCheckList = []
                 }
             }
-            console.log(tableCheckList)
             if (tableCheckList.length !== 0) {
                 $("#batchRelease").css("background","#409EFF");
                 // $("#batchRelease").css("pointer-events", "auto")
@@ -821,11 +819,17 @@ $('#z-selectDeptInp').on('click', function(){
                     // 部门
                     request.get(`/bi/${appId}/departments`).then(res => {
                         zNodesDept = res.data.data
-                        $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
                         // 设置默认勾选
-                        if (checkDeptArr.length !== 0) {
+                        zNodesDept.forEach((item,index) => {
+                            if (checkDeptArr.includes(item.name)) {
+                                zNodesDept[index].checked = true
+                            }
+                        })
+                        $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
+                        departTree = $.fn.zTree.getZTreeObj("treeDept");
+                        departTree.expandAll(true)
 
-                        }
+
                     })
                     // 职位
                     request.get(`/bi/${appId}/positions`).then(res => {
@@ -835,13 +839,13 @@ $('#z-selectDeptInp').on('click', function(){
                                 <i class="g-right ${jobArr.includes(item.name) ? 'active' : ''} "></i>
                             </li>`
                         })
-                        console.log(html)
                         $('#rankSelect').html(html)
                     })
                     // 人员
                     request.get(`/bi/${appId}/departments`).then(res => {
                         zNodesDeptOrpeo = res.data.data
                         $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
+                        peopleTree = $.fn.zTree.getZTreeObj("treeDemoDeptOrpeo");
                     })
                     request.get(`/bi/${appId}/users`).then(res => {
                         staffList = res.data.data
@@ -878,7 +882,6 @@ $('#z-selectDeptInp').on('click', function(){
                     }        
                 },
                 end: function () {
-                    console.log('pp', permissionList.length)
                     if (permissionList.length === 0) {
                         checkDeptArr = []
                         jobArr = []
@@ -916,7 +919,6 @@ $(document).on("click","#rankSelect i",function(e){
             view = document.getElementById('viewTpl2');
             if(jobArrdata.length >= 0){
                 laytpl(getTpl).render(jobArrdata, function(html){
-                    // console.log(html);
                     view.innerHTML = html;
                 });
             }

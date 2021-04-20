@@ -30,6 +30,8 @@ var pTree   // 新增仪表板树
 var addPTree // 新建分组树
 var attrTree  //属性位置树
 var fromTree //其他仪表板复制 
+var departTree //部门树
+var peopleTree //人员树
  //主页面左侧的树
  var setting = {
     view: {
