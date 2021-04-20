@@ -360,19 +360,34 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                             return false
                         }else{
                             let panelName = $('#attrName').val()
-                            let groupId = currentPositionNode.id
+                            let groupId = currentPositionNode.parentId
+                            let panelId = currentPositionNode.id
+                            console.log(currentPositionNode)
                             let description = $('#attribute-describeVal').val()
                             let accessType = $("input[name='permission']:checked").val();
+                            if (accessType === 'custom') {
+                                if (permissionList.length === 0) {
+                                    layer.msg('请设置权限');
+                                    return false
+                                }
+                            }
                             let postData = {
                                 panelName,
                                 groupId,
+                                accessType,
+                                panelId,
                                 description,
-                                accessType
+                                customPermissions: permissionList
                             }
-                            console.log(postData)
-                            // request.post(`/bi/${appId}/panel-permissions`).then(res => {
-
-                            // })
+                            request.post(`/bi/${appId}/panel-permissions`, postData).then(res => {
+                                if (res.data.code === 0) {
+                                    layer.msg('保存成功!')
+                                    initTable(currentGroupNode.id)
+                                    layer.close(index);
+                                } else {
+                                    layer.msg(res.data.msg)
+                                }
+                            })
                         }
                     },
                     end: function () {
@@ -617,6 +632,15 @@ layui.use('form', function() {
             $("#z-selectDept").show();
             $("#layui-form-margin9").css("margin-bottom","0px");
           }else{
+            permissionList = []
+            jobArr = []
+            checkDeptArr = []
+            peopleArr = []
+            currentPeopleNode  = {}
+            $('#viewTpl').html('')
+            $('#viewTpl2').html('')
+            $('#viewTpl3').html('')
+            $('#z-selectDeptInp').val('')
             $("#z-selectDept").hide();
             $("#layui-form-margin9").css("margin-bottom","15px");
           }
