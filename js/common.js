@@ -4,6 +4,7 @@ var searchObjData = {};
 var attributeObjData = {};
 var currentPositionNode = {}  //位置树选中的node
 var currentGroupNode = {}  //分组树选中的node
+var currentPeopleNode  = {} //人员树选中的node
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var defaultTd = '8ecd52dcd312f9dd21beb42a1a2345ce'  //表格全部分组id
 var zNodes = [];
@@ -421,9 +422,8 @@ function onCheckDept(e,treeId,treeNode){
 
 function onClickSelectDept(e, treeId, treeNode) {
   let str = ``
-  peopleArr = []
   userList = []
-  let value = $('#search-user').val()
+  let value = $('#input-user').val()
   staffList.forEach(item => {
     if (item.parentId === treeNode.id) {
       userList.push(item)
@@ -432,7 +432,7 @@ function onClickSelectDept(e, treeId, treeNode) {
   userList.forEach(item => {
     if (item.name.indexOf(value) !== -1) {
       str += `<li class="clearfix" data-id="${item.id}">
-          <i class="g-left"></i>
+          <i class="g-left  ${peopleArr.includes(item.name) ? 'active' : ''} "></i>
           <span class="g-left">${item.name}</span>
       </li>`
     }

@@ -197,21 +197,21 @@
         </div>
         <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
             <ul class="layui-tab-title">
-              <li class="layui-this">部门</li>
+              <li>部门</li>
               <li>职位</li>
               <li>人员</li>
             </ul>
             <div class="layui-tab-content z-contentBoxLeft">
                 <div class="layui-tab-item copeConfigureTo layui-show">
                     <div class="layui-tab-item-inpbox">
-                        <input type="text" onblur="searchDept(event)" placeholder="搜索部门名称">
+                        <input type="text" onblur="searchDept(event)" id="input-Dept" autocomplete="off" placeholder="搜索部门名称">
                         <i class="icon iconfont iconsousuo"></i>
                     </div>
                     <ul id="treeDept" class="ztree"></ul>
                 </div>
                 <div class="layui-tab-item">
                     <div class="layui-tab-item-inpbox">
-                        <input type="text" onblur="searchJob(event)" placeholder="搜索职位名称">
+                        <input type="text" onblur="searchJob(event)" id="input-job" autocomplete="off" placeholder="搜索职位名称">
                         <i class="icon iconfont iconsousuo"></i>
                     </div>
                     <ul class="rank rankScroll" id="rankSelect">
@@ -240,7 +240,7 @@
                         <ul id="treeDemoDeptOrpeo" class="ztree g-left" style="width: 224px;height: 251px;"></ul>
                         <div class="g-left selectPeopleBox">
                             <div class="layui-tab-item-inpbox">
-                                <input type="text" onblur="searchName(event)" id="search-user" placeholder="搜索用户名称" style="width: 205px;margin: 0;">
+                                <input type="text" onblur="searchName(event)" id="input-user" autocomplete="off" placeholder="搜索用户名称" style="width: 205px;margin: 0;">
                                 <i class="icon iconfont iconsousuo" style="top: 10px;left: 9px;"></i>
                             </div>
                             <ul class="selectPeople selectPeopleScroll" id="peopleSelect">
