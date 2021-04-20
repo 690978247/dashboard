@@ -418,6 +418,7 @@ function onCheckDept(e,treeId,treeNode){
 
 function onClickSelectDept(e, treeId, treeNode) {
   let str = ``
+  peopleArr = []
   userList = []
   let value = $('#search-user').val()
   staffList.forEach(item => {
@@ -427,11 +428,12 @@ function onClickSelectDept(e, treeId, treeNode) {
   })
   userList.forEach(item => {
     if (item.name.indexOf(value) !== -1) {
-      str += `<li class="clearfix">
+      str += `<li class="clearfix" data-id="${item.id}">
           <i class="g-left"></i>
           <span class="g-left">${item.name}</span>
       </li>`
     }
+    $('#viewTpl3').html('')
   })
   $('#peopleSelect').html(str)
 }

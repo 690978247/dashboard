@@ -816,9 +816,38 @@ $('#z-selectDeptInp').on('click', function(){
                 content: $('.z-selectDeptInp') ,
                 area: ['498px', '590px'],
                 success: function(layero,index) {
+                    let html = ''
+                    let str =``
+                    // 部门
                     request.get(`/bi/${appId}/departments`).then(res => {
                         zNodesDept = res.data.data
                         $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
+                    })
+                    // 职位
+                    request.get(`/bi/${appId}/positions`).then(res => {
+                        res.data.data.forEach(item => {
+                            html += `<li class="clearfix">
+                            <span class="g-left">${item.name}</span>
+                            <i class="g-right"></i>
+                        </li>`
+                        })
+                        $('#rankSelect').html(html)
+                    })
+                    // 人员
+                    request.get(`/bi/${appId}/departments`).then(res => {
+                        zNodesDeptOrpeo = res.data.data
+                        $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
+                    })
+                    request.get(`/bi/${appId}/users`).then(res => {
+                        staffList = res.data.data
+                        userList = res.data.data
+                        staffList.forEach(item => {
+                            html+= `<li class="clearfix" data-id="${item.id}">
+                                <i class="g-left"></i>
+                                <span class="g-left">${item.name}</span>
+                            </li>`
+                        })
+                     $('#peopleSelect').html(html)
                     })
                 },
                 btn2: function(index, layero){
@@ -838,6 +867,13 @@ $('#z-selectDeptInp').on('click', function(){
                         layer.msg('请配置权限');
                         return false;
                     }        
+                },
+                end: function () {
+                    jobArr = []
+                    peopleArr = []
+                    $('#viewTpl').html('')
+                    $('#viewTpl2').html('')
+                    $('#viewTpl3').html('')
                 }                     
     });
 });
@@ -879,42 +915,58 @@ layui.use('element', function(){
     //一些事件触发
     element.on('tab(docDemoTabBrief)', function(ele){
         if (ele.index === 0) {
-            request.get(`/bi/${appId}/departments`).then(res => {
-                zNodesDept = res.data.data
-                $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
-            })
+            // request.get(`/bi/${appId}/departments`).then(res => {
+            //     zNodesDept = res.data.data
+            //     $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
+            // })
             return
         }
         if (ele.index === 1) {
-            let html = ''
-            request.get(`/bi/${appId}/positions`).then(res => {
-                res.data.data.forEach(item => {
-                    html += `<li class="clearfix">
-                    <span class="g-left">${item.name}</span>
-                    <i class="g-right"></i>
-                </li>`
+            // let html = ''
+            // request.get(`/bi/${appId}/positions`).then(res => {
+            //     res.data.data.forEach(item => {
+            //         html += `<li class="clearfix">
+            //         <span class="g-left">${item.name}</span>
+            //         <i class="g-right"></i>
+            //     </li>`
+            //     })
+                // $('#rankSelect').html(html)
+                let lis = [...$('#rankSelect li')]
+                lis.forEach((item, index) => {
+                    if (jobArr.includes(item.firstElementChild.innerText)) {
+                        $(item.lastElementChild).addClass("active");
+                    } else {
+                        $(item.lastElementChild).removeClass("active");
+                    }
                 })
-                $('#rankSelect').html(html)
-            })
+            // })
             return
         }
         if (ele.index === 2) {
-            let html =``
-            request.get(`/bi/${appId}/departments`).then(res => {
-                zNodesDeptOrpeo = res.data.data
-                $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
-            })
-            request.get(`/bi/${appId}/users`).then(res => {
-                staffList = res.data.data
-                userList = res.data.data
-                staffList.forEach(item => {
-                    html+= `<li class="clearfix">
-                        <i class="g-left"></i>
-                        <span class="g-left">${item.name}</span>
-                    </li>`
-                })
-             $('#peopleSelect').html(html)
-            })
+            // let html =``
+            // request.get(`/bi/${appId}/departments`).then(res => {
+            //     zNodesDeptOrpeo = res.data.data
+            //     $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
+            // })
+            // request.get(`/bi/${appId}/users`).then(res => {
+            //     staffList = res.data.data
+            //     userList = res.data.data
+            //     staffList.forEach(item => {
+            //         html+= `<li class="clearfix" data-id="${item.id}">
+            //             <i class="g-left"></i>
+            //             <span class="g-left">${item.name}</span>
+            //         </li>`
+            //     })
+            //  $('#peopleSelect').html(html)
+             let lis = [...$('#peopleSelect li')]
+             lis.forEach((item, index) => {
+                if (peopleArr.includes(item.lastElementChild.innerText)) {
+                    $(item.firstElementChild).addClass("active");
+                } else {
+                    $(item.firstElementChild).removeClass("active");
+                }
+             })
+            // })
             return
         } 
     });
@@ -952,7 +1004,7 @@ function searchName (event) {
     let str =``
     userList.forEach(item => {
         if (item.name.indexOf(event.target.value) !== -1) {
-            str += `<li class="clearfix">
+            str += `<li class="clearfix" data-id="${item.id}" >
                 <i class="g-left"></i>
                 <span class="g-left">${item.name}</span>
             </li>`
