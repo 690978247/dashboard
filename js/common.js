@@ -22,6 +22,7 @@ var idsArr = [];//新增仪表板位置  选中树的id集合
 var ConfigureFromidsArr = [];//从其他仪表板复制配置 选中树的id集合
 var ConfigureToidsArr = [];//将配置复制给其他仪表板  选中树的id集合
 var checkDeptArr = [];//自定义权限选择部门的集合
+var permissionList = []
 //树配置初始化
 var rMenu
 var zTree  //分组树

@@ -822,15 +822,20 @@ $('#z-selectDeptInp').on('click', function(){
                     request.get(`/bi/${appId}/departments`).then(res => {
                         zNodesDept = res.data.data
                         $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
+                        // 设置默认勾选
+                        if (checkDeptArr.length !== 0) {
+
+                        }
                     })
                     // 职位
                     request.get(`/bi/${appId}/positions`).then(res => {
                         res.data.data.forEach(item => {
                             html += `<li class="clearfix">
-                            <span class="g-left">${item.name}</span>
-                            <i class="g-right"></i>
-                        </li>`
+                                <span class="g-left">${item.name}</span>
+                                <i class="g-right ${jobArr.includes(item.name) ? 'active' : ''} "></i>
+                            </li>`
                         })
+                        console.log(html)
                         $('#rankSelect').html(html)
                     })
                     // 人员
@@ -842,26 +847,30 @@ $('#z-selectDeptInp').on('click', function(){
                         staffList = res.data.data
                         userList = res.data.data
                         staffList.forEach(item => {
-                            html+= `<li class="clearfix" data-id="${item.id}">
+                            str+= `<li class="clearfix" data-id="${item.id}">
                                 <i class="g-left"></i>
                                 <span class="g-left">${item.name}</span>
                             </li>`
                         })
-                     $('#peopleSelect').html(html)
+                     $('#peopleSelect').html(str)
+                     // 设置默认勾选
+                     if (peopleArr.length !== 0) {
+
+                    }
                     })
                 },
                 btn2: function(index, layero){
+                    permissionList = []
                     $("#z-selectDeptInp").val("");
                     if(checkDeptArr === ""){
                         checkDeptArr = checkDeptArr.split(",");
                     }
-                    var a = jobArr.concat(peopleArr);
-                    var c;
+                    permissionList = jobArr.concat(peopleArr);
                     if(checkDeptArr != ""){
-                        c =a.concat(checkDeptArr);                        
-                        $("#z-selectDeptInp").val(c);
+                        permissionList = permissionList.concat(checkDeptArr);                        
+                        $("#z-selectDeptInp").val(permissionList);
                     }else{
-                        $("#z-selectDeptInp").val(a);
+                        $("#z-selectDeptInp").val(permissionList);
                     }
                     if(($("#viewTpl li").length == 0) && ($("#viewTpl2 li").length==0) && ($("#viewTpl3 li").length==0)){
                         layer.msg('请配置权限');
@@ -869,8 +878,12 @@ $('#z-selectDeptInp').on('click', function(){
                     }        
                 },
                 end: function () {
-                    jobArr = []
-                    peopleArr = []
+                    console.log('pp', permissionList.length)
+                    if (permissionList.length === 0) {
+                        checkDeptArr = []
+                        jobArr = []
+                        peopleArr = [] 
+                    }
                     $('#viewTpl').html('')
                     $('#viewTpl2').html('')
                     $('#viewTpl3').html('')
