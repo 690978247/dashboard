@@ -338,6 +338,10 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                     area: ['598px', '490px'],
                     btn: ['取消', '保存'],
                     success: function (res, curr, count) {  //回调函数
+                        request.get(`/bi/${appId}/panel-permissions/${data.id}`).then(res => {
+                            $(`input[name='permission'][value='${res.data.data.accessType}']`).prop('checked', true)
+                            layui.form.render()
+                        })
                         $("#attrName").val(data.name)
                     },
                     btn2: function(index, layero){
