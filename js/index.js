@@ -821,12 +821,24 @@ $('#z-selectDeptInp').on('click', function(){
                 success: function(layero,index) {
                     let html = ''
                     let str =``
+                    let deptNames = []
+                    let jobNames = []
+                    let peopleNames = []
+                    checkDeptArr.forEach(item => {
+                        deptNames.push(item.bizName)
+                    })
+                    jobArr.forEach(item => {
+                        jobNames.push(item.bizName)
+                    })
+                    peopleArr.forEach(item => {
+                        peopleNames.push(item.bizName)
+                    })
                     // 部门
                     request.get(`/bi/${appId}/departments`).then(res => {
                         zNodesDept = res.data.data
                         // 设置默认勾选
                         zNodesDept.forEach((item,index) => {
-                            if (checkDeptArr.includes(item.name)) {
+                            if (deptNames.includes(item.name)) {
                                 zNodesDept[index].checked = true
                             }
                         })
@@ -836,7 +848,7 @@ $('#z-selectDeptInp').on('click', function(){
                         layui.use('laytpl', function(){
                             let laytpl = layui.laytpl;
                             //第三步：渲染模版
-                            let data =checkDeptArr;
+                            let data =deptNames;
                             let getTpl = demoTpl.innerHTML;
                             view = document.getElementById('viewTpl');
                             if(data.length != 0){
@@ -851,7 +863,7 @@ $('#z-selectDeptInp').on('click', function(){
                         res.data.data.forEach(item => {
                             html += `<li class="clearfix">
                                 <span class="g-left" data-id="${item.id}" >${item.name}</span>
-                                <i class="g-right ${jobArr.includes(item.name) ? 'active' : ''} "></i>
+                                <i class="g-right ${jobNames.includes(item.name) ? 'active' : ''} "></i>
                             </li>`
                         })
                         $('#rankSelect').html(html)
@@ -859,7 +871,7 @@ $('#z-selectDeptInp').on('click', function(){
                         layui.use('laytpl', function(){
                             let laytpl = layui.laytpl;
                             //第三步：渲染模版
-                            let jobArrdata = jobArr;
+                            let jobArrdata = jobNames;
                             let getTpl = jobArrTpl.innerHTML;
                             view = document.getElementById('viewTpl2');
                             if(jobArrdata.length >= 0){
@@ -876,15 +888,6 @@ $('#z-selectDeptInp').on('click', function(){
                         peopleTree = $.fn.zTree.getZTreeObj("treeDemoDeptOrpeo");
                         peopleTree.expandAll(true)
                         peopleTree.selectNode(currentPeopleNode)
-                        // userList.forEach(item => {
-                        //     if (item.name.indexOf(event.target.value) !== -1) {
-                        //         str += `<li class="clearfix" data-id="${item.id}" >
-                        //             <i class="g-left"></i>
-                        //             <span class="g-left">${item.name}</span>
-                        //         </li>`
-                        //     }
-                        // })
-                        // $('#peopleSelect').html(str)
                     })
                     request.get(`/bi/${appId}/users`).then(res => {
                         staffList = res.data.data
@@ -900,14 +903,14 @@ $('#z-selectDeptInp').on('click', function(){
                         }
                         userList.forEach(item => {
                             str+= `<li class="clearfix">
-                                <i class="g-left ${peopleArr.includes(item.name) ? 'active' : ''} "></i>
+                                <i class="g-left ${peopleNames.includes(item.name) ? 'active' : ''} "></i>
                                 <span class="g-left" data-id="${item.id}" >${item.name}</span>
                             </li>`
                         })
                         $('#peopleSelect').html(str)
                         layui.use('laytpl', function(){
                             var laytpl = layui.laytpl;
-                            var jobArrdata = peopleArr;
+                            var jobArrdata = peopleNames;
                             var getTpl = jobArrTpl.innerHTML;
                             view = document.getElementById('viewTpl3');
                             if(jobArrdata.length >= 0){
@@ -1007,20 +1010,28 @@ layui.use('element', function(){
             return
         }
         if (ele.index === 1) {
-                let lis = [...$('#rankSelect li')]
-                lis.forEach((item, index) => {
-                    if (jobArr.includes(item.firstElementChild.innerText)) {
-                        $(item.lastElementChild).addClass("active");
-                    } else {
-                        $(item.lastElementChild).removeClass("active");
-                    }
-                })
+            let lis = [...$('#rankSelect li')]
+            let jobNames = []
+            jobArr.forEach(item => {
+                jobNames.push(item.bizName)
+            })
+            lis.forEach((item, index) => {
+                if (jobNames.includes(item.firstElementChild.innerText)) {
+                    $(item.lastElementChild).addClass("active");
+                } else {
+                    $(item.lastElementChild).removeClass("active");
+                }
+            })
             return
         }
         if (ele.index === 2) {
              let lis = [...$('#peopleSelect li')]
+             let peopleNames = []
+             peopleArr.forEach(item => {
+                peopleNames.push(item.bizName)
+             })
              lis.forEach((item, index) => {
-                if (peopleArr.includes(item.lastElementChild.innerText)) {
+                if (peopleNames.includes(item.lastElementChild.innerText)) {
                     $(item.firstElementChild).addClass("active");
                 } else {
                     $(item.firstElementChild).removeClass("active");
