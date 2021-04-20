@@ -748,87 +748,92 @@ $('#addDashboard').on('click', function(){
 });
 $('#copeConfigureTo').on('click', function(){
     layer.open({
-                type: 1,
-                title: ['选择要将权限配置复制到的仪表板', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-                closeBtn: 1,
-                btn: ['取消', '应用'],
-                shadeClose: true,
-                skin: 'z-addDashboard',
-                content: $('.copeConfigureForm') ,
-                area: ['599px', '620px'],
-                success  : function(layero,index){
-                    //完成后的回调
-                    request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
-                        zNodesCopeFrom = res.data.data
-                        $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
-                    })
-                },
-                yes: function(index, layero){
-                    layer.close(index);
-                },
-                btn2: function(index, layero){
-                    var dataObj = ConfigureFromidsArr;
-                    if(dataObj == ""){
-                        layer.msg('请选择仪表板');
-                        return false
-                    }else{
-                        // $.ajax({
-                        //     url: methodsApi.getworkstats1_get,
-                        //     type: "post",
-                        //     contentType: "application/json",
-                        //     data: JSON.stringify(searchObjData),
-                        //     dataType: "json",
-                        //     /* async: false, */
-                        //     success: function (res) {
-                                
-                        //     },
-                        //     error: function (err) {
-                        //         wui.errorNotice("获取信息失败");
-                        //     }
-                        // });
-                    }
-                }           
+        type: 1,
+        title: ['选择要将权限配置复制到的仪表板', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
+        closeBtn: 1,
+        btn: ['取消', '应用'],
+        shadeClose: true,
+        skin: 'z-addDashboard',
+        content: $('.copeConfigureTo1') ,
+        area: ['599px', '620px'],
+        success: function(layero,index){
+            //完成后的回调
+            request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
+                zNodesCopeto = res.data.data
+                $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
+            })
+        },
+        btn2: function(index, layero){
+            var dataObj = ConfigureToidsArr;
+            if(dataObj == ""){
+                layer.msg('请选择仪表板');
+                return false
+            }else{
+                // $.ajax({
+                //     url: methodsApi.getworkstats1_get,
+                //     type: "post",
+                //     contentType: "application/json",
+                //     data: JSON.stringify(searchObjData),
+                //     dataType: "json",
+                //     /* async: false, */
+                //     success: function (res) {
+                        
+                //     },
+                //     error: function (err) {
+                //         wui.errorNotice("获取信息失败");
+                //     }
+                // });
+            }
+        }                     
     });
 });
 $('#copeConfigureFrom').on('click', function(){
     layer.open({
-                type: 1,
-                title: ['选择从哪个仪表板复制权限配置', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-                closeBtn: 1,
-                btn: ['取消', '应用'],
-                shadeClose: true,
-                skin: 'z-addDashboard',
-                content: $('.copeConfigureTo1') ,
-                area: ['599px', '620px'],
-                success: function(layero,index){
-                    //完成后的回调
-                    request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
-                        zNodesCopeto = res.data.data
-                        $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
-                    })
-                },
-                btn2: function(index, layero){
-                    var dataObj = ConfigureToidsArr;
-                    if(dataObj == ""){
-                        layer.msg('请选择仪表板');
-                        return false
-                    }else{
-                        // $.ajax({
-                        //     url: methodsApi.getworkstats1_get,
-                        //     type: "post",
-                        //     contentType: "application/json",
-                        //     data: JSON.stringify(searchObjData),
-                        //     dataType: "json",
-                        //     /* async: false, */
-                        //     success: function (res) {
-                                
-                        //     },
-                        //     error: function (err) {
-                        //         wui.errorNotice("获取信息失败");
-                        //     }
-                        // });
+        type: 1,
+        title: ['选择从哪个仪表板复制权限配置', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
+        closeBtn: 1,
+        btn: ['取消', '应用'],
+        shadeClose: true,
+        skin: 'z-addDashboard',
+        content: $('.copeConfigureForm') ,
+        area: ['599px', '620px'],
+        success  : function(layero,index){
+            //完成后的回调
+            request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
+                zNodesCopeFrom = res.data.data
+                zNodesCopeFrom.forEach(item => {
+                    if (!item.parentId) {
+                        item.nocheck = true
                     }
-                }                     
+                })
+                $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
+            })
+        },
+        yes: function(index, layero){
+            layer.close(index);
+        },
+        btn2: function(index, layero){
+            var dataObj = ConfigureFromidsArr;
+            if(dataObj == ""){
+                layer.msg('请选择仪表板');
+                return false
+            }else{
+                // $.ajax({
+                //     url: methodsApi.getworkstats1_get,
+                //     type: "post",
+                //     contentType: "application/json",
+                //     data: JSON.stringify(searchObjData),
+                //     dataType: "json",
+                //     /* async: false, */
+                //     success: function (res) {
+                        
+                //     },
+                //     error: function (err) {
+                //         wui.errorNotice("获取信息失败");
+                //     }
+                // });
+            }
+        }           
     });
 });
 var selectAllData = "";

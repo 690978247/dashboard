@@ -538,12 +538,16 @@
     background: url(./img/icon_sel_pre.png);
     width: 14px;
     height: 14px;
+    position: relative;
+    z-index: 100;
 }
 .copeConfigureForm .ztree li span.button.chk.radio_false_full,.copeConfigureForm .ztree li span.button.chk.radio_false_full_focus{
     background-position: 0 0;
     background: url(./img/icon_sel_nor.png);
     width: 14px;
     height: 14px;
+    position: relative;
+    z-index: 100;
 }
 
 body .layui-layer-page .layui-layer-content {
