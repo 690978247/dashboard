@@ -437,7 +437,7 @@ function onClickSelectDept(e, treeId, treeNode) {
           <span class="g-left">${item.name}</span>
       </li>`
     }
-    $('#viewTpl3').html('')
+    // $('#viewTpl3').html('')
   })
   $('#peopleSelect').html(str)
 }
