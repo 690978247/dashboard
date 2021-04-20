@@ -899,7 +899,6 @@ $('#z-selectDeptInp').on('click', function(){
                                 <span class="g-left">${item.name}</span>
                             </li>`
                         })
-                       
                         $('#peopleSelect').html(str)
                         layui.use('laytpl', function(){
                             var laytpl = layui.laytpl;
@@ -916,6 +915,9 @@ $('#z-selectDeptInp').on('click', function(){
                 },
                 btn2: function(index, layero){
                     permissionList = []
+                    cloneDepart = JSON.parse(JSON.stringify(checkDeptArr))
+                    cloneJob = JSON.parse(JSON.stringify(jobArr))
+                    clonePeople = JSON.parse(JSON.stringify(peopleArr))
                     $("#z-selectDeptInp").val("");
                     if(checkDeptArr === ""){
                         checkDeptArr = checkDeptArr.split(",");
@@ -941,6 +943,10 @@ $('#z-selectDeptInp').on('click', function(){
                         $('#viewTpl2').html('')
                         $('#viewTpl3').html('')
                     }
+                    checkDeptArr = JSON.parse(JSON.stringify(cloneDepart))
+                    jobArr = JSON.parse(JSON.stringify(cloneJob))
+                    peopleArr = JSON.parse(JSON.stringify(clonePeople))
+                    console.log(cloneDepart, cloneJob, clonePeople)
                     $('#input-Dept').val('')
                     $('#input-job').val('')
                     $('#input-user').val('')

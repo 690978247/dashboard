@@ -18,6 +18,9 @@ var idMap = new Map();
 var tableCheckList = [] //表格 
 var staffList = [] //访问权限人员用户
 var userList = []
+var cloneDepart = []
+var cloneJob = []
+var clonePeople = []
 //声明变量注意区分类型，数组或对象或字符串
 var idsArr = [];//新增仪表板位置  选中树的id集合
 var ConfigureFromidsArr = [];//从其他仪表板复制配置 选中树的id集合
