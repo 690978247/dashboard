@@ -836,6 +836,36 @@ $('#copeConfigureFrom').on('click', function(){
         }           
     });
 });
+
+// fromTree搜索
+function searchFromTree (e) {
+    let postData ={
+        appId,
+        name: e.target.previousElementSibling.value
+    }
+    request.get(`/bi/${appId}/panel-tree/copy`, {params: postData}).then(res => {
+        zNodesCopeFrom = res.data.data
+        zNodesCopeFrom.forEach(item => {
+            if (!item.parentId) {
+                item.nocheck = true
+            }
+        })
+        $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
+    })
+}
+
+// toTree搜索
+function searchToTree (e) {
+    let postData ={
+        appId,
+        name: e.target.previousElementSibling.value
+    }
+    request.get(`/bi/${appId}/panel-tree/copy`, { params: postData }).then(res => {
+        zNodesCopeto = res.data.data
+        $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
+    })
+}
+
 var selectAllData = "";
 $('#z-selectDeptInp').on('click', function(){
     layer.open({
