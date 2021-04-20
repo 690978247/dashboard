@@ -340,6 +340,7 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                     success: function (res, curr, count) {  //回调函数
                         request.get(`/bi/${appId}/panel-permissions/${data.id}`).then(res => {
                             $(`input[name='permission'][value='${res.data.data.accessType}']`).prop('checked', true)
+                            $(`#attribute-describeVal`).val(res.data.data.description)
                             layui.form.render()
                         })
                         $("#attrName").val(data.name)
