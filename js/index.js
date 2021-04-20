@@ -828,8 +828,6 @@ $('#z-selectDeptInp').on('click', function(){
                         $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
                         departTree = $.fn.zTree.getZTreeObj("treeDept");
                         departTree.expandAll(true)
-
-
                     })
                     // 职位
                     request.get(`/bi/${appId}/positions`).then(res => {
@@ -852,15 +850,15 @@ $('#z-selectDeptInp').on('click', function(){
                         userList = res.data.data
                         staffList.forEach(item => {
                             str+= `<li class="clearfix" data-id="${item.id}">
-                                <i class="g-left"></i>
+                                <i class="g-left ${peopleArr.includes(item.name) ? 'active' : ''} "></i>
                                 <span class="g-left">${item.name}</span>
                             </li>`
                         })
-                     $('#peopleSelect').html(str)
-                     // 设置默认勾选
-                     if (peopleArr.length !== 0) {
+                        $('#peopleSelect').html(str)
+                        // 设置默认勾选
+                        if (peopleArr.length !== 0) {
 
-                    }
+                        }
                     })
                 },
                 btn2: function(index, layero){

@@ -660,6 +660,8 @@ body .layui-layer-page .layui-layer-content {
 }
 .z-selectDeptInp .z-contentBoxLeft .ztree li span.button.noline_open,.z-selectDeptInp .z-contentBoxLeft .ztree li span.button.noline_close {
     top:4px;
+    position: relative;
+    z-index: 100;
 }
 .z-selectDeptInp .z-contentBoxLeft {
     float: none;
