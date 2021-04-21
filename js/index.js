@@ -382,6 +382,9 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                             request.post(`/bi/${appId}/panel-permissions`, postData).then(res => {
                                 if (res.data.code === 0) {
                                     layer.msg('保存成功!')
+                                    cloneDepart = []
+                                    cloneJob = []
+                                    clonePeople = []
                                     initTable(currentGroupNode.id)
                                     layer.close(index);
                                 } else {
@@ -391,6 +394,15 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                         }
                     },
                     end: function () {
+                        permissionList = []
+                        jobArr = []
+                        checkDeptArr = []
+                        peopleArr = []
+                        currentPeopleNode  = {}
+                        $('#viewTpl').html('')
+                        $('#viewTpl2').html('')
+                        $('#viewTpl3').html('')
+                        $('#z-selectDeptInp').val('')
                         $("#attrName").val('');
                         $("#attrPosition").val('');
                         $('#attribute-describeVal').val('')
