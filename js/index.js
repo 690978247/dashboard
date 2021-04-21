@@ -35,6 +35,10 @@ async function getGruopTree (name) {
         $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
         $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodes);
         $.fn.zTree.init($("#treeAttr"), settingAttr, zNodes);
+        zTree = $.fn.zTree.getZTreeObj("treeDemo");
+        pTree = $.fn.zTree.getZTreeObj("treeDemoAdd");
+        addPTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu");
+        attrTree = $.fn.zTree.getZTreeObj("treeAttr");
     })
 }
 // 右侧树查询
@@ -62,6 +66,7 @@ function  removeTreeNode() {
                     if (res.data.code === 0) {
                         layer.msg('删除成功!');
                         zTree.removeNode(nodes[0]);
+                        zTree.selectNode(currentPositionNode)
                     } else {
                         layer.msg(res.data.msg);
                     }
@@ -509,14 +514,16 @@ async function getToken () {
         origin: 0,
         password: 123456,
       }
-      
-    await request.post(`/bi/tokens`,null, { params: postData }).then(res => {
-        if (res.data.code === 0) {
-            localStorage.setItem("token", res.data.data.token)
-            appId = res.data.data.appId
-            console.log(localStorage.getItem('token'))
-        }
-     })
+    //   设置token,可删除
+      localStorage.setItem("token", '0f4d500ec89a4ef6a64d85a02eb26a13')
+      appId = 'innerTestPlatformId'
+    // await request.post(`/bi/tokens`,null, { params: postData }).then(res => {
+    //     if (res.data.code === 0) {
+    //         localStorage.setItem("token", res.data.data.token)
+    //         appId = res.data.data.appId
+    //         console.log(localStorage.getItem('token'))
+    //     }
+    //  })
 }
 
 
@@ -534,11 +541,14 @@ $(document).ready(async function(){
     // $.fn.zTree.init($("#treeDept"), settingDept, zNodesDept);
     // $.fn.zTree.init($("#treeDemoDeptOrpeo"), settingDeptOrPeo, zNodesDeptOrpeo);
 	rMenu = $("#rMenu");
-    zTree = $.fn.zTree.getZTreeObj("treeDemo");
+    // 设置默认展开
     zTree.expandAll(true);
-    pTree = $.fn.zTree.getZTreeObj("treeDemoAdd");
-    addPTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu");
-    attrTree = $.fn.zTree.getZTreeObj("treeAttr");
+    pTree.expandAll(true);
+    addPTree.expandAll(true);
+    attrTree.expandAll(true);
+    // pTree = $.fn.zTree.getZTreeObj("treeDemoAdd");
+    // addPTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu");
+    // attrTree = $.fn.zTree.getZTreeObj("treeAttr");
 
     // $(".nicescroll-slideBar").niceScroll({
     //         cursorcolor: "#ddd",
@@ -1346,7 +1356,7 @@ $(document).on("click","#m_add",function(e){
                     name: fenzuNameVal,
                     parentId: currentPositionNode.id
                 }
-                request.post(`/bi/${appId}/groups`, postData).then(res => {
+                request.post(`/bi/${appId}/groups`, postData).then(async res => {
                     if (res.data.code === 0) {
                         layer.msg('添加成功!')
                         // let data = {
@@ -1356,7 +1366,9 @@ $(document).on("click","#m_add",function(e){
                         // }
                         // zTree.addNodes(isNull, data);
                         layer.close(index);
-                        getGruopTree()
+                        await getGruopTree()
+                        zTree.expandAll(true)
+                        zTree.selectNode(currentPositionNode)
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
                     } else {
@@ -1416,12 +1428,15 @@ $(document).on("click","#m_check",function(e){
                     name: fenzuNameVal,
                     parentId: currentPositionNode.parentId
                 }
-                request.put(`/bi/${appId}/groups`, postData).then(res => {
+                request.put(`/bi/${appId}/groups`, postData).then(async res => {
                     if (res.data.code === 0) {
                         layer.msg('编辑成功!')
                         nodes[0].name = fenzuNameVal
                         layer.close(index);
-                        getGruopTree()
+                        await getGruopTree()
+                        groupNodeClick()
+                        zTree.expandAll(true);
+                        zTree.selectNode(currentPositionNode)
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
                     } else {
