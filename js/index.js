@@ -73,6 +73,9 @@ function  removeTreeNode() {
                         await getGruopTree()
                         zTree.expandAll(true)
                         setGroupChoice(current[0].name)
+                        if (current[0].name === nodes[0].name) {
+                            setDefaultChoice(zNodes[0].name)
+                        }
                     } else {
                         layer.msg(res.data.msg);
                     }
@@ -87,6 +90,9 @@ function  removeTreeNode() {
                     await getGruopTree()
                     zTree.expandAll(true)
                     setGroupChoice(current[0].name)
+                    if (current[0].name === nodes[0].name) {
+                        setDefaultChoice(zNodes[0].name)
+                    }
                 } else {
                     layer.msg(res.data.msg);
                 }
@@ -165,7 +171,6 @@ function onBodyDown(event) {
 }
 // 表格初始化
 function initTable (id, pager) {
-    id = id || defaultTd
     pager = { current: 1 , size: 10 } || pager
     // groupId 默认展示全部分组id
     request.get(`/bi/${appId}/panels`, { params: {appId, groupId: id, current: pager.current, size: pager.size }}).then(res => {
@@ -488,10 +493,16 @@ function searchTableData () {
         zindex:"99999999",
     });
 }
+// 
+function setDefaultChoice (name) {
+    let node = zTree.getNodeByParam("name", name, null);
+    zTree.selectNode(node)
+    initTable(node.id)
+}
 
 // 设置分组树默认选中
 function setGroupChoice (name) {
-    name = name || '全部分组'
+    name = name || zNodes[0].name
     // let nodes = zTree.getNodes();
     // nodes.forEach((item,index) => {
     //     if (item.name == name) {
@@ -501,7 +512,7 @@ function setGroupChoice (name) {
     // })
     let node = zTree.getNodeByParam("name", name, null);
     zTree.selectNode(node)
-
+    // initTable(node.id)
 }
 
 // 设置位置树默认选中
@@ -619,7 +630,7 @@ $(document).ready(async function(){
     //     zindex:"99999999",
     // });
     addNode();//给后台返回的tree数据添加属性
-    initTable ()
+    initTable (zNodes[0].id)
 });
 layui.use('laydate', function(){
   var laydate = layui.laydate;

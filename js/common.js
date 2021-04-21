@@ -9,7 +9,6 @@ var currentFromNode = {} //从仪表板复制树
 var currentToNode = [] //复制到其他树
 var currentRightNode = {} //右键菜单栏选中的字节点
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
-var defaultTd = '8ecd52dcd312f9dd21beb42a1a2345ce'  //表格全部分组id
 var zNodes = []
 var addCount = 1
 var pageData = {}
@@ -327,9 +326,9 @@ function OnRightClick(event, treeId, treeNode) {
 }
 
 function beforeClickAdd(treeId, treeNode) {
-  var check = (treeNode && !treeNode.isParent);
-  // if (!check) alert("只能选择城市...");控制哪些层级不能选择
-  return check;
+  // var check = (treeNode && !treeNode.isParent);
+  // // if (!check) alert("只能选择城市...");控制哪些层级不能选择
+  // return check;
 }
 
 
