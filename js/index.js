@@ -57,6 +57,7 @@ function addTreeNode() {
 }
 function  removeTreeNode() {
     hideRMenu();
+    
     let current = zTree.getSelectedNodes()
     let nodes = []
     nodes.push(currentRightNode)
@@ -64,22 +65,28 @@ function  removeTreeNode() {
         if (nodes[0].children && nodes[0].children.length > 0) {
             var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
             if (confirm(msg)==true){
-                request.delete(`/bi/${appId}/groups/${nodes[0].id}`).then(res => {
+                request.delete(`/bi/${appId}/groups/${nodes[0].id}`).then(async res => {
                     if (res.data.code === 0) {
                         layer.msg('删除成功!');
                         zTree.removeNode(nodes[0]);
-                        zTree.selectNode(current[0])
+                        // zTree.selectNode(current[0])
+                        await getGruopTree()
+                        zTree.expandAll(true)
+                        setGroupChoice(current[0].name)
                     } else {
                         layer.msg(res.data.msg);
                     }
                 })
             }
         } else {
-            request.delete(`/bi/${appId}/groups/${nodes[0].id}`).then(res => {
+            request.delete(`/bi/${appId}/groups/${nodes[0].id}`).then(async res => {
                 if (res.data.code === 0) {
                     layer.msg('删除成功!');
                     zTree.removeNode(nodes[0]);
-                    zTree.selectNode(current[0])
+                    // zTree.selectNode(current[0])
+                    await getGruopTree()
+                    zTree.expandAll(true)
+                    setGroupChoice(current[0].name)
                 } else {
                     layer.msg(res.data.msg);
                 }
@@ -1367,7 +1374,7 @@ $(document).on("click","#m_add",function(e){
                         layer.close(index);
                         await getGruopTree()
                         zTree.expandAll(true)
-                        zTree.selectNode(nodes[0])
+                        setGroupChoice(nodes[0].name)
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
                     } else {
