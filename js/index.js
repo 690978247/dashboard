@@ -57,6 +57,7 @@ function addTreeNode() {
 }
 function  removeTreeNode() {
     hideRMenu();
+    let current = zTree.getSelectedNodes()
     let nodes = []
     nodes.push(currentRightNode)
     if (nodes && nodes.length>0) {
@@ -67,7 +68,7 @@ function  removeTreeNode() {
                     if (res.data.code === 0) {
                         layer.msg('删除成功!');
                         zTree.removeNode(nodes[0]);
-                        zTree.selectNode(currentGroupNode)
+                        zTree.selectNode(current[0])
                     } else {
                         layer.msg(res.data.msg);
                     }
@@ -78,7 +79,7 @@ function  removeTreeNode() {
                 if (res.data.code === 0) {
                     layer.msg('删除成功!');
                     zTree.removeNode(nodes[0]);
-                    zTree.selectNode(currentGroupNode)
+                    zTree.selectNode(current[0])
                 } else {
                     layer.msg(res.data.msg);
                 }
@@ -1418,19 +1419,20 @@ $(document).on("click","#m_check",function(e){
                 $("#fenzuPosition").addClass("valNUllBorder");
                 return false
             }else{
-                let nodes = zTree.getSelectedNodes(); 
                 let postData = {
                     id: currentRightNode.id,
                     name: fenzuNameVal,
                     parentId: currentRightNode.parentId
                 }
                 request.put(`/bi/${appId}/groups`, postData).then(async res => {
+                    let nodes = zTree.getSelectedNodes(); 
                     if (res.data.code === 0) {
                         layer.msg('编辑成功!')
                         nodes[0].name = fenzuNameVal
                         layer.close(index);
                         await getGruopTree()
                         zTree.expandAll(true);
+                        console.log(nodes[0])
                         zTree.selectNode(nodes[0])
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
