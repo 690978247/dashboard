@@ -1331,7 +1331,7 @@ $(document).on("click","#m_add",function(e){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
             // let nodes = zTree.getSelectedNodes();
             $("#fenzuPosition")[0].value = currentRightNode.name
-            currentPositionNode = currentRightNode
+            // currentPositionNode = currentRightNode
             setPositionChoice(currentRightNode.name)
         },
         btn2: function(index, layero){
@@ -1353,10 +1353,10 @@ $(document).on("click","#m_add",function(e){
                 return false
             }else{
                 let nodes = zTree.getSelectedNodes();
-                let isNull = currentPositionNode.parentId ? nodes[0] : null
+                // let isNull = currentPositionNode.parentId ? nodes[0] : null
                 let postData = {
                     name: fenzuNameVal,
-                    parentId: currentPositionNode.id
+                    parentId: currentRightNode.id
                 }
                 request.post(`/bi/${appId}/groups`, postData).then(async res => {
                     if (res.data.code === 0) {
@@ -1370,7 +1370,7 @@ $(document).on("click","#m_add",function(e){
                         layer.close(index);
                         await getGruopTree()
                         zTree.expandAll(true)
-                        zTree.selectNode(currentPositionNode)
+                        zTree.selectNode(nodes[0])
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
                     } else {
@@ -1403,7 +1403,7 @@ $(document).on("click","#m_check",function(e){
             // let nodes = zTree.getSelectedNodes();
             $("#fenzuName")[0].value = currentRightNode.name
             $("#fenzuPosition")[0].value = currentRightNode.name
-            // currentPositionNode = currentPositionNode
+            // currentPositionNode = currentRightNode
             setPositionChoice(currentRightNode.name)
         },
         btn2: function(index, layero){
@@ -1426,9 +1426,9 @@ $(document).on("click","#m_check",function(e){
             }else{
                 let nodes = zTree.getSelectedNodes(); 
                 let postData = {
-                    id: currentPositionNode.id,
+                    id: currentRightNode.id,
                     name: fenzuNameVal,
-                    parentId: currentPositionNode.parentId
+                    parentId: currentRightNode.parentId
                 }
                 request.put(`/bi/${appId}/groups`, postData).then(async res => {
                     if (res.data.code === 0) {
@@ -1436,9 +1436,8 @@ $(document).on("click","#m_check",function(e){
                         nodes[0].name = fenzuNameVal
                         layer.close(index);
                         await getGruopTree()
-                        groupNodeClick()
                         zTree.expandAll(true);
-                        zTree.selectNode(currentPositionNode)
+                        zTree.selectNode(nodes[0])
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
                     } else {
