@@ -122,7 +122,7 @@ var settingAddFenzu = {
       }
   },
   callback: {
-      beforeClick: beforeClickAddFenzu,
+      // beforeClick: beforeClickAddFenzu,
       onClick: onClickAddFenzu,
   }
 };
@@ -356,7 +356,7 @@ function beforeClickAddFenzu(treeId, treeNode) {
 
 function onClickAddFenzu(e, treeId, treeNode) {
   nodes = addPTree.getSelectedNodes()
-  currentPositionNode = treeNode
+  currentRightNode = treeNode
   let cityObj = $("#fenzuPosition")[0];
   cityObj.value = treeNode.name
 }

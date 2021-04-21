@@ -1361,12 +1361,6 @@ $(document).on("click","#m_add",function(e){
                 request.post(`/bi/${appId}/groups`, postData).then(async res => {
                     if (res.data.code === 0) {
                         layer.msg('添加成功!')
-                        // let data = {
-                        //     id: res.data.data,
-                        //     name: fenzuNameVal,
-                        //     parentId: nodes[0].id ? nodes[0].id : ''
-                        // }
-                        // zTree.addNodes(isNull, data);
                         layer.close(index);
                         await getGruopTree()
                         zTree.expandAll(true)
