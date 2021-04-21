@@ -738,11 +738,13 @@ $('#addDashboard').on('click', function(){
                         name: addDashboardNameVal,
                         groupId: currentPositionNode.id
                     }
-                    request.post(`/bi/${appId}/panels`, postData).then(res => {
+                    request.post(`/bi/${appId}/panels`, postData).then(async res => {
                         if (res.data.code === 0) {
                             layer.msg('添加成功!')
                             layer.close(index);
-                            getGruopTree()
+                            await getGruopTree()
+                            zTree.expandAll(true);
+                            zTree.selectNode(nodes[0])
                             $("#addDashboardName")[0].value = ''
                             $("#citySel")[0].value = ''
                             initTable(currentPositionNode.id)
