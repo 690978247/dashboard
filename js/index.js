@@ -512,11 +512,11 @@ async function getToken () {
       
     await request.post(`/bi/tokens`,null, { params: postData }).then(res => {
         if (res.data.code === 0) {
-          localStorage.setItem("token", res.data.data.token)
-          appId = res.data.data.appId
-          console.log(localStorage.getItem('token'))
+            localStorage.setItem("token", res.data.data.token)
+            appId = res.data.data.appId
+            console.log(localStorage.getItem('token'))
         }
-      })
+     })
 }
 
 
@@ -640,6 +640,9 @@ layui.use('form', function() {
     // });
     form.on('radio(policyRadio)', function(data){
           policyRadioVal = data.value //被点击的 radio 的 value 值
+          cloneDepart = []
+          cloneJob = []
+          clonePeople = []
           if( policyRadioVal =="custom"){
             $("#z-selectDept").show();
             $("#layui-form-margin9").css("margin-bottom","0px");
@@ -1049,6 +1052,10 @@ $('#z-selectDeptInp').on('click', function(){
                     })
                 },
                 btn2: function(index, layero){
+                    if(($("#viewTpl li").length == 0) && ($("#viewTpl2 li").length==0) && ($("#viewTpl3 li").length==0)){
+                        layer.msg('请配置权限');
+                        return false;
+                    }        
                     permissionList = []
                     cloneDepart = JSON.parse(JSON.stringify(checkDeptArr))
                     cloneJob = JSON.parse(JSON.stringify(jobArr))
@@ -1060,10 +1067,6 @@ $('#z-selectDeptInp').on('click', function(){
                         permissionNames.push(item.bizName)
                     })
                     $("#z-selectDeptInp").val(permissionNames);
-                    if(($("#viewTpl li").length == 0) && ($("#viewTpl2 li").length==0) && ($("#viewTpl3 li").length==0)){
-                        layer.msg('请配置权限');
-                        return false;
-                    }        
                 },
                 end: function () {
                     if (permissionList.length === 0) {
