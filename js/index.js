@@ -57,7 +57,8 @@ function addTreeNode() {
 }
 function  removeTreeNode() {
     hideRMenu();
-    var nodes = zTree.getSelectedNodes();
+    let nodes = []
+    nodes.push(currentRightNode)
     if (nodes && nodes.length>0) {
         if (nodes[0].children && nodes[0].children.length > 0) {
             var msg = "要删除的节点是父节点，如果删除将连同子节点一起删掉。\n\n请确认！";
@@ -1328,10 +1329,10 @@ $(document).on("click","#m_add",function(e){
         area: ['568px', '520px'],
         success: function(layero,index){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
-            let nodes = zTree.getSelectedNodes();
-            $("#fenzuPosition")[0].value = nodes[0].name
-            currentPositionNode = nodes[0]
-            setPositionChoice(nodes[0].name)
+            // let nodes = zTree.getSelectedNodes();
+            $("#fenzuPosition")[0].value = currentRightNode.name
+            currentPositionNode = currentRightNode
+            setPositionChoice(currentRightNode.name)
         },
         btn2: function(index, layero){
             //return false 开启该代码可禁止点击该按钮关闭
@@ -1399,11 +1400,11 @@ $(document).on("click","#m_check",function(e){
         area: ['568px', '520px'],
         success  : function(layero,index){
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
-            let nodes = zTree.getSelectedNodes();
-            $("#fenzuName")[0].value = nodes[0].name
-            $("#fenzuPosition")[0].value = nodes[0].name
-            currentPositionNode = nodes[0]
-            setPositionChoice(nodes[0].name)
+            // let nodes = zTree.getSelectedNodes();
+            $("#fenzuName")[0].value = currentRightNode.name
+            $("#fenzuPosition")[0].value = currentRightNode.name
+            // currentPositionNode = currentPositionNode
+            setPositionChoice(currentRightNode.name)
         },
         btn2: function(index, layero){
             //return false 开启该代码可禁止点击该按钮关闭

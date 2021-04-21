@@ -7,6 +7,7 @@ var currentGroupNode = {}  //分组树选中的node
 var currentPeopleNode  = {} //人员树选中的node
 var currentFromNode = {} //从仪表板复制树
 var currentToNode = [] //复制到其他树
+var currentRightNode = {} //右键菜单栏选中的字节点
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var defaultTd = '8ecd52dcd312f9dd21beb42a1a2345ce'  //表格全部分组id
 var zNodes = []
@@ -313,12 +314,14 @@ function setFontCss(treeId, treeNode) {
 };
 
 function OnRightClick(event, treeId, treeNode) {
+  currentRightNode = treeNode
+  console.log(currentRightNode)
   let zTree = $.fn.zTree.getZTreeObj("treeDemo");
   if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
-      zTree.cancelSelectedNode();
+      // zTree.cancelSelectedNode();
       showRMenu("root", event.clientX, event.clientY);
   } else if (treeNode && !treeNode.noR) {
-      zTree.selectNode(treeNode);
+      // zTree.selectNode(treeNode);
       showRMenu("node", event.clientX, event.clientY);
   }
 }
