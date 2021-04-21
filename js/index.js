@@ -42,8 +42,10 @@ async function getGruopTree (name) {
     })
 }
 // 右侧树查询
-function searchGroupTree (e) {
-    getGruopTree(e.target.value)
+async function searchGroupTree (e) {
+    await getGruopTree(e.target.value)
+    setGroupChoice(currentGroupNode.name ? currentGroupNode.name : '')
+    
 }
 function addTreeNode() {
     hideRMenu();
