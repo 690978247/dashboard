@@ -5,6 +5,8 @@ var attributeObjData = {}
 var currentPositionNode = {}  //位置树选中的node
 var currentGroupNode = {}  //分组树选中的node
 var currentPeopleNode  = {} //人员树选中的node
+var currentFromNode = {} //从仪表板复制树
+var currentToNode = [] //复制到其他树
 var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
 var defaultTd = '8ecd52dcd312f9dd21beb42a1a2345ce'  //表格全部分组id
 var zNodes = []
@@ -23,7 +25,6 @@ var cloneJob = []
 var clonePeople = []
 //声明变量注意区分类型，数组或对象或字符串
 var idsArr = []//新增仪表板位置  选中树的id集合
-var ConfigureFromidsArr = []//从其他仪表板复制配置 选中树的id集合
 var ConfigureToidsArr = []//将配置复制给其他仪表板  选中树的id集合
 var checkDeptArr = []//自定义权限选择部门的集合
 var permissionList = []
@@ -143,7 +144,7 @@ var settingCopeto = {
       }
   },
   callback: {
-      onCheck: onCheck
+      onCheck: onCheckTo
   },
 };
 settingCopeto.check.chkboxType = { "Y" : "s", "N" : "s" };
@@ -358,31 +359,18 @@ function onClickAddFenzu(e, treeId, treeNode) {
 }
 
 
-function onCheck(e,treeId,treeNode){
-  var treeObj=$.fn.zTree.getZTreeObj("treeDemoCopeto"),
-  nodes=treeObj.getCheckedNodes(true),
-  v1="";
-  h1="";
-  for(var i=0;i<nodes.length;i++){
-      v1+=nodes[i].name + ",";
-      h1+=nodes[i].id + ",";  
-  }
-  ConfigureToidsArr = h1;
-  ConfigureToidsArr = ConfigureToidsArr.slice(0,-1);
+function onCheckTo(e,treeId,treeNode){
+  var treeObj = $.fn.zTree.getZTreeObj("treeDemoCopeto")
+  currentToNode = treeObj.getCheckedNodes(true)
 }
 
 
 function onCheckRaido(e,treeId,treeNode){
-  var treeObj=$.fn.zTree.getZTreeObj("treeDemoCopeFrom"),
-  nodes=treeObj.getCheckedNodes(true),
-  v2="";
-  h2="";
-  for(var i=0;i<nodes.length;i++){
-      v2+=nodes[i].name + ",";
-      h2+=nodes[i].id + ",";  
+  if ( treeNode.checked) {
+    currentFromNode = treeNode
+  } else {
+    currentFromNode = {}
   }
-  ConfigureFromidsArr = h2;
-  ConfigureFromidsArr = ConfigureFromidsArr.slice(0,-1);
 }
 
 

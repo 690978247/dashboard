@@ -360,8 +360,8 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                             return false
                         }else{
                             let panelName = $('#attrName').val()
-                            let groupId = currentPositionNode.parentId
-                            let panelId = currentPositionNode.id
+                            let groupId = currentPositionNode.id
+                            let panelId = data.id
                             console.log(currentPositionNode)
                             let description = $('#attribute-describeVal').val()
                             let accessType = $("input[name='permission']:checked").val();
@@ -747,45 +747,90 @@ $('#addDashboard').on('click', function(){
         });
 });
 $('#copeConfigureTo').on('click', function(){
-    layer.open({
-        type: 1,
-        title: ['选择要将权限配置复制到的仪表板', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-        closeBtn: 1,
-        btn: ['取消', '应用'],
-        shadeClose: true,
-        skin: 'z-addDashboard',
-        content: $('.copeConfigureTo1') ,
-        area: ['599px', '620px'],
-        success: function(layero,index){
-            //完成后的回调
-            request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
-                zNodesCopeto = res.data.data
-                $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
-            })
-        },
-        btn2: function(index, layero){
-            var dataObj = ConfigureToidsArr;
-            if(dataObj == ""){
-                layer.msg('请选择仪表板');
-                return false
-            }else{
-                // $.ajax({
-                //     url: methodsApi.getworkstats1_get,
-                //     type: "post",
-                //     contentType: "application/json",
-                //     data: JSON.stringify(searchObjData),
-                //     dataType: "json",
-                //     /* async: false, */
-                //     success: function (res) {
-                        
-                //     },
-                //     error: function (err) {
-                //         wui.errorNotice("获取信息失败");
-                //     }
-                // });
-            }
-        }                     
-    });
+    var name = $("#attrName").val();
+    var position = $("#attrPosition").val();
+    $("#attrName").removeClass("valNUllBorder");
+    $("#attrPosition").removeClass("valNUllBorder");
+    if(name == ""){
+        layer.msg('请填写名称');
+        $("#attrName").addClass("valNUllBorder");
+        return false
+    }else if(position==""){
+        layer.msg('请选择位置');
+        $("#attrPosition").addClass("valNUllBorder");
+        return false
+    }else{
+        layer.open({
+            type: 1,
+            title: ['选择要将权限配置复制到的仪表板', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
+            closeBtn: 1,
+            btn: ['取消', '应用'],
+            shadeClose: true,
+            skin: 'z-addDashboard',
+            content: $('.copeConfigureTo1') ,
+            area: ['599px', '620px'],
+            success: function(layero,index){
+                //完成后的回调
+                request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
+                    zNodesCopeto = res.data.data
+                    $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
+                })
+            },
+            btn2: function(index, layero){
+                if(currentToNode.length === 0){
+                    layer.msg('请选择仪表板');
+                    return false
+                }else{
+                    let panelName = $('#attrName').val()
+                    let groupId = currentPositionNode.id
+                    let panelId = data.id
+                    let description = $('#attribute-describeVal').val()
+                    let accessType = $("input[name='permission']:checked").val();
+                    if (accessType === 'custom') {
+                        if (permissionList.length === 0) {
+                            layer.msg('请设置访问权限');
+                            return false
+                        }
+                    }
+                    let panelIds = []  
+                    currentToNode.forEach((item) => {
+                        panelIds.push(item.id)
+                    })
+                    let paramsData = panelIds.join()
+                    let postData = {
+                        panelName,
+                        groupId,
+                        accessType,
+                        panelId,
+                        description,
+                        customPermissions: permissionList
+                    }
+                    request.post(`/bi/${appId}/panel-permissions/copy-to?panelIds=${paramsData}`, postData).then(res => {
+                        if (res.data.code === 0) {
+                            layer.msg('应用成功!')
+                            layer.close(index);
+                        } else {
+                            layer.msg(res.data.msg)
+                        }
+                    })
+                    // $.ajax({
+                    //     url: methodsApi.getworkstats1_get,
+                    //     type: "post",
+                    //     contentType: "application/json",
+                    //     data: JSON.stringify(searchObjData),
+                    //     dataType: "json",
+                    //     /* async: false, */
+                    //     success: function (res) {
+                            
+                    //     },
+                    //     error: function (err) {
+                    //         wui.errorNotice("获取信息失败");
+                    //     }
+                    // });
+                }
+            }                     
+        });
+    }
 });
 $('#copeConfigureFrom').on('click', function(){
     layer.open({
@@ -813,11 +858,22 @@ $('#copeConfigureFrom').on('click', function(){
             layer.close(index);
         },
         btn2: function(index, layero){
-            var dataObj = ConfigureFromidsArr;
-            if(dataObj == ""){
+            if(JSON.stringify(currentFromNode) == "{}"){
                 layer.msg('请选择仪表板');
                 return false
             }else{
+                request.get(`/bi/${appId}/panel-permissions/${currentFromNode.id}/to-copy`).then(res => {
+                    if (res.data.code === 0) {
+                        layer.msg('应用成功!')
+                        $(`input[name='permission'][value='${res.data.data.accessType}']`).prop('checked', true)
+                        $(`#attribute-describeVal`).val(res.data.data.description)
+                        layui.form.render()
+                        permissionList = res.data.data.customPermissions
+                        layer.close(index);
+                    } else {
+                        layer.msg(res.data.msg)
+                    }
+                })
                 // $.ajax({
                 //     url: methodsApi.getworkstats1_get,
                 //     type: "post",
