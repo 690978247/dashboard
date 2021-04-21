@@ -66,7 +66,7 @@ function  removeTreeNode() {
                     if (res.data.code === 0) {
                         layer.msg('删除成功!');
                         zTree.removeNode(nodes[0]);
-                        zTree.selectNode(currentPositionNode)
+                        zTree.selectNode(currentGroupNode)
                     } else {
                         layer.msg(res.data.msg);
                     }
@@ -77,6 +77,7 @@ function  removeTreeNode() {
                 if (res.data.code === 0) {
                     layer.msg('删除成功!');
                     zTree.removeNode(nodes[0]);
+                    zTree.selectNode(currentGroupNode)
                 } else {
                     layer.msg(res.data.msg);
                 }
@@ -125,6 +126,7 @@ function showMenuFenzu() {
     // zTree.setting.view.fontCss = {color: '#409EFF',background: 'red'}
     // zTree.updateNode(nodes[0])
     $("body").bind("mousedown", onBodyDown);
+    
 }
 function hideMenuFenzu() {
     $("#menuContentFenzu").fadeOut("fast");
@@ -481,23 +483,22 @@ function searchTableData () {
 // 设置分组树默认选中
 function setGroupChoice (name) {
     name = name || '全部分组'
-    let nodes = zTree.getNodes();
-    nodes.forEach((item,index) => {
-        if (item.name == name) {
-            zTree.selectNode(nodes[index]);
-            currentGroupNode = nodes[index]
-        }
-    })
+    // let nodes = zTree.getNodes();
+    // nodes.forEach((item,index) => {
+    //     if (item.name == name) {
+    //         zTree.selectNode(nodes[index]);
+    //         currentGroupNode = nodes[index]
+    //     }
+    // })
+    let node = zTree.getNodeByParam("name", name, null);
+    zTree.selectNode(node)
+
 }
 
 // 设置位置树默认选中
 function setPositionChoice (name) {
-    let addNodes = addPTree.getNodes();
-    addNodes.forEach((item,index) => {
-        if (item.name == name) {
-            addPTree.selectNode(addNodes[index]);
-        }
-    })
+    let node = addPTree.getNodeByParam("name", name, null);
+    addPTree.selectNode(node)
 }
 
 
