@@ -365,6 +365,35 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                             $(`input[name='permission'][value='${res.data.data.accessType}']`).prop('checked', true)
                             $(`#attribute-describeVal`).val(res.data.data.description)
                             layui.form.render()
+                            if(res.data.data.accessType =="custom"){
+                                $("#z-selectDept").show();
+                                $("#layui-form-margin9").css("margin-bottom","0px");
+                                let names = []
+                                if (res.data.data.customPermissions.length !== 0) {
+                                    res.data.data.customPermissions.forEach(item => {
+                                        if (item.type === 'department') {   //部门department
+                                            checkDeptArr.push(item)
+                                            cloneDepart.push(item)
+                                            names.push(item.bizName)
+                                            zNodesDept
+                                        } else if (item.type === 'user') { //人员user
+                                            peopleArr.push(item)
+                                            clonePeople.push(item)
+                                            names.push(item.bizName)
+                                        } else {    //岗位 position
+                                            jobArr.push(item)
+                                            cloneJob.push(item)
+                                            names.push(item.bizName)
+                                        }
+                                    })
+                                    $("#z-selectDeptInp").val(names);
+                                    permissionList = checkDeptArr.concat(peopleArr).concat(jobArr)
+                                }
+                                
+                              }else{
+                                $("#z-selectDept").hide();
+                                $("#layui-form-margin9").css("margin-bottom","15px");
+                              }
                         })
                         $("#attrName").val(data.name)
                     },
