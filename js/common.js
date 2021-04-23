@@ -263,7 +263,7 @@ function addDiyDom(treeId, treeNode) {
     + "' title='"+treeNode.name+"' onfocus='this.blur();'></button>";
   aObj.append(editStr);
   var btn = $("#diyBtn_"+treeNode.id);
-  if (btn) btn.bind("click", function(){alert("diy Button for " + treeNode.name);});
+  // if (btn) btn.bind("click", function(){alert("diy Button for " + treeNode.name);});
 }
 
 function addDiyDom1(treeId, treeNode) {
