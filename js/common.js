@@ -8,7 +8,11 @@ var currentPeopleNode  = {} //人员树选中的node
 var currentFromNode = {} //从仪表板复制树
 var currentToNode = [] //复制到其他树
 var currentRightNode = {} //右键菜单栏选中的字节点
-var appId = '68d61d7f990e11eb847e88d7f63cc98f'  //appId
+// 获取url值
+var appId = ''  //appId
+appId = getParams('appId', window.location.href)
+appId = appId ? appId : '0f4d500ec89a4ef6a64d85a02eb26a13'
+
 var zNodes = []
 var addCount = 1
 var pageData = {}
@@ -443,3 +447,30 @@ function onClickSelectDept(e, treeId, treeNode) {
         }
     })
 }
+
+
+// 获取url参数
+function getParams(key, str) {
+      var result = {};
+      var paramStr = ''
+      let params
+      if (str) {
+          paramStr = str.split('?')[1]
+          if (paramStr) {
+              params = paramStr.split('&');
+              params.forEach(item => {
+                  result[item.split('=')[0]] = unescape(item.split('=')[1])
+              })
+          }
+      } else {
+          paramStr = encodeURI(window.document.location.search);
+          if (paramStr) {
+              paramStr = paramStr.substring(1);
+              params = paramStr.split('&');
+              for (var p = 0; p < params.length; p++) {
+                  result[params[p].split('=')[0]] = unescape(params[p].split('=')[1]);
+              }
+          }
+      }
+      return result[key];
+  }

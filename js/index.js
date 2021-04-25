@@ -283,8 +283,9 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
             var data = obj.data;
             if(obj.event === 'edit'){
                 // layer.msg('跳转页面');
-                // window.open('http://127.0.0.1:5501/', '_parent')
-                window.postMessage(data.id, '*')
+                // postMessage 给sass页面传递值
+                window.parent.postMessage(data.id, '*')
+                console.log('发送')
             } else if(obj.event === 'del'){
                 layer.confirm("确定要删除" + data.name + "?", {
                 skin: 'z-tipdel',
@@ -577,9 +578,13 @@ async function getToken () {
         origin: 0,
         password: 123456,
       }
+    // 获取url值
+      let token = getParams('token', window.location.href)
+      token = token ? token : '0f4d500ec89a4ef6a64d85a02eb26a13'
     //   设置token,可删除
-      localStorage.setItem("token", '0f4d500ec89a4ef6a64d85a02eb26a13')
-      appId = 'innerTestPlatformId'
+      localStorage.setItem("token", token)
+      appId = getParams('appId', window.location.href)
+      appId = appId ? appId : '0f4d500ec89a4ef6a64d85a02eb26a13'
     // await request.post(`/bi/tokens`,null, { params: postData }).then(res => {
     //     if (res.data.code === 0) {
     //         localStorage.setItem("token", res.data.data.token)
