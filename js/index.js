@@ -282,7 +282,9 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
         table.on('tool(test)', function(obj){//tool(test)中的test对应table标签中lay-filter="test"的test
             var data = obj.data;
             if(obj.event === 'edit'){
-            layer.msg('跳转页面');
+                // layer.msg('跳转页面');
+                // window.open('http://127.0.0.1:5501/', '_parent')
+                window.postMessage(data.id, '*')
             } else if(obj.event === 'del'){
                 layer.confirm("确定要删除" + data.name + "?", {
                 skin: 'z-tipdel',
