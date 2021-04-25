@@ -377,7 +377,7 @@ function onCheckRaido(e,treeId,treeNode){
 
 
 function zTreeBeforeCheck(treeId, treeNode) {
-  return !treeNode.isParent;//当是父节点 返回false 不让选取
+  // return treeNode.nodeType === 'panel';//当是父节点 返回false 不让选取
 }
 
 function onCheckDept(e,treeId,treeNode){

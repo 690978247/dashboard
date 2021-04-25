@@ -935,7 +935,7 @@ $('#copeConfigureFrom').on('click', function(){
             request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
                 zNodesCopeFrom = res.data.data
                 zNodesCopeFrom.forEach(item => {
-                    if (!item.parentId) {
+                    if (item.nodeType !== 'panel') {
                         item.nocheck = true
                     }
                 })
