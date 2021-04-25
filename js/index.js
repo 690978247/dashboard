@@ -515,7 +515,16 @@ function searchTableData () {
     }
     request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
         let { data } = res.data
+        pageData.pageIndex = 1
         renderTable(data.records, {size: res.data.data.size,})
+        pageData = {
+            totalCount: res.data.data.total, // 总条数
+            totalPage: res.data.data.pages, // 总页数
+            pageIndex: res.data.data.current, // 当前页
+            pageSize: res.data.data.size, // 每页显示条数
+        }
+        renderPagination('popup-pagination')
+        renderLis ()
     })
     $(".layui-table-main").niceScroll({
         cursorcolor: "#ddd",
