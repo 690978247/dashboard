@@ -284,7 +284,7 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
             if(obj.event === 'edit'){
                 // layer.msg('跳转页面');
                 // postMessage 给sass页面传递值
-                window.parent.postMessage(data.id, '*')
+                window.parent.postMessage({id: data.id, source: 'SYCBI'}, '*')
                 console.log('发送')
             } else if(obj.event === 'del'){
                 layer.confirm("确定要删除" + data.name + "?", {
