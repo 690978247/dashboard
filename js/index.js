@@ -584,7 +584,7 @@ async function getToken () {
     //   设置token,可删除
       localStorage.setItem("token", token)
       appId = getParams('appId', window.location.href)
-      appId = appId ? appId : '0f4d500ec89a4ef6a64d85a02eb26a13'
+      appId = appId ? appId : 'innerTestPlatformId'
     // await request.post(`/bi/tokens`,null, { params: postData }).then(res => {
     //     if (res.data.code === 0) {
     //         localStorage.setItem("token", res.data.data.token)
