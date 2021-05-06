@@ -391,7 +391,7 @@ function onCheckDept(e,treeId,treeNode){
     arr.push({
       bizId: item.id,
       bizName: item.name,
-      type: 'department'
+      bizType: 'department'
     })
   })
   checkDeptArr = arr

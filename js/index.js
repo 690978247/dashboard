@@ -374,12 +374,12 @@ function renderTable (data, pager , type) { // type 勾选缓存tableCheckList�
                                 let names = []
                                 if (res.data.data.customPermissions.length !== 0) {
                                     res.data.data.customPermissions.forEach(item => {
-                                        if (item.type === 'department') {   //部门department
+                                        if (item.bizType === 'department') {   //部门department
                                             checkDeptArr.push(item)
                                             cloneDepart.push(item)
                                             names.push(item.bizName)
                                             zNodesDept
-                                        } else if (item.type === 'user') { //人员user
+                                        } else if (item.bizType === 'user') { //人员user
                                             peopleArr.push(item)
                                             clonePeople.push(item)
                                             names.push(item.bizName)
@@ -1190,7 +1190,7 @@ $(document).on("click","#rankSelect i",function(e){
             jobArr.push({
                 bizId: $(this).siblings().data().id,
                 bizName: $(this).siblings().text(),
-                type: 'position'
+                bizType: 'position'
             })
         }
 
@@ -1345,7 +1345,7 @@ $(document).on("click","#peopleSelect i",function(e){
         peopleArr.push({
             bizId: $(this).siblings().data().id,
             bizName: $(this).siblings().text(),
-            type: 'user'
+            bizType: 'user'
         })
     }
     layui.use('laytpl', function(){
