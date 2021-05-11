@@ -136,7 +136,7 @@ h5 {
       display: inline-block;
       border: 1px solid #eee;
       width: 240px;
-      color: #06bdf2;
+      color: #333333;
       border-radius: 5px;
       position: relative;
    }
@@ -162,7 +162,7 @@ h5 {
 .g-bluebtn{
   width: 42px;
   height: 24px;
-  line-height: 24px;
+  line-height: 22px;
   display: inline-block;
   background: #ECF5FF;
   border: 1px solid #409EFF;
@@ -176,7 +176,7 @@ h5 {
 .g-redbtn{
   width: 42px;
   height: 24px;
-  line-height: 24px;
+  line-height: 22px;
   display: inline-block;
   background: #FEF0F0;;
   border: 1px solid #409EFF;

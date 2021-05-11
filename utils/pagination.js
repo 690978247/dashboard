@@ -78,10 +78,23 @@ function renderLis () {
 // 获取表格数据
 function getTableData (postData) {
   request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
-    let { data } = res.data
-    renderTable(data.records, {size: res.data.data.size}, 'flashCheck')
-    renderPagination('popup-pagination')
-    renderLis ()
+    let { data,msg } = res.data
+    if(data != null && data != ''){
+      renderTable(data.records, {size: res.data.data.size,pageIndex:res.data.data.current}, 'flashCheck')
+      renderPagination('popup-pagination')
+      renderLis ()
+  }else{
+      layer.confirm(msg, {
+          skin: 'z-tipoffline',
+          area: ['420px', '136px'],
+          title: "提示",
+          btn: ['确定']},
+          function(index, layero){
+              //按钮【按钮一】的回调
+              layer.close(index);
+          }
+      );
+  }
   })
 }
 

@@ -2,6 +2,7 @@
     /* display: flex; */
     height: 100%;
     padding-top: 10px;
+    
 }
 .z-contentBoxLeft{
     float:left;
@@ -13,6 +14,7 @@
 .z-contentBoxRight{
     height: 100%;
     overflow:hidden;
+    position: relative;
 }
 .z-contentBoxRightBox{
     border: 1px solid #eee;
@@ -26,8 +28,12 @@
     width: 138px;
 }
 .z-contentBoxRight-top{
-    margin-top: 10px;
+    margin-top: 15px;
     margin-left: 25px;
+    /* min-width: 1340px; */
+}
+.z-contentBoxRight-top li{
+    display: inline-block;
 }
 .z-contentBoxRight-top li .state{
     position: relative;
@@ -134,7 +140,7 @@
     margin-left: 0px;
 }
 .z-addDashboard .addDashboardContent .position{
-    padding: 6px 15px 0px 16px;
+    padding: 6px 3px 0px 0;
 }
 .z-addDashboard  .layui-layer-btn .layui-layer-btn1{
     border-color: #1E9FFF;
@@ -320,8 +326,12 @@
   width: 100%;
 }
 .z-contentBoxRight-table {
-    height: calc(100% - 85px);
-    overflow: auto;
+    height: calc(100% - 150px);
+    width: 100%;
+    position: absolute;
+    top:70px;
+    bottom: 50px;
+    /* overflow: auto; */
 }
 .z-contentBoxRight-table .layui-laypage .layui-laypage-curr .layui-laypage-em {
     background-color: #409EFF;
@@ -802,18 +812,18 @@ body .layui-layer-page .layui-layer-content {
     position: relative;
 }
 .z-contentBoxLeft .ztree li a.level1 {
-    left: -18px;
-    padding-left: 23px;
-}
-.z-contentBoxLeft .ztree li a.level2 {
+    /* left: -18px; */
+    padding-left: 5px;
+} 
+/*.z-contentBoxLeft .ztree li a.level2 {
     left: -36px;
     padding-left: 41px;
-}
-.z-contentBoxLeft .ztree li a.level3 {
+} 
+/* .z-contentBoxLeft .ztree li a.level3 {
     left: -72px;
     padding-left: 77px;
-}
-.z-contentBoxLeft .ztree li a.level4 {
+} */
+/* .z-contentBoxLeft .ztree li a.level4 {
     left: -144px;
     padding-left: 149px;
 }
@@ -828,7 +838,44 @@ body .layui-layer-page .layui-layer-content {
 .z-contentBoxLeft .ztree li a.level7 {
     left: -1152px;
     padding-left: 1157px;
-}
+} */
 .z-contentBoxLeft .ztree {
     padding:0px;
+    position: relative;
+    overflow: auto;
+    height: 100%;
+   
 }
+
+/* liCuiHong */
+.layui-form-checkbox[lay-skin=primary]:hover i{
+    border:  1px solid #409EFF;
+}
+.nicescroll-slideBar{
+    height: calc(100% - 50px);
+
+}
+body .layui-msg-style{
+    /* position: relative; */
+    
+    background-color: #f0f9eb;
+    color: #67c23a;
+    min-width: 380px;
+    height: 48px;
+    margin: 0;
+
+}
+.layui-msg-style.layui-layer-dialog{
+    top:20px
+}
+.layui-msg-style.layui-layer-dialog .layui-layer-content{
+    line-height: 48px !important;
+    padding: 0 20px !important;
+    
+  
+}
+.layui-form-select dl dd.layui-this{
+  background:rgba(0, 0, 0, 0);
+  color: #409EFF;
+}
+

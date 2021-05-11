@@ -35,6 +35,7 @@ var permissionList = []
 var jobArr = []
 var peopleArr = []
 
+
 //树配置初始化
 var rMenu
 var zTree  //分组树
@@ -246,6 +247,51 @@ var zNodesDeptOrpeo =[
   // { id:23, pId:2, name:"随意勾选 2-3"}
 ];
 
+// msg 样式设置
+var app={
+  msg:function(message,style){
+        var css={
+          skin: 'layui-msg-style',
+          offset: '20px'
+      }
+
+      css=$.extend(css,style);
+        layer.msg(message,css);
+  },
+  alert:function(){
+    layer.alert()
+  },
+  confirm:function(message,style,colseFun,delFun){
+    var css = {
+      skin: 'z-tipdel',
+      area: ['420px', '136px'],
+      btn: ['取消', '删除'],
+      title: "提示",
+  }
+  css=$.extend(css,style);
+  layer.confirm(message,css,colseFun,delFun)
+  },
+  showHtml:function(title){
+    var data =  {
+      type: 1,
+      title: false,
+      closeBtn: 0,
+      area: ['598px', '490px'],
+      skin: 'z-addDashboard', //没有背景色
+      shadeClose: true,
+      btn: ['取消', '保存'],
+      content: $('#tong')
+    }
+
+
+    layer.open()
+
+  },
+  showIfar:function(){
+
+  }
+}
+
 /* zTree事件 */
 function addDiyDom(treeId, treeNode) {
   var spaceWidth = 5;
@@ -253,13 +299,14 @@ function addDiyDom(treeId, treeNode) {
   icoObj = $("#" + treeNode.tId + "_ico");
   switchObj.remove();
   icoObj.before(switchObj);
-
+  //  debugger
   if (treeNode.level > 1) {
       var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
       switchObj.before(spaceStr);
   }
 
   var aObj = $("#" + treeNode.tId + "_a");
+  
   //treeNode.id 要根据树的数据中的id获取，zNodes 数据配置中的i
   // if ($("#diyBtn_"+treeNode.id).length>0) return; //控制哪些节点不显示按钮
   var editStr = "<span class='dot' id='diyBtn_space_"+treeNode.id+ "' >...</span>"
@@ -292,7 +339,7 @@ function groupNodeClick(event, treeId, treeNode) {
   }
   request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
     let { data } = res.data
-    renderTable(data.records, {size: res.data.data.size,})
+    renderTable(data.records, {size: res.data.data.size,pageIndex: res.data.data.current,})
     pageData = {
         totalCount: res.data.data.total, // 总条数
         totalPage: res.data.data.pages, // 总页数
@@ -325,7 +372,12 @@ function OnRightClick(event, treeId, treeNode) {
       showRMenu("root", event.clientX, event.clientY);
   } else if (treeNode && !treeNode.noR) {
       // zTree.selectNode(treeNode);
-      showRMenu("node", event.clientX, event.clientY);
+      if(currentRightNode['parentId']){
+        showRMenu("node", event.clientX, event.clientY);
+      }else{
+        showRMenu("topNode", event.clientX, event.clientY);
+      }
+     
   }
 }
 
