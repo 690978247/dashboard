@@ -48,8 +48,10 @@ async function getGruopTree(name) {
             name
         }
     }).then(res => {
-
-        zNodes = res.data.data
+        // debugger
+        // if(res.data.data){
+            zNodes = res.data.data||[];
+           // if(!zNodes)z
         console.log(res.data.data)
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
@@ -62,6 +64,10 @@ async function getGruopTree(name) {
 
         currentGroupNode = (zNodes || []).filter(x => x['parentId'] == null || x['parentId'] == '')[0];
 
+
+        // }
+
+        
     })
 }
 // 右侧树查询
@@ -742,7 +748,7 @@ async function getToken() {
 
 $(document).ready(async function () {
     await getToken()
-
+    // debugger
     await getGruopTree()
     rMenu = $("#rMenu");
     // 设置默认展开
@@ -751,7 +757,11 @@ $(document).ready(async function () {
     addPTree.expandAll(true);
     attrTree.expandAll(true);
     addNode(); //给后台返回的tree数据添加属性
-    initTable(currentGroupNode.id)
+    if(currentGroupNode){
+        initTable(currentGroupNode.id)
+
+    }
+    
 });
 layui.use('laydate', function () {
     var laydate = layui.laydate;
