@@ -45,6 +45,11 @@
   display: flex;
   align-items: center;
 }
+.popup-pagination1{
+  position:absolute;
+  bottom: 10px;
+  width: 100%;
+}
 .visual-pagination span:nth-of-type(2) {
   margin-left: 20px;
 }
