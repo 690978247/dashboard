@@ -15,6 +15,9 @@
   padding: 0 15px;
   transition: border-color .2s cubic-bezier(.645,.045,.355,1);
 }
+.popup-pagination select .selectOption{
+  padding: 20px 0;
+}
 .popup-pagination select:focus, .popup-pagination input:focus, .popup-pagination textarea:focus {
   border-color: #409eff;
 }

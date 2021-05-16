@@ -135,7 +135,7 @@ var settingAddFenzu = {
 var zNodesCopeto =[]
 var settingCopeto = {
   view:{
-      showLine: false,
+      showLine:false,
       fontCss : {color:"#333333"}
   },
   check: {
@@ -261,45 +261,58 @@ var app={
   alert:function(){
     layer.alert()
   },
+  
   confirm:function(message,style,colseFun,delFun){
     var css = {
       skin: 'z-tipdel',
-      area: ['420px', '136px'],
+      area: ['420px', '180px'],
       btn: ['取消', '删除'],
       title: "提示",
+      shadeClose: false,
   }
   css=$.extend(css,style);
   layer.confirm(message,css,colseFun,delFun)
   },
-  showHtml:function(title){
+  showHtml:function(title,data1,fun1,fun2){
     var data =  {
       type: 1,
-      title: false,
-      closeBtn: 0,
+      title: [title, 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
+      closeBtn: 1,
       area: ['598px', '490px'],
       skin: 'z-addDashboard', //没有背景色
-      shadeClose: true,
+      shadeClose: false,
       btn: ['取消', '保存'],
-      content: $('#tong')
+      content: $('#addDashboardContent'),
     }
-
-
-    layer.open()
+    data=$.extend(data,data1);
+    layer.open(data,fun1,fun2)
 
   },
   showIfar:function(){
 
   }
 }
+//loading
+function showloading(t) {
+  if (t) {//如果是true则显示loading
+      console.log(t);
+      loading = layer.load(1, {
+          shade: [0.1, '#fff'] //0.1透明度的白色背景
+      });
+  } else {//如果是false则关闭loading
+      console.log("关闭loading层:" + t);
+      layer.closeAll('loading');
+  }
+}
 
 /* zTree事件 */
 function addDiyDom(treeId, treeNode) {
+  // console.log(treeNode)
   var spaceWidth = 5;
   var switchObj = $("#" + treeNode.tId + "_switch"),
   icoObj = $("#" + treeNode.tId + "_ico");
   switchObj.remove();
   icoObj.before(switchObj);
-  //  debugger
   if (treeNode.level > 1) {
       var spaceStr = "<span style='display: inline-block;width:" + (spaceWidth * treeNode.level)+ "px'></span>";
       switchObj.before(spaceStr);
@@ -348,6 +361,7 @@ function groupNodeClick(event, treeId, treeNode) {
     }
     renderPagination('popup-pagination')
     renderLis ()
+    setPermissions()
   })
 };
 
@@ -525,4 +539,48 @@ function getParams(key, str) {
           }
       }
       return result[key];
+  }
+
+var checkPermissionsList = ''//权限
+//获取权限
+ async function checkPermissions(){
+    await request.get(`bi/${appId}/users/permission/code`, {
+      params: {
+          appId
+      }
+  }).then(res => {
+      let data = res.data
+      if(data.code == 0){
+          if(data.data){
+            checkPermissionsList = data.data
+            setPermissions()
+          }
+
+      }else{
+          layer.msg(data.msg)
+      }
+      
+      console.log(res)
+     
+
+  })
+  }
+//调用权限
+  function setPermissions(){
+    // debugger
+    let list = checkPermissionsList
+    let permissionsBtnList = list.filter(x=>x.code.indexOf('bi')>-1)
+    console.log(permissionsBtnList)
+    var permissionsBtnMap={};
+    permissionsBtnList.forEach(item=>{
+      permissionsBtnMap[item.code]=item.exist;
+    });
+
+    $.each($('.checkPer'),function(){
+       var code = $(this).data('permission');
+       if(!permissionsBtnMap[code]){
+        $(this).hide();
+       }
+
+    });
   }

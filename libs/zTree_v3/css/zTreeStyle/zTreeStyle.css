@@ -12,6 +12,8 @@ website:	http://code.google.com/p/jquerytree/
 .ztree {margin:0; padding:5px; color:#333}
 .ztree li{padding:0; margin:0; list-style:none; line-height:14px; text-align:left; white-space:nowrap; outline:0}
 .ztree li ul{ margin:0; }
+.copeConfigureTo1 .ztree li ul,.treeDemoCopeFromScroll .ztree li ul,
+.copeConfigureForm .ztree li ul{padding-left: 10px;}
 /* .ztree li ul{ margin:0;} */
 .ztree li ul.line{ background:url(./img/line_conn.gif) 0 0 repeat-y;}
 

@@ -1,15 +1,24 @@
 /* 分页部分 */
 let data = []
 // 渲染分页组件
+// <div class="visual-pagination-select">
+    // <ul>
+    // <li value="10" ${pageData.pageSize === 10 ? 'selected': '' }>10条/页</li>
+    // <li value="20" ${pageData.pageSize === 20 ? 'selected': ''  }>20条/页</li>
+    // <li value="30" ${pageData.pageSize === 30 ? 'selected': ''}>30条/页</li>
+    // <li value="40" ${pageData.pageSize === 40 ? 'selected': '' }>40条/页</li>
+    // </ul>
+    // </div>
 function renderPagination (ref) { // ref参数为渲染根元素
   let pagination = document.getElementById(ref)
   let page = `<div class="visual-pagination">
     <span>共 ${pageData.totalCount} 条</span>
+    
     <select class="visual-pagination-select" onchange="perPage(event)" >
-      <option value="10" ${pageData.pageSize === 10 ? 'selected': '' }>10条/页</option>
-      <option value="30" ${pageData.pageSize === 30 ? 'selected': '' }>30条/页</option>
-      <option value="50" ${pageData.pageSize === 50 ? 'selected': '' }>50条/页</option>
-      <option value="80" ${pageData.pageSize === 80 ? 'selected': '' }>80条/页</option>
+      <option  value="10" ${pageData.pageSize === 10 ? 'selected': '' }><div class="selectOption">10条/页</div></option>
+      <option  value="20" ${pageData.pageSize === 20 ? 'selected': '' }>20条/页</option>
+      <option  value="30" ${pageData.pageSize === 30 ? 'selected': '' }>30条/页</option>
+      <option  value="40" ${pageData.pageSize === 40 ? 'selected': '' }>40条/页</option>
     </select>
     <button type="button" onclick="nextPage(event)" id="pager-left-btn" class="visual-pagination-button" ${pageData.pageIndex <= 1 ? 'disabled' : ''}><i class="iconfont iconzuojiantou"></i></button>
     <ul class="visual-pager" id="visual-pager" onclick="changePage(event)" >
@@ -77,12 +86,15 @@ function renderLis () {
 
 // 获取表格数据
 function getTableData (postData) {
+  showloading(true)
   request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
+    showloading(false)
     let { data,msg } = res.data
     if(data != null && data != ''){
       renderTable(data.records, {size: res.data.data.size,pageIndex:res.data.data.current}, 'flashCheck')
       renderPagination('popup-pagination')
       renderLis ()
+      setPermissions()
   }else{
       layer.confirm(msg, {
           skin: 'z-tipoffline',

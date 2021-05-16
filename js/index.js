@@ -39,6 +39,91 @@ function onBodyMouseDown(event) {
         });
     }
 }
+//获取用户按钮权限
+async function getpermissionsBtn(){
+    await request.get(`bi/${appId}/users/permission/code`, {
+        params: {
+            appId
+        }
+    }).then(res => {
+        let data = res.data
+        if(data.code == 0){
+            if(data.data){
+                let list = data.data
+                let permissionsBtnList = list.filter(x=>x.code.indexOf('bi')>-1)
+                console.log(permissionsBtnList)
+                permissionsBtnList.forEach(item=>{
+                    //查看权限
+                    if(item.code == 'bi_configuration_view' && !item.exist){
+                        console.log(item)
+                        $("#rMenu").hide()
+                        $("#addDashboardBtnLi").hide()
+                        $("#batchReleaseBtn").hide()
+                        $("#tableListBtn").hide()
+                        console.log($("table").find("td[data-field='score']").find('layui-table-cell'))
+                        $("table").find("td[data-field='score']").find("a").hide()
+                        
+                    }
+                    //新增分组
+                    if(item.code == 'bi_configuration_group_add' && !item.exist){
+                        console.log('新增分组')
+                        $("#m_add_btn").hide()
+                    }
+                     //编辑分组
+                     if(item.code == 'bi_configuration_group_edit' && !item.exist){
+                        console.log('编辑分组')
+                        $("#m_check_btn").hide()
+                    }
+                    //删除分组
+                     if(item.code == 'bi_configuration_group_delete' && !item.exist){
+                        console.log('删除分组')
+                        $("#m_del_btn").hide()
+                    }
+                    //新增仪表板
+                    if(item.code == 'bi_configuration_dashboard_add' && !item.exist){
+                        console.log('新增仪表板')
+                        $("#addDashboardBtnLi").hide()
+                    }
+                    //删除仪表板
+                    if(item.code == 'bi_configuration_dashboard_delete' && !item.exist){
+                        // console.log(item)
+                        let edits = [...document.querySelectorAll('table .g-del')]
+                        edits.forEach(item => {
+                            item.style.display = 'none'
+                        })
+                    }
+                    //编辑仪表板页面
+                    if(item.code == 'bi_configuration_dashboard_edit' && !item.exist){
+                        // debugger
+                        // $('table .g-edit').forEach(item => {
+                        //     debugger
+                        // })
+                        let edits = [...document.querySelectorAll('table .g-edit')]
+                        edits.forEach(item => {
+                            item.style.display = 'none'
+                        })
+
+                        // let tableList = $("table").find("td[data-field='score']").find("a[innerHTML='编辑']").hide()
+                        // for(let i=0;i<tableList.length;i++){
+                        //     if(tableList[i].innerHTML == '编辑'){
+                        //         tableList[i].hide()
+                        //     }
+                        // }
+                        // console.log(tableList)
+                    }
+                })
+            }
+
+        }else{
+            layer.msg(data.msg)
+        }
+        
+        console.log(res)
+       
+
+    })
+
+}
 // 获取右侧分组数数据 以及位置树数据
 async function getGruopTree(name) {
 
@@ -48,10 +133,9 @@ async function getGruopTree(name) {
             name
         }
     }).then(res => {
-        // debugger
         // if(res.data.data){
-            zNodes = res.data.data||[];
-           // if(!zNodes)z
+        zNodes = res.data.data || [];
+        // if(!zNodes)z
         console.log(res.data.data)
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
         $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
@@ -67,7 +151,7 @@ async function getGruopTree(name) {
 
         // }
 
-        
+
     })
 }
 // 右侧树查询
@@ -75,6 +159,7 @@ async function searchGroupTree(e) {
     await getGruopTree(e.target.value)
 
     setGroupChoice(currentGroupNode.name ? currentGroupNode.name : '')
+    zTree.expandAll(true);
 
 }
 
@@ -125,7 +210,7 @@ function removeTreeNode() {
                 }
             })
         })
-        
+
 
     }
 }
@@ -157,8 +242,8 @@ function showMenu() {
     var cityObj = $("#citySel");
     var cityOffset = $("#citySel").offset();
     $("#menuContent").css({
-        left: cityOffset.left + "px",
-        top: cityOffset.top + cityObj.outerHeight() + "px"
+        // left: cityOffset.left + "px",
+        // top: cityOffset.top + cityObj.outerHeight() + "px"
     }).slideDown("fast");
 
     $("body").bind("mousedown", onBodyDown);
@@ -214,7 +299,7 @@ function onBodyDown(event) {
 }
 // 表格初始化
 function initTable(id, pager) {
-    // debugger
+   
     if (!pager) {
         pager = {
             pageIndex: 1,
@@ -223,6 +308,7 @@ function initTable(id, pager) {
     }
 
     // groupId 默认展示全部分组id
+    showloading(true)
     request.get(`/bi/${appId}/panels`, {
         params: {
             appId,
@@ -231,9 +317,11 @@ function initTable(id, pager) {
             size: pager.pageSize
         }
     }).then(res => {
+        showloading(false)
         if (res.data.data) {
             renderTable(res.data.data.records, {
-                size: res.data.data.size,pageIndex: res.data.data.current,
+                size: res.data.data.size,
+                pageIndex: res.data.data.current,
             })
             setGroupChoice(currentPositionNode.name)
             pageData = {
@@ -244,23 +332,51 @@ function initTable(id, pager) {
             }
             renderPagination('popup-pagination')
             renderLis()
+            setPermissions()
         }
 
     })
 }
+//表格提示
+function renderTooltip(){
+    var tooltip 
+    $("tooltip").each(function(index,element){
+        var parent = element.parentElement
+        element.onmouseenter = function(){
+            if(parent.offsetWidth - 30 < element.offsetWidth){
+                tooltip = layer.open({
+                    type: 4,
+                    content: [element.innerText, element], //数组第二项即吸附元素选择器或者DOM
+                    shade: 0,
+                    tips: 1,
+                    closeBtn:0,
+                    skin: 'table-tips',
+                  });
+            }
+        }
+        parent.onmouseleave = function(){
+            layer.close(tooltip);
+        }
+     });
+}
+
 
 // 渲染表格
 function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 不清除
-    //  debugger
     pager = pager ? pager : pager.size = 10
     tableData = data
+    data.forEach(item=>{
+        for(let key in item){
+            item[key]=item[key]||''
+        }
+    })
     if (!type) {
         tableCheckList = []
     }
-
+     
     layui.use(['table', 'laydate', 'laypage', 'layer', 'element'], function () {
-       
-        
+
+        // showloading(true)
         var $ = layui.jquery
         // console.log()
         laydate = layui.laydate //日期
@@ -286,39 +402,53 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                         field: 'index',
                         width: 70,
                         title: '序号',
-                        templet: function(d) {
-                            return d.LAY_INDEX+(pager.pageIndex-1)*10;
+                        templet: function (d) {
+                            return d.LAY_INDEX + (pager.pageIndex - 1) * 10;
                         }
                     },
                     {
                         field: 'name',
                         // width: '8%',
-                        title: '名称'
+                        title: '名称',
+                        templet:function(d){
+                            return '<tooltip>' + d.name + '</tooltip>'}
+                        
                     },
                     {
                         field: 'groupName',
                         width: '12%',
-                        title: '上级分组'
+                        title: '上级分组',
+                        templet:function(d){
+                            return '<tooltip>' + d.groupName + '</tooltip>'}
                     },
                     {
                         field: 'creatorName',
                         width: 120,
-                        title: '创建者'
+                        title: '创建者',
+                        templet:function(d){
+                            return '<tooltip>' + d.creatorName + '</tooltip>'}
                     },
                     {
                         field: 'updaterName',
                         width: 120,
-                        title: '修改人'
+                        title: '修改人',
+                        templet:function(d){
+                            return '<tooltip>' + d.updaterName + '</tooltip>'}
                     },
                     {
                         field: 'updateTime',
                         title: '最近修改时间',
+                        templet:function(d){
+                            return '<tooltip>' + d.updateTime + '</tooltip>'}
                         // width: '15%',
                     }, //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     {
                         field: 'published',
                         title: '状态',
                         width: '13%',
+                        templet:function(d){
+                            return '<tooltip>' + d.published + '</tooltip>'}
+                        
                     },
                     {
                         field: 'score',
@@ -346,8 +476,19 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                         $('tr[data-index=' + index + '] input[type="checkbox"]').next().addClass('layui-form-checked');
                     }
                 })
+                renderTooltip()
+               
             }
         });
+        // //监听性别操作
+        // table.on('switch(sexDemo)', function (obj) {
+        //     layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+        // });
+
+        // //监听锁定操作
+        // table.on('checkbox(lockDemo)', function (obj) {
+        //     layer.tips(this.value + ' ' + this.name + '：' + obj.elem.checked, obj.othis);
+        // });
         //监听表格复选框选择
         table.on('checkbox(test)', function (obj) { //checkbox(test)中的test对应table标签中lay-filter="test"的test
             if (obj.type == 'one') { //单选操作
@@ -406,7 +547,6 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                     request.delete(`/bi/${appId}/panels/${data.id}`).then(res => {
                         if (res.data.code === 0) {
                             app.msg('删除成功!')
-                            // debugger
                             initTable(currentGroupNode.id, pageData)
                             layer.close(index);
                         } else {
@@ -459,19 +599,12 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                         })
                     });
             } else if (obj.event === 'attribute') {
-                layer.open({
-                    type: 1,
-                    title: ['属性', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-                    closeBtn: 1,
-                    shadeClose: true,
-                    skin: 'z-addDashboard',
+
+                // console.log("fdfdd")
+                app.showHtml('属性', {
                     content: $('#attribute'),
-                    // shadeClose: false,
-                    area: ['598px', '490px'],
-                    btn: ['取消', '保存'],
                     success: function (res, curr, count) { //回调函数
                         request.get(`/bi/${appId}/panel-permissions/${data.id}`).then(res => {
-                            // debugger;
                             let data1 = res.data || {}
                             if (data1) {
                                 $(`input[name='permission'][value='${data1.data.accessType}']`).prop('checked', true)
@@ -508,7 +641,7 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                                 }
                                 $("#attrName").val(data1.data.panelName)
                                 $("#attrPosition").val(data1.data.groupName)
-                                // debugger
+                                currentPositionNode.id = data1.data.groupId
 
 
                             }
@@ -517,6 +650,7 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
 
                     },
                     btn2: function (index, layero) {
+
                         var name = $("#attrName").val();
                         var position = $("#attrPosition").val();
                         $("#attrName").removeClass("valNUllBorder");
@@ -625,6 +759,7 @@ function searchTableData() {
     let revisionTimeVal = $("#revisionTime").val();
     let startTime = revisionTimeVal.split(' - ')[0]
     let endTime = revisionTimeVal.split(' - ')[1]
+    endTime = dayjs(endTime).add(1, 'day').format('YYYY-MM-DD');
     let postData = {
         appId,
         groupId: currentGroupNode.id,
@@ -633,18 +768,20 @@ function searchTableData() {
         published: stateVal,
         name: name,
     }
+    showloading(true)
     request.get(`/bi/${appId}/panels`, {
         params: postData
     }).then(res => {
+        showloading(false)
         let {
             data,
             msg
         } = res.data
-        // debugger
         if (data != null && data != '') {
             pageData.pageIndex = 1
             renderTable(data.records, {
-                size: res.data.data.size,pageIndex: res.data.data.current,
+                size: res.data.data.size,
+                pageIndex: res.data.data.current,
             })
             pageData = {
                 totalCount: res.data.data.total, // 总条数
@@ -656,8 +793,6 @@ function searchTableData() {
             renderLis()
 
         } else {
-            // debugger
-
             layer.confirm(msg, {
 
                     skin: 'z-tipoffline',
@@ -682,7 +817,7 @@ function searchTableData() {
 }
 // 
 function setDefaultChoice(name) {
-    // debugger
+   
     let node = zTree.getNodeByParam("name", name, null);
     zTree.selectNode(node)
     initTable(node.id)
@@ -690,9 +825,8 @@ function setDefaultChoice(name) {
 
 // 设置分组树默认选中
 function setGroupChoice(name) {
-    //  debugger;
+    console.log(zTree.getNodes())
     name = name || ((zNodes || []).filter(x => x['parentId'] == null || x['parentId'] == ''))[0].name
-    // debugger
     // let nodes = zTree.getNodes();
     // nodes.forEach((item,index) => {
     //     if (item.name == name) {
@@ -702,14 +836,12 @@ function setGroupChoice(name) {
     // })
     let node = zTree.getNodeByParam("name", name, null);
     zTree.selectNode(node)
-    // debugger;
     currentGroupNode = node
     //initTable(node.id)
 }
 
 // 设置位置树默认选中
 function setPositionChoice(name) {
-    // debugger
     let node = addPTree.getNodeByParam("name", name, null);
     addPTree.selectNode(node)
 }
@@ -745,11 +877,11 @@ async function getToken() {
 }
 
 
-
+//页面初始化
 $(document).ready(async function () {
     await getToken()
-    // debugger
     await getGruopTree()
+    await checkPermissions();
     rMenu = $("#rMenu");
     // 设置默认展开
     zTree.expandAll(true);
@@ -757,11 +889,13 @@ $(document).ready(async function () {
     addPTree.expandAll(true);
     attrTree.expandAll(true);
     addNode(); //给后台返回的tree数据添加属性
-    if(currentGroupNode){
+    if (currentGroupNode) {
         initTable(currentGroupNode.id)
 
     }
-    
+    // await getpermissionsBtn()
+   
+
 });
 layui.use('laydate', function () {
     var laydate = layui.laydate;
@@ -769,6 +903,7 @@ layui.use('laydate', function () {
     laydate.render({
         elem: '#revisionTime',
         range: true,
+        theme: '#409eff',
         value: "",
         change: function (value, date, endDate) {
             searchObjData.revision = value //得到日期生成的值，如：2017-08-18
@@ -857,17 +992,13 @@ function batchSubmitWt() {
     }
 }
 $('#addDashboard').on('click', function () {
-    layer.open({
-        type: 1,
-        title: ['新增仪表板', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-        closeBtn: 1,
-        btn: ['取消', '保存'],
-        shadeClose: true,
-        skin: 'z-addDashboard',
+    let id = currentGroupNode.id
+    app.showHtml('新增仪表板', {
         content: $('#addDashboardContent'),
-        area: ['568px', '520px'],
         success: function (layero, index) {
             //完成后的回调
+            $("#citySel")[0].value = currentGroupNode.name
+            
         },
         btn2: function (index, layero) {
             //return false 开启该代码可禁止点击该按钮关闭
@@ -889,21 +1020,25 @@ $('#addDashboard').on('click', function () {
                 let postData = {
                     appId,
                     name: addDashboardNameVal,
-                    groupId: currentPositionNode.id
+                    groupId: currentPositionNode.id?currentPositionNode.id:id
                 }
                 request.post(`/bi/${appId}/panels`, postData).then(async res => {
                     if (res.data.code === 0) {
-                        layer.msg('添加成功!', {
-                            skin: 'layui-msg-style',
-                            offset: '20px',
-                        })
+                       app.msg('添加成功!')
                         layer.close(index);
                         await getGruopTree()
                         zTree.expandAll(true);
-                        zTree.selectNode(nodes[0])
+                        // zTree.selectNode(nodes[0])
                         $("#addDashboardName")[0].value = ''
                         $("#citySel")[0].value = ''
-                        initTable(currentPositionNode.id)
+                        
+                        // currentGroupNode = currentPositionNode
+                        if(currentPositionNode.id){
+                            initTable(currentPositionNode.id)
+                        }else{
+                            initTable(id)
+                        }
+                        
                     } else {
                         layer.msg(res.data.msg)
                     }
@@ -946,13 +1081,8 @@ $('#copeConfigureTo').on('click', function () {
         $("#attrPosition").addClass("valNUllBorder");
         return false
     } else {
-        layer.open({
-            type: 1,
-            title: ['选择要将权限配置复制到的仪表板', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-            closeBtn: 1,
+        app.showHtml('选择要将权限配置复制到的仪表板', {
             btn: ['取消', '应用'],
-            shadeClose: true,
-            skin: 'z-addDashboard',
             content: $('.copeConfigureTo1'),
             area: ['599px', '620px'],
             success: function (layero, index) {
@@ -960,6 +1090,8 @@ $('#copeConfigureTo').on('click', function () {
                 request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
                     zNodesCopeto = res.data.data
                     $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
+                    zNodesCopeto =  $.fn.zTree.getZTreeObj("treeDemoCopeto");
+                    zNodesCopeto.expandAll(true)
                 })
             },
             btn2: function (index, layero) {
@@ -1022,13 +1154,8 @@ $('#copeConfigureTo').on('click', function () {
     }
 });
 $('#copeConfigureFrom').on('click', function () {
-    layer.open({
-        type: 1,
-        title: ['选择从哪个仪表板复制权限配置', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-        closeBtn: 1,
+    app.showHtml('选择从哪个仪表板复制权限配置', {
         btn: ['取消', '应用'],
-        shadeClose: true,
-        skin: 'z-addDashboard',
         content: $('.copeConfigureForm'),
         area: ['599px', '620px'],
         success: function (layero, index) {
@@ -1041,6 +1168,9 @@ $('#copeConfigureFrom').on('click', function () {
                     }
                 })
                 $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
+                zNodesCopeto =  $.fn.zTree.getZTreeObj("treeDemoCopeFrom");
+                zNodesCopeto.expandAll(true)
+                
             })
         },
         yes: function (index, layero) {
@@ -1084,6 +1214,7 @@ $('#copeConfigureFrom').on('click', function () {
 
 // fromTree搜索
 function searchFromTree(e) {
+    // debugger
     let postData = {
         appId,
         name: e.target.previousElementSibling.value
@@ -1098,11 +1229,15 @@ function searchFromTree(e) {
             }
         })
         $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
+        zNodesCopeFrom = $.fn.zTree.getZTreeObj("treeDemoCopeFrom");
+        zNodesCopeFrom.expandAll(true)
+        
     })
 }
 
 // toTree搜索
 function searchToTree(e) {
+    // debugger
     let postData = {
         appId,
         name: e.target.previousElementSibling.value
@@ -1112,20 +1247,16 @@ function searchToTree(e) {
     }).then(res => {
         zNodesCopeto = res.data.data
         $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
+        zNodesCopeto = $.fn.zTree.getZTreeObj("treeDemoCopeto");
+        zNodesCopeto.expandAll(true)
+        
     })
 }
 
 var selectAllData = "";
 $('#z-selectDeptInp').on('click', function () {
-    layer.open({
-        type: 1,
-        title: ['自定义访问权限', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-        closeBtn: 1,
-        btn: ['取消', '保存'],
-        shadeClose: true,
-        skin: 'z-addDashboard',
+    app.showHtml('自定义访问权限', {
         content: $('.z-selectDeptInp'),
-        area: ['498px', '590px'],
         success: function (layero, index) {
             let html = ''
             let str = ``
@@ -1270,6 +1401,7 @@ $("#resetBtn").on('click', function () {
     $("#userName").val("");
     $("#revisionTime").val("");
     $("#mySelect").siblings("div.layui-form-select").find("dd:first").click();
+    initTable(currentGroupNode.id)
 })
 //自定义权限中的职位勾选事件
 $(document).on("click", "#rankSelect i", function (e) {
@@ -1486,18 +1618,47 @@ $(document).on("click", "#viewTpl3 i", function (e) {
     $(this).parents("li").remove();
     peopleArr.splice($.inArray($(this).siblings().text(), peopleArr), 1);
 })
+//获取层级数
+function getMaxlevel (treeData) {
+    
+    let level = 0
+    let v = this
+    let maxLevel = 0
+    function loop (data, level) {
+      data.forEach(item => {
+        item.level = level
+        if (level > maxLevel) {
+          maxLevel = level
+        }
+        if('children' in item){
+          if (item.children.length > 0) {
+            loop(item.children, level + 1)
+          }
+        }
+      })             
+    }
+    loop(treeData,1)
+    console.log(maxLevel)
+    return maxLevel
+   
+  }
 //主页左侧树的增删改事件
 $(document).on("click", "#m_add", function (e) {
+    // console.log('jdfkddf'+getMaxlevel(zTree.getNodes()))
+    // debugger
+    if(currentRightNode.level >= 11){
+        layer.msg('最多只能创建11个分组')
+        return
+    }
+    // zTree.getSelectedNodes();
+    // if(getMaxlevel(zTree.getNodes()) >= 12){
+    //     layer.msg('最多只能创建11个分组')
+    //     return
+    // }
     hideRMenu();
-    layer.open({
-        type: 1,
-        title: ['新建分组', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-        closeBtn: 1,
-        btn: ['取消', '保存'],
-        shadeClose: true,
-        skin: 'z-addDashboard',
+    app.showHtml('新建分组', {
         content: $('#Z-addFenZU'),
-        area: ['568px', '520px'],
+        
         success: function (layero, index) {
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
             // let nodes = zTree.getSelectedNodes();
@@ -1555,19 +1716,11 @@ $(document).on("click", "#m_add", function (e) {
 })
 $(document).on("click", "#m_check", function (e) {
     hideRMenu();
-    layer.open({
-        type: 1,
-        title: ['编辑分组', 'font-size: 20px;font-weight: 500;color: #FFFFFF;text-align:center;'],
-        closeBtn: 1,
-        btn: ['取消', '保存'],
-        shadeClose: true,
-        skin: 'z-addDashboard',
+    app.showHtml('编辑分组', {
         content: $('#Z-addFenZU'),
-        area: ['568px', '520px'],
         success: function (layero, index) {
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
             // let nodes = zTree.getSelectedNodes();
-            // debugger
             $("#fenzuName")[0].value = currentRightNode.name
             var parentId = currentRightNode.parentId;
             var parentNode = zNodes.filter(x => x['id'] == parentId) || [];

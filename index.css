@@ -488,7 +488,7 @@
 
 .addDashboardContent .z-contentBoxLeft,.copeConfigureForm .z-contentBoxLeft{
     border: none;
-    width: 398px;
+    width: 300px;
     height: 300px;
     float:none;
     margin-left: 69px;
@@ -879,3 +879,52 @@ body .layui-msg-style{
   color: #409EFF;
 }
 
+/* 时间控件 */
+.layui-laydate .layui-this{
+    background-color: #409eff !important;
+  }
+  .layui-laydate-content td.laydate-selected{
+      background: #c3e7ff!important;
+  }
+  #layui-laydate1 .layui-laydate-header{
+      background: #fff !important;
+      
+  }
+  .laydate-theme-molv .layui-laydate-header i, .laydate-theme-molv .layui-laydate-header span{
+    color: #606266 !important;
+
+  }
+  .layui-laydate-content td.layui-this span{
+    /* -webkit-transform: translateX(-50%);
+    transform: translateX(-50%); */
+    border-radius: 50%;
+
+  }
+  .layui-laydate-content td, .layui-laydate-content th{
+      height: 24px !important;
+      width: 24px !important;
+      padding:8px !important;
+      margin: 5px !important;
+  }
+  .laydate-footer-btns .laydate-btns-clear,
+  .laydate-footer-btns .laydate-btns-clear:hover{
+    color: #409eff;
+    background: 0 0;
+    /* padding-left: 0;
+    padding-right: 0; */
+    border:0
+  }
+  .layui-laydate-footer span{
+      margin-right: 5px;
+      /* display: none; */
+
+  }
+  .laydate-footer-btns .laydate-btns-confirm{
+      padding: 7px 15px;
+      border-radius: 3px;
+      line-height: 1;
+  }
+  .laydate-footer-btns .laydate-btns-confirm:hover{
+    color: #409eff;
+    border: 1px solid #409eff;
+  }
