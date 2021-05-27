@@ -64,7 +64,7 @@ var peopleTree //人员树
     },
     callback: {
         onClick: groupNodeClick,
-        onRightClick: OnRightClick,
+        // onRightClick: OnRightClick,
     }
 };
 
@@ -306,8 +306,10 @@ function showloading(t) {
 }
 
 /* zTree事件 */
+ //右侧按钮
 function addDiyDom(treeId, treeNode) {
   // console.log(treeNode)
+  // debugger
   var spaceWidth = 5;
   var switchObj = $("#" + treeNode.tId + "_switch"),
   icoObj = $("#" + treeNode.tId + "_ico");
@@ -319,17 +321,17 @@ function addDiyDom(treeId, treeNode) {
   }
 
   var aObj = $("#" + treeNode.tId + "_a");
-  
+ 
   //treeNode.id 要根据树的数据中的id获取，zNodes 数据配置中的i
   // if ($("#diyBtn_"+treeNode.id).length>0) return; //控制哪些节点不显示按钮
-  var editStr = "<span class='dot' id='diyBtn_space_"+treeNode.id+ "' >...</span>"
-    + "<button type='button' class='diyBtn1' id='diyBtn_" + treeNode.id
-    + "' title='"+treeNode.name+"' onfocus='this.blur();'></button>";
+  var editStr = `<span class="dot" id="diyBtn_space_${treeNode.id}" onclick="OnRightClick(event,'','${treeNode.id}')">...</span>`
+    + `<button type='button' onclick="getDome()" class='diyBtn1' id='diyBtn_${treeNode.id}'`
+    + "' title='"+treeNode.name+"' ></button>";
   aObj.append(editStr);
   var btn = $("#diyBtn_"+treeNode.id);
   // if (btn) btn.bind("click", function(){alert("diy Button for " + treeNode.name);});
 }
-
+//右侧按钮
 function addDiyDom1(treeId, treeNode) {
   var aObj = $("#" + treeNode.tId + "_a");
     //treeNode.id 要根据树的数据中的id获取，zNodes 数据配置中的i
@@ -343,12 +345,23 @@ function addDiyDom1(treeId, treeNode) {
 };
 
 function groupNodeClick(event, treeId, treeNode) {
+  // debugger
+  let name = $("#userName").val();
+    let stateVal = $('#mySelect option:selected').val();
+    let revisionTimeVal = $("#revisionTime").val();
+    let startTime = revisionTimeVal.split(' - ')[0]
+    let endTime = revisionTimeVal.split(' - ')[1]
+    endTime =endTime?dayjs(endTime).add(1, 'day').format('YYYY-MM-DD'):'';
   currentGroupNode = treeNode
   let postData = {
     appId,
     groupId: treeNode.id,
     current: 1,
-    size: 10
+    size: 10,
+    updateTimeBegin: startTime,
+    updateTimeEnd: endTime,
+    published: stateVal,
+    name: name,
   }
   request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
     let { data } = res.data
@@ -376,11 +389,17 @@ function setFontCss(treeId, treeNode) {
   // }
 	return obj
 };
+function getDome(treeNode){
+  // debugger
+  // alert(1)
 
-function OnRightClick(event, treeId, treeNode) {
-  currentRightNode = treeNode
-  console.log(currentRightNode)
+};
+function OnRightClick(event, treeId, treeNodeId) {
   let zTree = $.fn.zTree.getZTreeObj("treeDemo");
+  let treeNode =  zTree.getNodeByParam("id",treeNodeId);
+  currentRightNode = treeNode
+  // console.log(currentRightNode)
+  
   if (!treeNode && event.target.tagName.toLowerCase() != "button" && $(event.target).parents("a").length == 0) {
       // zTree.cancelSelectedNode();
       showRMenu("root", event.clientX, event.clientY);
@@ -549,10 +568,11 @@ var checkPermissionsList = ''//权限
           appId
       }
   }).then(res => {
+    // debugger
       let data = res.data
       if(data.code == 0){
           if(data.data){
-            checkPermissionsList = data.data
+            checkPermissionsList = data.data.filter(x=>x.code.indexOf('bi')>-1)
             setPermissions()
           }
 
@@ -568,19 +588,21 @@ var checkPermissionsList = ''//权限
 //调用权限
   function setPermissions(){
     // debugger
-    let list = checkPermissionsList
-    let permissionsBtnList = list.filter(x=>x.code.indexOf('bi')>-1)
+    // let list = checkPermissionsList
+    console.log(checkPermissionsList)
+    let permissionsBtnList = checkPermissionsList
     console.log(permissionsBtnList)
     var permissionsBtnMap={};
     permissionsBtnList.forEach(item=>{
       permissionsBtnMap[item.code]=item.exist;
     });
-
     $.each($('.checkPer'),function(){
+     
        var code = $(this).data('permission');
        if(!permissionsBtnMap[code]){
         $(this).hide();
        }
+       
 
     });
   }

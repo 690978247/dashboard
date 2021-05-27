@@ -593,6 +593,7 @@ body .layui-layer-page .layui-layer-content {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    padding:20px
 }
 #z-selectDept i{
     position: absolute;
@@ -603,20 +604,21 @@ body .layui-layer-page .layui-layer-content {
     background: url(./img/icon_open.png);
 }
 .z-selectDeptInp .treeSelectShow{
-    width: 438px;
+    /* width: 438px; */
     height: 120px;
     background: #FFFFFF;
     border: 1px solid #DCDFE6;
     border-radius: 4px;
-    margin: 15px 30px;
+    /* margin: 15px 30px; */
     padding: 10px;
 }
 .z-selectDeptInp .layui-tab-title li{
-    padding: 0 33px;
+    /* padding: 0 33px; */
+    width: 33%;
 }
 .z-selectDeptInp .layui-tab-title .layui-this:after{
-    width: 36%;
-    left: 30px;
+    width: 40%;
+    left: 30%;
 }
 .z-selectDeptInp .layui-tab-brief>.layui-tab-more li.layui-this:after, .z-selectDeptInp .layui-tab-brief>.layui-tab-title .layui-this:after {
     border-bottom: 2px solid #409EFF;
@@ -626,23 +628,29 @@ body .layui-layer-page .layui-layer-content {
 }
 .z-selectDeptInp .layui-tab{
     border-bottom: 1px solid #DCDFE6;
-    height: 355px;
+    /* height: 355px; */
+    /* overflow:auto; */
 }
+/* .z-selectDeptInp .layui-tab-content{
+    text-align: center;
+    position: relative;
+} */
 .z-selectDeptInp .layui-tab-content input{
-    width: 408px;
+    width:90%;
     height: 32px;
     background: #FFFFFF;
     border: 1px solid #DCDFE6;
     border-radius: 4px;
-    margin: 12px 26px 10px 19px;
+    /* margin: 12px 26px 10px 19px; */
     padding-left: 30px;
 }
 .z-selectDeptInp .layui-tab-item-inpbox{
     position: relative;
+    width: 100%;
 }
 .z-selectDeptInp .layui-tab-item-inpbox i{
-    top: 22px;
-    left: 28px;
+    top: 10px;
+    left: 6px;
     position: absolute;
 }
 .z-selectDeptInp .treeSelectShow li{
@@ -681,8 +689,8 @@ body .layui-layer-page .layui-layer-content {
 }
 .z-selectDeptInp .z-contentBoxLeft {
     float: none;
-    width: 398px;
-    height: 200px;
+    width: 100%;
+    /* height: 200px; */
     border: none;
     padding: 10px;
 }
@@ -715,11 +723,11 @@ body .layui-layer-page .layui-layer-content {
 .z-selectDeptInp .layui-tab-content .rank li{
     height: 36px;
     line-height: 36px;
-    width: 460px;
+    width: 90%;
     padding-left: 21px;
 }
 .z-selectDeptInp .layui-tab-content .rank{
-    width: 474px;
+    /* width: 474px; */
     height: 248px;
     overflow: auto;
 }
@@ -800,6 +808,7 @@ body .layui-layer-page .layui-layer-content {
     position: absolute;
     top: 9px;
     right: 9px;
+    height: 50%;
 }
 .z-contentBoxLeft .ztree li span {
     line-height: 6px;
@@ -808,7 +817,7 @@ body .layui-layer-page .layui-layer-content {
 /* 改变树的hover和点击的样式 */
 .z-contentBoxLeft .ztree li a{
     line-height: 22px;
-    width: 300px;
+    width: 290px;
     position: relative;
 }
 .z-contentBoxLeft .ztree li a.level1 {
@@ -880,10 +889,10 @@ body .layui-msg-style{
 }
 
 /* 时间控件 */
-.layui-laydate .layui-this{
+#layui-laydate1 .layui-laydate .layui-this{
     background-color: #409eff !important;
   }
-  .layui-laydate-content td.laydate-selected{
+  #layui-laydate1 .layui-laydate-content td.laydate-selected{
       background: #c3e7ff!important;
   }
   #layui-laydate1 .layui-laydate-header{
