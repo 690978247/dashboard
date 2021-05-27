@@ -1258,10 +1258,36 @@ $('#copeConfigureFrom').on('click', function () {
                 return false
             } else {
                 request.get(`/bi/${appId}/panel-permissions/${currentFromNode.id}/to-copy`).then(res => {
+                    jobArr = []
+                    checkDeptArr = []
+                    peopleArr = []
                     if (res.data.code === 0) {
                         layer.msg('应用成功!')
                         $(`input[name='permission'][value='${res.data.data.accessType}']`).prop('checked', true)
                         $(`#attribute-describeVal`).val(res.data.data.description)
+                        
+                        
+                        if (res.data.data.accessType === 'custom' ) {
+                            $("#z-selectDept").show();
+                            $("#layui-form-margin9").css("margin-bottom", "0px");
+
+                            let permissionNames = []
+                            res.data.data.customPermissions.forEach(item => {
+                            permissionNames.push(item.bizName)
+                            if (item.bizType === 'department') {
+                                checkDeptArr.push(item)
+                            } else if (item.bizType === 'position') {
+                                jobArr.push(item)
+                            } else if (item.bizType === 'user') {
+                                peopleArr.push(item)
+                            }
+                            })
+                            $("#z-selectDeptInp").val(permissionNames);
+
+                        } else {
+                            $("#z-selectDept").hide();
+                            $("#layui-form-margin9").css("margin-bottom", "15px");
+                        }
                         layui.form.render()
                         permissionList = res.data.data.customPermissions
                         layer.close(index);
