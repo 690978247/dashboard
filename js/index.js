@@ -14,15 +14,30 @@ function showRMenu(type, x, y) {
         $("#m_unCheck").show();
     }
 
-    y += document.body.scrollTop;
+
+    // debugger
+    // $('.nicescroll-slideBar').scrollTop
+    if (y >= $('.z-contentBoxLeft').innerHeight() - $('#rMenu').height()) {
+        y = $('.z-contentBoxLeft').innerHeight() - ($('.z-contentBoxLeft').innerHeight() - y) - $('#rMenu').height();
+    } else {
+        y += document.body.scrollTop;
+
+    }
+    console.log(y)
     x += document.body.scrollLeft;
     rMenu.css({
         "top": y + "px",
         "left": x + "px",
         "visibility": "visible"
     });
-
+    // debugger
+    // console.log(checkPermissionsList)
+    let data = checkPermissionsList.filter(x => x.code == "bi_configuration_view" || x.code == "bi_configuration_group_add" || x.code == "bi_configuration_group_edit" || x.code == "bi_configuration_group_delete")
+    if (data.length <= 1 && data[0].exist) {
+        $("#rMenu").hide()
+    }
     $("body").bind("mousedown", onBodyMouseDown);
+
 }
 
 function hideRMenu() {
@@ -40,21 +55,21 @@ function onBodyMouseDown(event) {
     }
 }
 //获取用户按钮权限
-async function getpermissionsBtn(){
+async function getpermissionsBtn() {
     await request.get(`bi/${appId}/users/permission/code`, {
         params: {
             appId
         }
     }).then(res => {
         let data = res.data
-        if(data.code == 0){
-            if(data.data){
+        if (data.code == 0) {
+            if (data.data) {
                 let list = data.data
-                let permissionsBtnList = list.filter(x=>x.code.indexOf('bi')>-1)
+                let permissionsBtnList = list.filter(x => x.code.indexOf('bi') > -1)
                 console.log(permissionsBtnList)
-                permissionsBtnList.forEach(item=>{
+                permissionsBtnList.forEach(item => {
                     //查看权限
-                    if(item.code == 'bi_configuration_view' && !item.exist){
+                    if (item.code == 'bi_configuration_view' && !item.exist) {
                         console.log(item)
                         $("#rMenu").hide()
                         $("#addDashboardBtnLi").hide()
@@ -62,30 +77,30 @@ async function getpermissionsBtn(){
                         $("#tableListBtn").hide()
                         console.log($("table").find("td[data-field='score']").find('layui-table-cell'))
                         $("table").find("td[data-field='score']").find("a").hide()
-                        
+
                     }
                     //新增分组
-                    if(item.code == 'bi_configuration_group_add' && !item.exist){
+                    if (item.code == 'bi_configuration_group_add' && !item.exist) {
                         console.log('新增分组')
                         $("#m_add_btn").hide()
                     }
-                     //编辑分组
-                     if(item.code == 'bi_configuration_group_edit' && !item.exist){
+                    //编辑分组
+                    if (item.code == 'bi_configuration_group_edit' && !item.exist) {
                         console.log('编辑分组')
                         $("#m_check_btn").hide()
                     }
                     //删除分组
-                     if(item.code == 'bi_configuration_group_delete' && !item.exist){
+                    if (item.code == 'bi_configuration_group_delete' && !item.exist) {
                         console.log('删除分组')
                         $("#m_del_btn").hide()
                     }
                     //新增仪表板
-                    if(item.code == 'bi_configuration_dashboard_add' && !item.exist){
+                    if (item.code == 'bi_configuration_dashboard_add' && !item.exist) {
                         console.log('新增仪表板')
                         $("#addDashboardBtnLi").hide()
                     }
                     //删除仪表板
-                    if(item.code == 'bi_configuration_dashboard_delete' && !item.exist){
+                    if (item.code == 'bi_configuration_dashboard_delete' && !item.exist) {
                         // console.log(item)
                         let edits = [...document.querySelectorAll('table .g-del')]
                         edits.forEach(item => {
@@ -93,7 +108,7 @@ async function getpermissionsBtn(){
                         })
                     }
                     //编辑仪表板页面
-                    if(item.code == 'bi_configuration_dashboard_edit' && !item.exist){
+                    if (item.code == 'bi_configuration_dashboard_edit' && !item.exist) {
                         // debugger
                         // $('table .g-edit').forEach(item => {
                         //     debugger
@@ -114,12 +129,12 @@ async function getpermissionsBtn(){
                 })
             }
 
-        }else{
+        } else {
             layer.msg(data.msg)
         }
-        
+
         console.log(res)
-       
+
 
     })
 
@@ -298,8 +313,9 @@ function onBodyDown(event) {
     }
 }
 // 表格初始化
-function initTable(id, pager) {
-   
+function initTable(id, pager, type) {
+    // debugger
+
     if (!pager) {
         pager = {
             pageIndex: 1,
@@ -323,7 +339,15 @@ function initTable(id, pager) {
                 size: res.data.data.size,
                 pageIndex: res.data.data.current,
             })
-            setGroupChoice(currentPositionNode.name)
+            // debugger
+            if (type == '1') {
+                // currentPositionNode.
+                setGroupChoice(currentPositionNode.name)
+            } else {
+                setGroupChoice(currentGroupNode.name)
+
+            }
+
             pageData = {
                 totalCount: res.data.data.total, // 总条数
                 totalPage: res.data.data.pages, // 总页数
@@ -338,26 +362,26 @@ function initTable(id, pager) {
     })
 }
 //表格提示
-function renderTooltip(){
-    var tooltip 
-    $("tooltip").each(function(index,element){
+function renderTooltip() {
+    var tooltip
+    $("tooltip").each(function (index, element) {
         var parent = element.parentElement
-        element.onmouseenter = function(){
-            if(parent.offsetWidth - 30 < element.offsetWidth){
+        element.onmouseenter = function () {
+            if (parent.offsetWidth - 30 < element.offsetWidth) {
                 tooltip = layer.open({
                     type: 4,
                     content: [element.innerText, element], //数组第二项即吸附元素选择器或者DOM
                     shade: 0,
                     tips: 1,
-                    closeBtn:0,
+                    closeBtn: 0,
                     skin: 'table-tips',
-                  });
+                });
             }
         }
-        parent.onmouseleave = function(){
+        parent.onmouseleave = function () {
             layer.close(tooltip);
         }
-     });
+    });
 }
 
 
@@ -365,15 +389,15 @@ function renderTooltip(){
 function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 不清除
     pager = pager ? pager : pager.size = 10
     tableData = data
-    data.forEach(item=>{
-        for(let key in item){
-            item[key]=item[key]||''
+    data.forEach(item => {
+        for (let key in item) {
+            item[key] = item[key] || ''
         }
     })
     if (!type) {
         tableCheckList = []
     }
-     
+
     layui.use(['table', 'laydate', 'laypage', 'layer', 'element'], function () {
 
         // showloading(true)
@@ -389,6 +413,9 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
             elem: '#myTable',
             data,
             skin: 'nob',
+            text: {
+                none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
+            },
             // ,totalRow:true//开启该列的自动合计功能
             height: document.getElementById("z-contentBoxRight-table").clientHeight,
             page: false, //开启分页
@@ -410,45 +437,51 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                         field: 'name',
                         // width: '8%',
                         title: '名称',
-                        templet:function(d){
-                            return '<tooltip>' + d.name + '</tooltip>'}
-                        
+                        templet: function (d) {
+                            return '<tooltip>' + d.name + '</tooltip>'
+                        }
+
                     },
                     {
                         field: 'groupName',
                         width: '12%',
                         title: '上级分组',
-                        templet:function(d){
-                            return '<tooltip>' + d.groupName + '</tooltip>'}
+                        templet: function (d) {
+                            return '<tooltip>' + d.groupName + '</tooltip>'
+                        }
                     },
                     {
                         field: 'creatorName',
                         width: 120,
                         title: '创建者',
-                        templet:function(d){
-                            return '<tooltip>' + d.creatorName + '</tooltip>'}
+                        templet: function (d) {
+                            return '<tooltip>' + d.creatorName + '</tooltip>'
+                        }
                     },
                     {
                         field: 'updaterName',
                         width: 120,
                         title: '修改人',
-                        templet:function(d){
-                            return '<tooltip>' + d.updaterName + '</tooltip>'}
+                        templet: function (d) {
+                            return '<tooltip>' + d.updaterName + '</tooltip>'
+                        }
                     },
                     {
                         field: 'updateTime',
                         title: '最近修改时间',
-                        templet:function(d){
-                            return '<tooltip>' + d.updateTime + '</tooltip>'}
+                        templet: function (d) {
+                            return '<tooltip>' + d.updateTime + '</tooltip>'
+                        }
                         // width: '15%',
                     }, //minWidth：局部定义当前单元格的最小宽度，layui 2.2.1 新增
                     {
                         field: 'published',
                         title: '状态',
                         width: '13%',
-                        templet:function(d){
-                            return '<tooltip>' + d.published + '</tooltip>'}
-                        
+                        templet: function (d) {
+                            return '<tooltip>' + d.published + '</tooltip>'
+                        }
+
                     },
                     {
                         field: 'score',
@@ -477,7 +510,11 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                     }
                 })
                 renderTooltip()
-               
+                $('.layui-none').css({
+                    'height': document.getElementById("z-contentBoxRight-table").clientHeight - 50 + 'px',
+                    'line-height': document.getElementById("z-contentBoxRight-table").clientHeight - 50 + 'px'
+                })
+
             }
         });
         // //监听性别操作
@@ -547,7 +584,10 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                     request.delete(`/bi/${appId}/panels/${data.id}`).then(res => {
                         if (res.data.code === 0) {
                             app.msg('删除成功!')
-                            initTable(currentGroupNode.id, pageData)
+                            let zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                            let node = zTree.getSelectedNodes();
+                            // debugger
+                            initTable(node[0].id, pageData)
                             layer.close(index);
                         } else {
                             layer.msg(res.data.msg)
@@ -566,7 +606,9 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                         request.put(`/bi/${appId}/panels/${data.id}/offline`).then(res => {
                             if (res.data.code === 0) {
                                 app.msg('下线成功!')
-                                initTable(currentGroupNode.id)
+                                let zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                                let node = zTree.getSelectedNodes();
+                                initTable(node[0].id)
                                 layer.close(index);
                             } else {
                                 layer.msg(res.data.msg)
@@ -585,7 +627,9 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                             if (res.data.code === 0) {
                                 app.msg('发布成功!');
                                 // layer.msg('发布成功!',msgStyle)
-                                initTable(currentGroupNode.id)
+                                let zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                                let node = zTree.getSelectedNodes();
+                                initTable(node[0].id)
                                 layer.close(index);
                             } else {
                                 layer.msg(res.data.msg)
@@ -690,7 +734,9 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                                     cloneDepart = []
                                     cloneJob = []
                                     clonePeople = []
-                                    initTable(currentGroupNode.id)
+                                    let zTree = $.fn.zTree.getZTreeObj("treeDemo");
+                                    let node = zTree.getSelectedNodes();
+                                    initTable(node[0].id)
                                     layer.close(index);
                                 } else {
                                     layer.msg(res.data.msg)
@@ -754,12 +800,13 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
 
 // 查询表格数据
 function searchTableData() {
+    // debugger
     let name = $("#userName").val();
     let stateVal = $('#mySelect option:selected').val();
     let revisionTimeVal = $("#revisionTime").val();
     let startTime = revisionTimeVal.split(' - ')[0]
     let endTime = revisionTimeVal.split(' - ')[1]
-    endTime = dayjs(endTime).add(1, 'day').format('YYYY-MM-DD');
+    endTime = endTime ? dayjs(endTime).add(1, 'day').format('YYYY-MM-DD') : '';
     let postData = {
         appId,
         groupId: currentGroupNode.id,
@@ -791,6 +838,7 @@ function searchTableData() {
             }
             renderPagination('popup-pagination')
             renderLis()
+            setPermissions()
 
         } else {
             layer.confirm(msg, {
@@ -817,7 +865,7 @@ function searchTableData() {
 }
 // 
 function setDefaultChoice(name) {
-   
+
     let node = zTree.getNodeByParam("name", name, null);
     zTree.selectNode(node)
     initTable(node.id)
@@ -894,7 +942,7 @@ $(document).ready(async function () {
 
     }
     // await getpermissionsBtn()
-   
+
 
 });
 layui.use('laydate', function () {
@@ -992,17 +1040,23 @@ function batchSubmitWt() {
     }
 }
 $('#addDashboard').on('click', function () {
+    // debugger
+    // treeDemoAdd
+    // var zTree = $.fn.zTree.getZTreeObj("treeDemoAdd")
+    // zTree.selectNode(currentGroupNode);
     let id = currentGroupNode.id
+    currentPositionNode = currentGroupNode
     app.showHtml('新增仪表板', {
         content: $('#addDashboardContent'),
         success: function (layero, index) {
             //完成后的回调
             $("#citySel")[0].value = currentGroupNode.name
-            
+
         },
         btn2: function (index, layero) {
             //return false 开启该代码可禁止点击该按钮关闭
             //保存的回调
+            // debugger
             let result = false;
             let addDashboardNameVal = $("#addDashboardName").val();
             let grouping = $("#citySel").val();
@@ -1020,25 +1074,21 @@ $('#addDashboard').on('click', function () {
                 let postData = {
                     appId,
                     name: addDashboardNameVal,
-                    groupId: currentPositionNode.id?currentPositionNode.id:id
+                    groupId: currentPositionNode.id ? currentPositionNode.id : id
                 }
                 request.post(`/bi/${appId}/panels`, postData).then(async res => {
                     if (res.data.code === 0) {
-                       app.msg('添加成功!')
+                        app.msg('添加成功!')
                         layer.close(index);
                         await getGruopTree()
-                        zTree.expandAll(true);
-                        // zTree.selectNode(nodes[0])
+
+                        // debugger
                         $("#addDashboardName")[0].value = ''
                         $("#citySel")[0].value = ''
-                        
-                        // currentGroupNode = currentPositionNode
-                        if(currentPositionNode.id){
-                            initTable(currentPositionNode.id)
-                        }else{
-                            initTable(id)
-                        }
-                        
+                        zTree.expandAll(true);
+
+                        initTable(currentPositionNode.id, '', '1')
+
                     } else {
                         layer.msg(res.data.msg)
                     }
@@ -1088,11 +1138,28 @@ $('#copeConfigureTo').on('click', function () {
             success: function (layero, index) {
                 //完成后的回调
                 request.get(`/bi/${appId}/panel-tree/copy`).then(res => {
-                    zNodesCopeto = res.data.data
-                    $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
-                    zNodesCopeto =  $.fn.zTree.getZTreeObj("treeDemoCopeto");
-                    zNodesCopeto.expandAll(true)
+                    if (res.data.data) {
+                        zNodesCopeto = res.data.data
+                        zNodesCopeto.forEach(item => {
+                            if (item.nodeType !== 'panel') {
+                                item.nocheck = true
+                                item.icon = "./img/icon_file.png"
+                            } else {
+                                item.icon = "./img/iconTool/icon_monitor_nor.png"
+                            }
+                        })
+                        $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
+                        zNodesCopeto = $.fn.zTree.getZTreeObj("treeDemoCopeto");
+                        zNodesCopeto.expandAll(true)
+
+                    }
+
                 })
+            },
+            yes: function (index) {
+                $("#copeConfigureTo1-search-input").val("")
+                layer.close(index);
+
             },
             btn2: function (index, layero) {
                 if (currentToNode.length === 0) {
@@ -1149,6 +1216,10 @@ $('#copeConfigureTo').on('click', function () {
                     //     }
                     // });
                 }
+            },
+            cancel: function () {
+                // debugger
+                $('#cope-search-input').val("")
             }
         });
     }
@@ -1165,15 +1236,20 @@ $('#copeConfigureFrom').on('click', function () {
                 zNodesCopeFrom.forEach(item => {
                     if (item.nodeType !== 'panel') {
                         item.nocheck = true
+                        item.icon = "./img/icon_file.png"
+                    } else {
+                        item.icon = "./img/iconTool/icon_monitor_nor.png"
                     }
                 })
                 $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
-                zNodesCopeto =  $.fn.zTree.getZTreeObj("treeDemoCopeFrom");
+                zNodesCopeto = $.fn.zTree.getZTreeObj("treeDemoCopeFrom");
                 zNodesCopeto.expandAll(true)
-                
+
             })
         },
         yes: function (index, layero) {
+            // debugger
+            $('#cope-search-input').val("")
             layer.close(index);
         },
         btn2: function (index, layero) {
@@ -1208,7 +1284,14 @@ $('#copeConfigureFrom').on('click', function () {
                 //     }
                 // });
             }
+        },
+        cancel: function () {
+            // debugger
+            $('#cope-search-input').val("")
         }
+        // end: function (index){
+        //     debugger
+        // }
     });
 });
 
@@ -1224,14 +1307,17 @@ function searchFromTree(e) {
     }).then(res => {
         zNodesCopeFrom = res.data.data
         zNodesCopeFrom.forEach(item => {
-            if (!item.parentId) {
+            if (item.nodeType !== 'panel') {
                 item.nocheck = true
+                item.icon = "./img/icon_file.png"
+            } else {
+                item.icon = "./img/iconTool/icon_monitor_nor.png"
             }
         })
         $.fn.zTree.init($("#treeDemoCopeFrom"), settingCopeFrom, zNodesCopeFrom);
         zNodesCopeFrom = $.fn.zTree.getZTreeObj("treeDemoCopeFrom");
         zNodesCopeFrom.expandAll(true)
-        
+
     })
 }
 
@@ -1245,17 +1331,30 @@ function searchToTree(e) {
     request.get(`/bi/${appId}/panel-tree/copy`, {
         params: postData
     }).then(res => {
-        zNodesCopeto = res.data.data
-        $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
-        zNodesCopeto = $.fn.zTree.getZTreeObj("treeDemoCopeto");
-        zNodesCopeto.expandAll(true)
-        
+        if (res.data.data) {
+            zNodesCopeto = res.data.data
+            zNodesCopeto.forEach(item => {
+                if (item.nodeType !== 'panel') {
+                    item.nocheck = true
+                    item.icon = "./img/icon_file.png"
+                } else {
+                    item.icon = "./img/iconTool/icon_monitor_nor.png"
+                }
+            })
+            $.fn.zTree.init($("#treeDemoCopeto"), settingCopeto, zNodesCopeto);
+            zNodesCopeto = $.fn.zTree.getZTreeObj("treeDemoCopeto");
+            zNodesCopeto.expandAll(true)
+
+
+        }
+
     })
 }
 
 var selectAllData = "";
 $('#z-selectDeptInp').on('click', function () {
     app.showHtml('自定义访问权限', {
+        area: ['498px', '590px'],
         content: $('.z-selectDeptInp'),
         success: function (layero, index) {
             let html = ''
@@ -1340,7 +1439,26 @@ $('#z-selectDeptInp').on('click', function () {
                 } else {
                     userList = res.data.data
                 }
+                let userList1 = []
                 userList.forEach(item => {
+                    if (userList1.length > 0) {
+                        let id = 0
+                        for (let i = 0; i < userList1.length; i++) {
+                            if (item.id == userList1[i].id) {
+                                id = 1
+                                break
+                            }
+                        }
+                        if (id == 0) {
+                            userList1.push(item)
+                        }
+
+                    } else {
+                        userList1.push(item)
+                    }
+
+                })
+                userList1.forEach(item => {
                     str += `<li class="clearfix">
                                 <i class="g-left ${peopleNames.includes(item.name) ? 'active' : ''} "></i>
                                 <span class="g-left" data-id="${item.id}" >${item.name}</span>
@@ -1619,34 +1737,35 @@ $(document).on("click", "#viewTpl3 i", function (e) {
     peopleArr.splice($.inArray($(this).siblings().text(), peopleArr), 1);
 })
 //获取层级数
-function getMaxlevel (treeData) {
-    
+function getMaxlevel(treeData) {
+
     let level = 0
     let v = this
     let maxLevel = 0
-    function loop (data, level) {
-      data.forEach(item => {
-        item.level = level
-        if (level > maxLevel) {
-          maxLevel = level
-        }
-        if('children' in item){
-          if (item.children.length > 0) {
-            loop(item.children, level + 1)
-          }
-        }
-      })             
+
+    function loop(data, level) {
+        data.forEach(item => {
+            item.level = level
+            if (level > maxLevel) {
+                maxLevel = level
+            }
+            if ('children' in item) {
+                if (item.children.length > 0) {
+                    loop(item.children, level + 1)
+                }
+            }
+        })
     }
-    loop(treeData,1)
+    loop(treeData, 1)
     console.log(maxLevel)
     return maxLevel
-   
-  }
+
+}
 //主页左侧树的增删改事件
 $(document).on("click", "#m_add", function (e) {
     // console.log('jdfkddf'+getMaxlevel(zTree.getNodes()))
     // debugger
-    if(currentRightNode.level >= 11){
+    if (currentRightNode.level >= 11) {
         layer.msg('最多只能创建11个分组')
         return
     }
@@ -1658,7 +1777,7 @@ $(document).on("click", "#m_add", function (e) {
     hideRMenu();
     app.showHtml('新建分组', {
         content: $('#Z-addFenZU'),
-        
+
         success: function (layero, index) {
             //完成后的回调 如果是编辑操作，根据id获取数据回填表单
             // let nodes = zTree.getSelectedNodes();
@@ -1764,6 +1883,7 @@ $(document).on("click", "#m_check", function (e) {
                         zTree.selectNode(nodes[0])
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
+                        // initTable(currentRightNode.id)
                     } else {
                         layer.msg(res.data.msg);
                     }

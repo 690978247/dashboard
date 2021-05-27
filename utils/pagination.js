@@ -12,15 +12,18 @@ let data = []
 function renderPagination (ref) { // ref参数为渲染根元素
   let pagination = document.getElementById(ref)
   let page = `<div class="visual-pagination">
-    <span>共 ${pageData.totalCount} 条</span>
-    
-    <select class="visual-pagination-select" onchange="perPage(event)" >
-      <option  value="10" ${pageData.pageSize === 10 ? 'selected': '' }><div class="selectOption">10条/页</div></option>
-      <option  value="20" ${pageData.pageSize === 20 ? 'selected': '' }>20条/页</option>
-      <option  value="30" ${pageData.pageSize === 30 ? 'selected': '' }>30条/页</option>
-      <option  value="40" ${pageData.pageSize === 40 ? 'selected': '' }>40条/页</option>
-    </select>
-    <button type="button" onclick="nextPage(event)" id="pager-left-btn" class="visual-pagination-button" ${pageData.pageIndex <= 1 ? 'disabled' : ''}><i class="iconfont iconzuojiantou"></i></button>
+    <span>共 ${pageData.totalCount} 条</span>`
+    page += `<div class="select-input"><input  readonly="readonly" id="pageSizeValue" onclick="getPageList(event)" type="text" class="visual-pagination-select" 
+    id="datatextblockDevice" value="${pageData.pageSize}条/页">
+    <i class="layui-icon select-icon">&#xe61a;</i></div> 
+    `
+    // <select class="visual-pagination-select" onchange="perPage(event)" >
+    //   <option  value="10" ${pageData.pageSize === 10 ? 'selected': '' }>10条/页</option>
+    //   <option  value="20" ${pageData.pageSize === 20 ? 'selected': '' }>20条/页</option>
+    //   <option  value="30" ${pageData.pageSize === 30 ? 'selected': '' }>30条/页</option>
+    //   <option  value="40" ${pageData.pageSize === 40 ? 'selected': '' }>40条/页</option>
+    // </select>
+    page += `<button type="button" onclick="nextPage(event)" id="pager-left-btn" class="visual-pagination-button" ${pageData.pageIndex <= 1 ? 'disabled' : ''}><i class="iconfont iconzuojiantou"></i></button>
     <ul class="visual-pager" id="visual-pager" onclick="changePage(event)" >
     </ul>
     <button type="button" onclick="prevPage(event)" id="pager-right-btn"  class="visual-pagination-button"  ${pageData.pageIndex === pageData.totalPage || pageData.pageIndex <= 0 ? 'disabled' : ''}><i class="iconfont iconyoujiantou_huaban"></i></button>
@@ -82,6 +85,69 @@ function renderLis () {
     // }
   }
   pager.innerHTML = lis
+}
+
+//获取分页
+function getPageList(e) {
+  // debugger
+  let inputLeft = e.target.offsetLeft; //输入框的left
+  let inputTop = e.target.offsetTop + 120; //输入框的top
+  let inputHeight = e.target.offsetHeight; //输入框的高度
+  let inputWidth = e.target.offsetWidth; //输入框宽度
+  //判断是否存在下拉框select-drop-down
+  if (!$(".select-drop-down").length) {
+    //不存在新增
+    $(".select-input").append(`<div class="select-drop-down" style="left: ${inputLeft}px;top: -${inputTop + inputHeight}px;min-width: ${inputWidth}px;"><ul class="drop-down-list"></ul></div>`);
+  } else {
+    //存在则清空旧内容
+    $(".select-drop-down").css({
+      "display": "block",
+      "left": inputLeft + "px",
+      "top": inputTop + inputHeight + "px",
+      "min-width": inputWidth + "px"
+    })
+    $(".drop-down-list>li").remove()
+    $(".select-drop-down").remove()
+  }
+  let data = [{
+    id:10,
+    name:'10条/页'
+    
+  },{
+    id:20,
+    name:'20条/页'
+    
+  },
+  {
+    id:30,
+    name:'30条/页'
+    
+  },
+  {
+    id:40,
+    name:'40条/页'
+    
+  }
+]
+  data.forEach(item => {
+    if(item.id == pageData.pageSize){
+      $(".drop-down-list").append(`<li onclick="getPageSize(${item.id})" class ="selected">${item.name}</li>`)
+    }else{
+      $(".drop-down-list").append(`<li onclick="getPageSize(${item.id})" class =".unselected">${item.name}</li>`)
+    }
+
+  })
+  // dropDownLoad();
+  
+}
+//获取列表页面数量
+function getPageSize(pageSize){
+  // pageData.pageSize = pageSize
+  $(".select-drop-down").remove()
+  perPage(pageSize)
+  $("#pageSizeValue").val(pageSize+'条/页')
+  // $("")
+
 }
 
 // 获取表格数据
@@ -181,12 +247,12 @@ function homePage () {
   return data
 }
 // 选择每页显示多少条数据
-function perPage (e) {
+function perPage (pageSize) {
   let pagerInput = document.getElementById('pager-input')
   let html = ``
   pageData.pageIndex = 1
-  pageData.pageSize = Number(e.target.value)
-  pagerInput.value =  pageData.pageIndex
+  pageData.pageSize = pageSize
+  // pagerInput.value =  pageData.pageIndex
   pageData.totalPage = Math.ceil(pageData.totalCount / pageData.pageSize )
   renderLis()
   setDisable ()
