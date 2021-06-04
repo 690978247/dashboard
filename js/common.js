@@ -11,7 +11,7 @@ var currentRightNode = {} //右键菜单栏选中的字节点
 // 获取url值
 var appId = ''  //appId
 appId = getParams('appId', window.location.href)
-appId = appId ? appId : /* 'innerTestPlatformId' */ 'AAAAAA_9Cs4'
+appId = appId ? appId : /* 'innerTestPlatformId' */ 'SBWGCSZH_mCoP'
 
 var zNodes = []
 var addCount = 1
