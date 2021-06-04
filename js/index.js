@@ -148,8 +148,12 @@ async function getGruopTree(name) {
             name
         }
     }).then(res => {
-        // if(res.data.data){
+     if(res.data.data){
         zNodes = res.data.data || [];
+        zNodes.forEach(item=>{
+           item.icon = "./img/icon_file.png"
+        })
+        // debugger
         // if(!zNodes)z
         console.log(res.data.data)
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
@@ -164,7 +168,7 @@ async function getGruopTree(name) {
         currentGroupNode = (zNodes || []).filter(x => x['parentId'] == null || x['parentId'] == '')[0];
 
 
-        // }
+        }
 
 
     })
@@ -1046,7 +1050,7 @@ $('#addDashboard').on('click', function () {
     // zTree.selectNode(currentGroupNode);
     let id = currentGroupNode.id
     currentPositionNode = currentGroupNode
-    app.showHtml('新增仪表板', {
+    app.showHtml('新增看板', {
         content: $('#addDashboardContent'),
         success: function (layero, index) {
             //完成后的回调
