@@ -34,6 +34,7 @@
 }
 .z-contentBoxRight-top li{
     display: inline-block;
+    padding-bottom: 10px;
 }
 .z-contentBoxRight-top li .state{
     position: relative;
@@ -102,7 +103,7 @@
     line-height: 27px;
 }
 .z-contentBoxRight-top li .add{
-    width: 118px;
+    width: 100px;
     height: 28px;
     background: #409EFF;
     border-radius: 4px;
@@ -325,12 +326,13 @@
 .layui-table{
   width: 100%;
 }
+
 .z-contentBoxRight-table {
     height: calc(100% - 150px);
     width: 100%;
-    position: absolute;
-    top:70px;
-    bottom: 50px;
+    /* position: absolute; */
+    /* top:70px; */
+    /* bottom: 50px; */
     /* overflow: auto; */
 }
 .z-contentBoxRight-table .layui-laypage .layui-laypage-curr .layui-laypage-em {
