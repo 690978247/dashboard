@@ -328,7 +328,8 @@
 }
 
 .z-contentBoxRight-table {
-    height: calc(100% - 150px);
+    height: calc(100% - 110px);
+    overflow: auto;
     width: 100%;
     /* position: absolute; */
     /* top:70px; */
