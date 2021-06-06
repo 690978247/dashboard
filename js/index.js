@@ -914,11 +914,11 @@ async function getToken() {
     }
     // 获取url值
     let token = getParams('token', window.location.href)
-    token = token ? token : '9da8245fdff2419b961a6fc5f0fdc67a'
+    token = token ? token : '6671cd7815f34bb3925e7d0b3b0e4d47'
     //   设置token,可删除
     localStorage.setItem("token", token)
     appId = getParams('appId', window.location.href)
-    appId = appId ? appId : 'TEST123_o582'
+    appId = appId ? appId : 'SBWGCSZH_mCoP'
     // await request.post(`/bi/tokens`,null, { params: postData }).then(res => {
     //     if (res.data.code === 0) {
     //         localStorage.setItem("token", res.data.data.token)
