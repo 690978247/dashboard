@@ -12,7 +12,7 @@ var editorNode = {}
 // 获取url值
 var appId = ''  //appId
 appId = getParams('appId', window.location.href)
-appId = appId ? appId : /* 'innerTestPlatformId' */ 'SBWGCSZH_mCoP'
+appId = appId ? appId : /* 'innerTestPlatformId' */ 'TEST123_o582'
 
 var zNodes = []
 var addCount = 1
