@@ -914,7 +914,7 @@ async function getToken() {
     }
     // 获取url值
     let token = getParams('token', window.location.href)
-    token = token ? token : '36e81725b9f0433fb26cd9665fb72b05'
+    token = token ? token : '38d334f8eb504d868c3940f9fdcdcc89'
     //   设置token,可删除
     localStorage.setItem("token", token)
     appId = getParams('appId', window.location.href)
