@@ -8,6 +8,7 @@ var currentPeopleNode  = {} //人员树选中的node
 var currentFromNode = {} //从仪表板复制树
 var currentToNode = [] //复制到其他树
 var currentRightNode = {} //右键菜单栏选中的字节点
+var editorNode = {}
 // 获取url值
 var appId = ''  //appId
 appId = getParams('appId', window.location.href)
@@ -325,8 +326,8 @@ function addDiyDom(treeId, treeNode) {
   //treeNode.id 要根据树的数据中的id获取，zNodes 数据配置中的i
   // if ($("#diyBtn_"+treeNode.id).length>0) return; //控制哪些节点不显示按钮
   var editStr = `<span class="dot" id="diyBtn_space_${treeNode.id}" onclick="OnRightClick(event,'','${treeNode.id}')">...</span>`
-    + `<button type='button' onclick="getDome()" class='diyBtn1' id='diyBtn_${treeNode.id}'`
-    + "' title='"+treeNode.name+"' ></button>";
+    // + `<button type='button' onclick="getDome()" class='diyBtn1' id='diyBtn_${treeNode.id}'`
+    // + "' title='"+treeNode.name+"' ></button>";
   aObj.append(editStr);
   var btn = $("#diyBtn_"+treeNode.id);
   // if (btn) btn.bind("click", function(){alert("diy Button for " + treeNode.name);});
@@ -337,8 +338,8 @@ function addDiyDom1(treeId, treeNode) {
     //treeNode.id 要根据树的数据中的id获取，zNodes 数据配置中的i
   // if ($("#diyBtn_"+treeNode.id).length>0) return; //控制哪些节点不显示按钮
   var editStr = "<span class='dot' id='diyBtn_space_"+treeNode.id+ "' >...</span>"
-    + "<button type='button' class='diyBtn1' id='diyBtn_" + treeNode.id
-    + "' title='"+treeNode.name+"' onfocus='this.blur();'></button>";
+    // + "<button type='button' class='diyBtn1' id='diyBtn_" + treeNode.id
+    // + "' title='"+treeNode.name+"' onfocus='this.blur();'></button>";
   aObj.append(editStr);
   var btn = $("#diyBtn_"+treeNode.id);
   if (btn) btn.bind("click", function(){alert("diy Button for " + treeNode.name);});
@@ -444,7 +445,8 @@ function beforeClickAddFenzu(treeId, treeNode) {
 
 function onClickAddFenzu(e, treeId, treeNode) {
   nodes = addPTree.getSelectedNodes()
-  currentRightNode = treeNode
+  // currentRightNode = treeNode
+  editorNode = treeNode
   let cityObj = $("#fenzuPosition")[0];
   cityObj.value = treeNode.name
 }
@@ -589,17 +591,19 @@ var checkPermissionsList = ''//权限
   function setPermissions(){
     // debugger
     // let list = checkPermissionsList
-    console.log(checkPermissionsList)
+    // console.log(checkPermissionsList)
     let permissionsBtnList = checkPermissionsList
     console.log(permissionsBtnList)
     var permissionsBtnMap={};
     permissionsBtnList.forEach(item=>{
       permissionsBtnMap[item.code]=item.exist;
     });
+    // debugger
     $.each($('.checkPer'),function(){
      
        var code = $(this).data('permission');
        if(!permissionsBtnMap[code]){
+         
         $(this).hide();
        }
        

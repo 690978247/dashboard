@@ -1,16 +1,16 @@
 function showRMenu(type, x, y) {
     $("#rMenu ul").show();
     if (type == "root") {
-        $("#m_del").hide();
-        $("#m_check").hide();
-        $("#m_unCheck").hide();
+        $("#m_del").parent().hide();
+        $("#m_check").parent().hide();
+        $("#m_unCheck").parent().hide();
     } else if ("topNode" == type) {
-        $("#m_del").hide();
-        $("#m_check").hide();
+        $("#m_del").parent().hide();
+        $("#m_check").parent().hide();
         $("#m_unCheck").show();
     } else {
-        $("#m_del").show();
-        $("#m_check").show();
+        $("#m_del").parent().show();
+        $("#m_check").parent().show();
         $("#m_unCheck").show();
     }
 
@@ -157,13 +157,19 @@ async function getGruopTree(name) {
         // if(!zNodes)z
         console.log(res.data.data)
         $.fn.zTree.init($("#treeDemo"), setting, zNodes);
-        $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
+        if(!name){
+            $.fn.zTree.init($("#treeDemoAddFenzu"), settingAddFenzu, zNodes);
+        }
         $.fn.zTree.init($("#treeDemoAdd"), settingAdd, zNodes);
         $.fn.zTree.init($("#treeAttr"), settingAttr, zNodes);
         zTree = $.fn.zTree.getZTreeObj("treeDemo");
         pTree = $.fn.zTree.getZTreeObj("treeDemoAdd");
         addPTree = $.fn.zTree.getZTreeObj("treeDemoAddFenzu");
         attrTree = $.fn.zTree.getZTreeObj("treeAttr");
+        zTree.expandAll(true);
+        pTree.expandAll(true);
+        addPTree.expandAll(true);
+        attrTree.expandAll(true);
 
         currentGroupNode = (zNodes || []).filter(x => x['parentId'] == null || x['parentId'] == '')[0];
 
@@ -173,6 +179,7 @@ async function getGruopTree(name) {
 
     })
 }
+
 // 右侧树查询
 async function searchGroupTree(e) {
     await getGruopTree(e.target.value)
@@ -421,7 +428,7 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
                 none: '暂无数据' //默认：无数据。注：该属性为 layui 2.2.5 开始新增
             },
             // ,totalRow:true//开启该列的自动合计功能
-            height: document.getElementById("z-contentBoxRight-table").clientHeight,
+            // height: $("#z-contentBoxRight-table").height()-20,
             page: false, //开启分页
             limit: pager.size, //每页默认显示的数量
             cellMinWidth: 60, //全局定义常规单元格的最小宽度，layui 2.2.1 新增
@@ -771,6 +778,10 @@ function renderTable(data, pager, type) { // type 勾选缓存tableCheckList， 
             }
 
         });
+        $("#z-contentBoxRight-table").css('top',$('.z-contentBoxRight-top').height()+'px')
+  $("#myTable").css('height',$("#z-contentBoxRight-table").height()-60+'px')
+  $(".layui-table-body").css('height',$("#z-contentBoxRight-table").height()-60+'px')
+  $(".layui-table-view").css('height',$("#z-contentBoxRight-table").height()-60+'px')
         //表格搜索，重载
         // var $ = layui.$, activeSearch = {
         //     reload: function(){
@@ -914,7 +925,7 @@ async function getToken() {
     }
     // 获取url值
     let token = getParams('token', window.location.href)
-    token = token ? token : 'afcfa71c92964489903e729346a54d67'
+    token = token ? token : 'f217827c1d794907a9e63de054cdd41a'
     //   设置token,可删除
     localStorage.setItem("token", token)
     appId = getParams('appId', window.location.href)
@@ -936,19 +947,34 @@ $(document).ready(async function () {
     await checkPermissions();
     rMenu = $("#rMenu");
     // 设置默认展开
-    zTree.expandAll(true);
-    pTree.expandAll(true);
-    addPTree.expandAll(true);
-    attrTree.expandAll(true);
+   
     addNode(); //给后台返回的tree数据添加属性
     if (currentGroupNode) {
         initTable(currentGroupNode.id)
 
     }
+    $("#z-contentBoxRight-table").css('top',$('.z-contentBoxRight-top').height()+'px')
+    $("#myTable").css('height',$("#z-contentBoxRight-table").height()-60+'px')
+    $(".layui-table-body").css('height',$("#z-contentBoxRight-table").height()-60+'px')
+    $(".layui-table-view").css('height',$("#z-contentBoxRight-table").height()-60+'px')
+   
     // await getpermissionsBtn()
 
 
 });
+$(window).resize(function(){
+    console.log($('.layui-table-body').height());
+    console.log($('#z-contentBoxRight-table').height());
+    $("#z-contentBoxRight-table").css('top',$('.z-contentBoxRight-top').height()+'px')
+    $("#myTable").css('height',$("#z-contentBoxRight-table").height()-60+'px')
+    $(".layui-table-body").css('height',$("#z-contentBoxRight-table").height()-60+'px')
+    $(".layui-table-view").css('height',$("#z-contentBoxRight-table").height()-60+'px')
+})
+
+window.onzoom = function(e) {
+    console.log('eee')
+    // zoom even
+}
 layui.use('laydate', function () {
     var laydate = layui.laydate;
     //日期范围
@@ -1835,19 +1861,25 @@ $(document).on("click", "#m_add", function (e) {
             } else {
                 let nodes = zTree.getSelectedNodes();
                 // let isNull = currentPositionNode.parentId ? nodes[0] : null
+                let id =  currentRightNode.id
+                if(editorNode.id){
+                    id = editorNode.id
+                }
+                // debugger
                 let postData = {
                     name: fenzuNameVal,
-                    parentId: currentRightNode.id
+                    parentId: id
                 }
                 request.post(`/bi/${appId}/groups`, postData).then(async res => {
                     if (res.data.code === 0) {
-                        layer.msg('添加成功!')
+                        app.msg('添加成功!')
                         layer.close(index);
                         await getGruopTree()
                         zTree.expandAll(true)
                         setGroupChoice(nodes[0].name)
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
+                        editorNode = {}
                     } else {
                         layer.msg(res.data.msg);
                     }
@@ -1896,10 +1928,14 @@ $(document).on("click", "#m_check", function (e) {
                 $("#fenzuPosition").addClass("valNUllBorder");
                 return false
             } else {
+                let parentId = currentRightNode.parentId
+                if(editorNode.id){
+                    parentId = editorNode.id
+                }
                 let postData = {
                     id: currentRightNode.id,
                     name: fenzuNameVal,
-                    parentId: currentRightNode.parentId
+                    parentId: parentId
                 }
                 request.put(`/bi/${appId}/groups`, postData).then(async res => {
                     let nodes = zTree.getSelectedNodes();
@@ -1913,6 +1949,7 @@ $(document).on("click", "#m_check", function (e) {
                         zTree.selectNode(nodes[0])
                         $("#fenzuName")[0].value = ''
                         $("#fenzuPosition")[0].value = ''
+                        editorNode = {}
                         // initTable(currentRightNode.id)
                     } else {
                         layer.msg(res.data.msg);
@@ -1929,3 +1966,4 @@ $(document).on("click", "#m_check", function (e) {
         }
     });
 })
+

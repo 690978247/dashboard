@@ -56,12 +56,17 @@
 .visual-pagination {
   display: flex;
   align-items: center;
+  background: #fff;
+  min-width: 450px;
+  /* margin-bottom: 10px; */
+  
 }
 
 .popup-pagination1 {
   position: absolute;
   bottom: 10px;
   width: 100%;
+  
 }
 
 .visual-pagination span:nth-of-type(2) {

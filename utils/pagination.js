@@ -152,6 +152,7 @@ function getPageSize(pageSize){
 
 // 获取表格数据
 function getTableData (postData) {
+  
   showloading(true)
   request.get(`/bi/${appId}/panels`, {params: postData}).then(res => {
     showloading(false)

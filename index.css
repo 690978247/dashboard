@@ -328,11 +328,11 @@
 }
 
 .z-contentBoxRight-table {
-    height: calc(100% - 150px);
+    /* height: calc(100% - 150px); */
     width: 100%;
-    /* position: absolute; */
-    /* top:70px; */
-    /* bottom: 50px; */
+    position: absolute;
+    top:50px;
+    bottom: 50px;
     /* overflow: auto; */
 }
 .z-contentBoxRight-table .layui-laypage .layui-laypage-curr .layui-laypage-em {
@@ -791,7 +791,7 @@ body .layui-layer-page .layui-layer-content {
     visibility:hidden; 
     top:0;
     width: 138px;
-    height: 140px;
+    max-height: 140px;
     background: #FFFFFF;
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.15);
     border-radius: 4px;
@@ -802,8 +802,9 @@ body .layui-layer-page .layui-layer-content {
     font-weight: 500;
     color: #222222;
     height: 41px;
-    padding: 18px 0 0 30px;
+    padding: 0px 0 0 30px;
     cursor: pointer;
+    line-height: 41px;
 }
 .z-contentBoxLeft .ztree .dot{
     font-size: 20px;

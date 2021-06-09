@@ -2,7 +2,7 @@
 const request = axios.create({
   // 开发环境： https://apidev.sycdev.com
   //测试环境： https://api.sycdev.com
-  baseURL: 'https://apidev.sycdev.com', // url = base url + request url  https://apidev.sycdev.com https://api.sycdev.com
+  baseURL: 'https://api.sycdev.com', // url = base url + request url  https://apidev.sycdev.com https://api.sycdev.com
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 900000 // request timeout
 })
