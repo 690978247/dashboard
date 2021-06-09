@@ -28,7 +28,7 @@ function renderPagination (ref) { // ref参数为渲染根元素
     </ul>
     <button type="button" onclick="prevPage(event)" id="pager-right-btn"  class="visual-pagination-button"  ${pageData.pageIndex === pageData.totalPage || pageData.pageIndex <= 0 ? 'disabled' : ''}><i class="iconfont iconyoujiantou_huaban"></i></button>
     <span>前往</span>
-    <input type="text" class="pager-input" id="pager-input" onblur="jumpPage(event)" value="${pageData.pageIndex}" >
+    <input type="text" class="pager-input" autocomplete="off" id="pager-input" onblur="jumpPage(event)" value="${pageData.pageIndex}" >
     <span>页</span>
   </div>`
   pagination.innerHTML = page
